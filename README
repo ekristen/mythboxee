@@ -1,0 +1,19 @@
+Installation
+------------- 
+1. Download mythtv-rss-<version>.zip
+2. Extract contents of mythtv-rss-<version>.zip
+3. Copy boxee.php to webroot of your MythTV Backend (hopefully where your recordings are kept)
+4. Create a soft link to the recordings folder so that your recordings are accessible via http. (IE ln -s /path/to/recordings /DOCUMENT_ROOT/recordings)
+5. Edit boxee.php, read the comments at the top of the file, update configuration variables as needed. Only one configuration variable needs to be changed for sure.
+6. Copy the Boxee App to your apps folder --
+    * Linux: ~/.boxee/UserData/apps/
+    * Mac/ATV: ~/Library/Application Support/BOXEE/UserData/apps/
+    * Windows Vista: C:\Users\<windows user name>\AppData\Roaming\BOXEE\userdata\apps\
+    * Windows XP: C:\Documents and Settings\<your windows user name>\Application Data\BOXEE\userdata\apps\
+7. Edit the descriptor.xml file, update the rss path to http://<IP_OR_HOSTNAME_OF_YOUR_MYTHTV_BACKEND/boxee.php
+ 
+ 
+Caveats
+--------
+Unfortunately until I figure out or have time to figure out how to prompt a user inside Boxee to enter in their IP of their MythTV backend, the app has to run in test mode locally -- eventually I would like to put this up in its own repository someplace. Long term goal would be to convert the MythBox plugin for XBMC to Boxee so we could take full advantage of the MythTV API.
+
