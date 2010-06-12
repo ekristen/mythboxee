@@ -6,7 +6,7 @@
 def GetServer():
 		config = mc.GetApp().GetLocalConfig()
 		server = config.GetValue("server")
-		response = mc.ShowDialogKeyboard("Enter Full URL to Boxee Script (ie http://192.168.1.210/boxee.php)", server, False)
+		response = mc.ShowDialogKeyboard("Enter Full URL to the MythBoxee Script", server, False)
 		if not response and not server:
 			GetServer()
 		elif response:
@@ -15,18 +15,15 @@ def GetServer():
 
 config = mc.GetApp().GetLocalConfig()
 server = config.GetValue("server")
+
 show = config.GetValue("show")
 rss = config.GetValue("rss")
-
-if server == "":
-	GetServer()
-
-mc.GetActiveWindow().GetList(2001).SetContentURL(server)
 
 if show and rss:
 	mc.GetActiveWindow().GetLabel(2999).SetLabel(show)
 	mc.GetActiveWindow().GetList(3000).SetContentURL(rss)
 
+mc.GetActiveWindow().GetList(2001).SetContentURL(server)
 ]]></onload>
 	<controls>
 		<control type="visualisation" id ="5001">
