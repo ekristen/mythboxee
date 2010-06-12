@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<window type="window" id="14000">
+	<defaultcontrol always="true">2000</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<onload lang="python"><![CDATA[
+def GetServer():
+		config = mc.GetApp().GetLocalConfig()
+		server = config.GetValue("server")
+		response = mc.ShowDialogKeyboard("Enter Full URL to Boxee Script (ie http://192.168.1.210/boxee.php)", server, False)
+		if not response and not server:
+			GetServer()
+		elif response:
+			config.SetValue("server", response)
+
+
+config = mc.GetApp().GetLocalConfig()
+server = config.GetValue("server")
+show = config.GetValue("show")
+rss = config.GetValue("rss")
+
+if server == "":
+	GetServer()
+
+mc.GetActiveWindow().GetList(2001).SetContentURL(server)
+
+if show and rss:
+	mc.GetActiveWindow().GetLabel(2999).SetLabel(show)
+	mc.GetActiveWindow().GetList(3000).SetContentURL(rss)
+
+]]></onload>
+	<controls>
+		<control type="visualisation" id ="5001">
+			<width>1280</width>
+			<height>720</height>
+			<visible>Control.IsVisible(2000)</visible>
+		</control>
+		<control type="image">
+			<width>1280</width>
+			<height>720</height>
+			<texture>mb_bg.png</texture>
+			<animation effect="fade" start="85" end="85" time="0" condition="true">Conditional</animation>
+		</control>
+		<control type="grouplist" id="1000">
+			<posy>48</posy>
+			<posx>46</posx>
+			<itemgap>20</itemgap>
+			<ondown>2000</ondown>
+			<orientation>horizontal</orientation>
+<!--
+			<control type="button" id="1001">
+				<height>36</height>
+				<width>150</width>
+				<label>Recordings</label>
+				<align>center</align>
+				<aligny>top</aligny>
+				<textoffsety>4</textoffsety>
+				<font>font21</font>
+				<textcolor>ffffffff</textcolor>
+				<texturenofocus>-</texturenofocus>
+				<texturefocus border="5">mb_btn_bg.png</texturefocus>
+				<onclick lang="python"><![CDATA[
+url = mc.GetApp().GetLocalConfig().GetValue("server")
+mc.GetActiveWindow().GetList(2001).SetContentURL(url)
+]]></onclick>
+			</control>
+-->
+<!--
+			<control type="button" id="1002">
+				<height>36</height>
+				<width>150</width>
+				<label>Videos</label>
+				<align>center</align>
+				<aligny>top</aligny>
+				<textoffsety>4</textoffsety>
+				<font>font21</font>
+				<textcolor>ffffffff</textcolor>
+				<texturenofocus>-</texturenofocus>
+				<texturefocus border="5">mb_btn_bg.png</texturefocus>
+				<onclick lang="python"><![CDATA[
+url = mc.GetApp().GetLocalConfig().GetValue("server") + "?type=shows"
+mc.GetActiveWindow().GetList(100).SetContentURL(url)
+]]></onclick>
+			</control>
+-->
+			<control type="button" id="1003">
+				<height>36</height>
+				<width>150</width>
+				<label>Settings</label>
+				<align>center</align>
+				<aligny>top</aligny>
+				<textoffsety>4</textoffsety>
+				<font>font21</font>
+				<texturefocus border="5">mb_btn_bg.png</texturefocus>
+				<onclick lang="python"><![CDATA[GetServer()]]></onclick>
+			</control>
+		</control>
+		
+		<control type="group" id="2000">
+			<posx>13</posx>
+			<posy>135</posy>
+			<control type="image">
+				<width>407</width>
+				<height>575</height>
+				<texture>mb_black_bg.png</texture>
+			</control>
+			<control type="group">
+				<control type="label">
+					<posx>11</posx>
+					<posy>9</posy>
+					<font>sans21</font>
+					<label>[B]Recordings by Show[/B]</label>
+					<textcolor>ffffffff</textcolor>
+					<shadowcolor>black</shadowcolor>
+				</control>
+				<control type="list" id="2001">
+					<posy>42</posy>
+					<posx>13</posx>
+					<width>371</width>
+					<height>521</height>
+					<onup>1000</onup>
+					<ondown>2001</ondown>
+					<onleft>-</onleft>
+					<onright>3000</onright>
+					<scrolltime>200</scrolltime>
+					<orientation>vertical</orientation>
+					<itemlayout width="371" height="50">
+						<control type="label">
+							<posy>13</posy>
+							<posx>13</posx>
+							<width>371</width>
+							<height>50</height>
+							<font>sans23b</font>
+							<info>Listitem.label</info>
+							<textcolor>ffffffff</textcolor>
+						</control>
+						<control type="image">
+							<posy>50</posy>
+							<width>371</width>
+							<height>1</height>
+							<texture>ch_divider2.png</texture>
+						</control>
+					</itemlayout>
+					<focusedlayout width="371" height="50">
+						<control type="image">
+							<posx>0</posx>
+							<width>371</width>
+							<height>50</height>
+							<texture>mb_white_bg.png</texture>
+							<visible>Control.HasFocus(2001)</visible>
+						</control>
+						<control type="label">
+							<posy>13</posy>
+							<posx>13</posx>
+							<width>371</width>
+							<height>50</height>
+							<font>sans23b</font>
+							<info>Listitem.label</info>
+							<textcolor>ff454040</textcolor>
+							<visible>Control.HasFocus(2001)</visible>
+						</control>
+						<control type="label">
+							<posy>13</posy>
+							<posx>13</posx>
+							<width>371</width>
+							<height>50</height>
+							<font>sans23b</font>
+							<info>Listitem.label</info>
+							<textcolor>ffffffff</textcolor>
+							<visible>!Control.HasFocus(2001)</visible>
+						</control>
+						<control type="image">
+							<posy>50</posy>
+							<width>371</width>
+							<height>1</height>
+							<texture>ch_divider2.png</texture>
+						</control>
+					</focusedlayout>
+					<content type="action">
+						<onclick lang="python"><![CDATA[
+config = mc.GetApp().GetLocalConfig()
+list = mc.GetActiveWindow().GetList(2001)
+item = list.GetItem( list.GetFocusedItem() )
+url = item.GetPath()
+mc.GetActiveWindow().GetList(3000).SetContentURL(url)
+mc.GetActiveWindow().GetLabel(2999).SetLabel(item.GetLabel())
+config.SetValue("show", item.GetLabel())
+config.SetValue("rss", item.GetPath())
+]]></onclick>			
+					</content>
+				</control>
+				<control type="image">
+					<posy>42</posy>
+					<posx>13</posx>
+					<width>370</width>
+					<height>1</height>
+					<texture>ch_divider1.png</texture>
+				</control>
+			</control>
+		</control>
+		
+		<control type="group">
+			<posx>436</posx>
+			<posy>135</posy>
+			<control type="label" id="2999">
+				<posx>5</posx>
+				<posy>9</posy>
+				<font>sans21</font>
+				<textcolor>fffffffff</textcolor>
+				<shadowcolor>black</shadowcolor>
+			</control>
+			<control type="image">
+				<posy>41</posy>
+				<width>838</width>
+				<height>1</height>
+				<texture>ch_divider1.png</texture>
+			</control>
+			<control type="list" id="3000">
+				<posy>42</posy>
+				<width>493</width>
+				<height>532</height>
+				<onup>1000</onup>
+				<ondown>-</ondown>
+				<onleft>2000</onleft>
+				<onright>-</onright>
+				<scrolltime>200</scrolltime>
+				<orientation>vertical</orientation>
+				<itemlayout width="493" height="115">
+					<control type="image">
+						<posx>5</posx>
+						<posy>16</posy>
+						<width>111</width>
+						<height>83</height>
+						<bordersize>1</bordersize>
+						<info>Listitem.thumb</info>
+						<bordertexture>mb_black_bg.png</bordertexture>
+						<aspectratio>stretch</aspectratio>
+					</control>
+					<control type="label">
+						<posy>10</posy>
+						<posx>125</posx>
+						<width>280</width>
+						<height>80</height>
+						<font>sans21</font>
+						<info>Listitem.label</info>
+						<textcolor>ffffffff</textcolor>
+						<selectedcolor>ffffffff</selectedcolor>
+						<wrapmultiline>true</wrapmultiline>
+					</control>
+					<control type="image">
+						<posy>114</posy>
+						<width>416</width>
+						<height>1</height>
+						<texture>ch_divider2.png</texture>
+					</control>
+				</itemlayout>
+				<focusedlayout width="493" height="115">
+					<control type="image">
+						<posy>-1</posy>
+						<width>416</width>
+						<height>115</height>
+						<texture>mb_black_bg.png</texture>
+						<visible>Control.HasFocus(3000)</visible>
+					</control>
+					<control type="image">
+						<posx>5</posx>
+						<posy>16</posy>
+						<width>111</width>
+						<height>83</height>
+						<bordersize>1</bordersize>
+						<info>Listitem.thumb</info>
+						<bordertexture>mb_black_bg.png</bordertexture>
+						<aspectratio>stretch</aspectratio>
+					</control>
+					<control type="label">
+						<posy>10</posy>
+						<posx>125</posx>
+						<width>280</width>
+						<height>80</height>
+						<font>sans21</font>
+						<info>Listitem.label</info>
+						<textcolor>ff454040</textcolor>
+						<selectedcolor>ff9299b3</selectedcolor>
+						<wrapmultiline>true</wrapmultiline>
+						<visible>Control.HasFocus(3000)</visible>
+					</control>
+					<control type="label">
+						<posy>10</posy>
+						<posx>125</posx>
+						<width>280</width>
+						<height>80</height>
+						<font>sans21</font>
+						<info>Listitem.label</info>
+						<textcolor>ffffffff</textcolor>
+						<selectedcolor>ff9299b3</selectedcolor>
+						<wrapmultiline>true</wrapmultiline>
+						<visible>!Control.HasFocus(3000)</visible>
+					</control>
+					<control type="image">
+						<posy>72</posy>
+						<posx>128</posx>
+						<width>166</width>
+						<height>30</height>
+						<texture>ch_watch_button.png</texture>
+						<visible>Control.HasFocus(3000)</visible>
+					</control>
+					<control type="label">
+						<posy>72</posy>
+						<posx>159</posx>
+						<width>166</width>
+						<height>30</height>
+						<font>sans18b</font>
+						<label>WATCH NOW</label>
+						<textcolor>ffffffff</textcolor>
+						<selectedcolor>fff89b20</selectedcolor>
+						<aligny>center</aligny>
+						<visible>Control.HasFocus(3000)</visible>
+					</control>
+					<control type="image">
+						<posy>0</posy>
+						<posx>429</posx>
+						<width>63</width>
+						<height>114</height>
+						<texture>ch_focus_arrow.png</texture>
+						<visible>Control.HasFocus(3000)</visible>
+					</control>
+				</focusedlayout>
+				<content type="url" url=""></content>
+			</control>
+			<control type="image">
+				<posy>573</posy>
+				<width>838</width>
+				<height>1</height>
+				<texture>ch_divider1.png</texture>
+			</control>
+		</control>
+		
+		
+		<control type="group">
+			<posx>889</posx>
+			<posy>177</posy>
+			<control type="image">
+				<width>385</width>
+				<height>531</height>
+				<texture>mb_black_bg.png</texture>
+			</control>
+			<control type="label" id="100">
+				<posx>380</posx>
+				<posy>-31</posy>
+				<font>sans18</font>
+				<align>right</align>
+				<label>$INFO[Container(3000).NumItems] Recording(s)</label>
+				<textcolor>ffffffff</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<visible>!IsEmpty(Container(3000).Listitem.property(custom:index)) + Control.HasFocus(3000)</visible>
+			</control>
+			<control type="label">
+				<posx>380</posx>
+				<posy>-31</posy>
+				<font>sans18</font>
+				<align>right</align>
+				<label>$INFO[Container(3000).NumItems] Recording(s)</label>
+				<textcolor>ffffffff</textcolor>
+				<shadowcolor>black</shadowcolor>
+				<visible>!Control.IsVisible(100)</visible>
+			</control>
+			<control type="image">
+				<posy>12</posy>
+				<posx>12</posx>
+				<width>361</width>
+				<height>264</height>
+				<info>Container(3000).Listitem.Thumb</info>
+				<aspectratio align="center" aligny="top">keep</aspectratio>
+				<bordersize>1</bordersize>
+				<bordertexture>mb_white_bg.png</bordertexture>
+				<visible>Control.HasFocus(3000)</visible>
+				<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+			</control>
+			<control type="grouplist">
+				<posx>17</posx>
+				<posy>290</posy>
+				<itemgap>5</itemgap>
+				<orientation>vertical</orientation>
+				<visible>Control.HasFocus(3000)</visible>
+				<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+				<control type="label">
+					<width>356</width>
+					<height>205</height>
+					<label>[B]$INFO[Container(3000).Listitem.Label][/B][CR][COLOR ffffffff]$INFO[Container(3000).Listitem.property(description)][/COLOR]</label>
+					<font>sans21</font>
+					<textcolor>fff89b20</textcolor>
+					<wrapmultiline>true</wrapmultiline>
+				</control>
+				<control type="label">
+					<width>361</width>
+					<height>24</height>
+					<label>Release Date: [COLOR ffc2c2c2]$INFO[Container(3000).Listitem.property(releasedate)][/COLOR]</label>
+					<font>sans18</font>
+					<textcolor>ff7a7a7a</textcolor>
+				</control>
+			</control>
+		</control>
+	</controls>
+</window>

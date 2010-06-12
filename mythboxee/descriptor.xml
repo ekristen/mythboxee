@@ -1,0 +1,15 @@
+<app>
+  <id>mythtv-py</id>
+  <name>MythBoxee</name>
+  <version>1.00</version>
+  <description>Watch all your MythTV recordings from Boxee. For this to work you will need to have a PHP script installed on your MythTV Backend. Please visit http://erikkristensen.com/project/mythboxee for more details.</description>
+  <thumb>http://erikkristensen.com/boxee-mythtv/mythboxee_logo.jpg</thumb>
+  <media>video</media>
+  <copyright>Erik Kristensen</copyright>
+  <email>erik@erikkristensen.com</email>
+  <type>skin</type>
+  <startWindow>launch</startWindow>
+  <platform>all</platform>
+  <minversion>0.9.21</minversion>
+  <test-app>true</test-app>
+</app>
