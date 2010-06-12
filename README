@@ -1,19 +1,23 @@
+11 June 2010 - This is now a full python based application for Boxee. However I am still in testing phase. Once I am sure that there are not immediate issues with this application I will be submitting it to the Boxee Repository
+
+If you would like to beta test this for me please use the instructions below.
+
 Installation
 ------------- 
-1. Download mythtv-rss-<version>.zip
-2. Extract contents of mythtv-rss-<version>.zip
-3. Copy boxee.php to webroot of your MythTV Backend (hopefully where your recordings are kept)
+1. Download 2.0-beta in the format of your choosing from http://github.com/ekristen/mythboxee/downloads
+2. Extract contents of the archive you download.
+3. Copy mythboxee.php to some location on your MythTV Backend that is accessible via http. (hopefully where your recordings are kept)
 4. Create a soft link to the recordings folder so that your recordings are accessible via http. (IE ln -s /path/to/recordings /DOCUMENT_ROOT/recordings)
-5. Edit boxee.php, read the comments at the top of the file, update configuration variables as needed. Only one configuration variable needs to be changed for sure.
+5. Edit mythboxee.php, read the comments at the top of the file, update configuration variables as needed. Only one configuration variable needs to be changed for sure and that is the recordings variable.
 6. Copy the Boxee App to your apps folder --
     * Linux: ~/.boxee/UserData/apps/
     * Mac/ATV: ~/Library/Application Support/BOXEE/UserData/apps/
     * Windows Vista: C:\Users\<windows user name>\AppData\Roaming\BOXEE\userdata\apps\
     * Windows XP: C:\Documents and Settings\<your windows user name>\Application Data\BOXEE\userdata\apps\
-7. Edit the descriptor.xml file, update the rss path to http://<IP_OR_HOSTNAME_OF_YOUR_MYTHTV_BACKEND/boxee.php
+7. When you launch the application the first time you will be prompted for the path to the mythboxee.php script. Provide the entire URL. The application will test to make sure it can connect.
+8. Sit back and enjoy watching your recordings from MythTV on your Boxee frontend.
  
- 
-Caveats
---------
-Unfortunately until I figure out or have time to figure out how to prompt a user inside Boxee to enter in their IP of their MythTV backend, the app has to run in test mode locally -- eventually I would like to put this up in its own repository someplace. Long term goal would be to convert the MythBox plugin for XBMC to Boxee so we could take full advantage of the MythTV API.
+ToDo
+----
+I am looking at potentially seeing if I can tie directly into the backend of MythTV so that I can take full advantage of commercial skipping and other MythTV features that are only accessible when streaming via the MythTV protocol.
 
