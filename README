@@ -1,21 +1,23 @@
-11 June 2010 - This is now a full python based application for Boxee. However I am still in testing phase. Once I am sure that there are not immediate issues with this application I will be submitting it to the Boxee Repository
+MythBoxee
+----------
+
+Update 11 June 2010 - The application is now a python based application and it is being hosted in my custom repository for Boxee.
+
+Repository: http://erikkristensen.com/project/boxeerepo
 
 If you would like to beta test this for me please use the instructions below.
 
 Installation
 ------------- 
-1. Download 2.0-beta in the format of your choosing from http://github.com/ekristen/mythboxee/downloads
-2. Extract contents of the archive you download.
-3. Copy mythboxee.php to some location on your MythTV Backend that is accessible via http. (hopefully where your recordings are kept)
-4. Create a soft link to the recordings folder so that your recordings are accessible via http. (IE ln -s /path/to/recordings /DOCUMENT_ROOT/recordings)
-5. Edit mythboxee.php, read the comments at the top of the file, update configuration variables as needed. Only one configuration variable needs to be changed for sure and that is the recordings variable.
-6. Copy the Boxee App to your apps folder --
-    * Linux: ~/.boxee/UserData/apps/
-    * Mac/ATV: ~/Library/Application Support/BOXEE/UserData/apps/
-    * Windows Vista: C:\Users\<windows user name>\AppData\Roaming\BOXEE\userdata\apps\
-    * Windows XP: C:\Documents and Settings\<your windows user name>\Application Data\BOXEE\userdata\apps\
-7. When you launch the application the first time you will be prompted for the path to the mythboxee.php script. Provide the entire URL. The application will test to make sure it can connect.
-8. Sit back and enjoy watching your recordings from MythTV on your Boxee frontend.
+1. Download the latest version of the MythBoxee php script. http://github.com/ekristen/mythboxee/raw/master/scripts/mythboxee.php
+2. Upload the mythboxee.php script to your MythTV Backend server (this should be where the recordings are stored.)
+3. Create a soft link to the recordings folder so that your recordings are accessible via http. (IE ln -s /path/to/recordings /DOCUMENT_ROOT/recordings)
+4. Edit mythboxee.php, read the comments at the top of the file, update configuration variables as needed. Only one configuration variable needs to be changed for sure and that is the recordings variable.
+5. Browse to the Apps section in Boxee
+6. Select "Repositories" in the left hand side at the bottom.
+7. Add Repository, use the url http://erikkristensen.com/project/boxeerepo
+8. Launch MythBoxee, you'll be prompted to enter in the URL of where the mythboxee.php script is located. Make sure you include the http://
+9. Sit back and enjoy watching your recordings from MythTV on your Boxee frontend.
  
 ToDo
 ----
