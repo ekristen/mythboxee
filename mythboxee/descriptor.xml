@@ -1,7 +1,7 @@
 <app>
   <id>mythtv-py</id>
   <name>MythBoxee</name>
-  <version>1.00</version>
+  <version>2.0-beta</version>
   <description>Watch all your MythTV recordings from Boxee. For this to work you will need to have a PHP script installed on your MythTV Backend. Please visit http://erikkristensen.com/project/mythboxee for more details.</description>
   <thumb>http://erikkristensen.com/boxee-mythtv/mythboxee_logo.jpg</thumb>
   <media>video</media>

@@ -5,7 +5,7 @@
  * Name: MythBoxee MythTV Backend Script
  * Website: http://erikkristensen.com/project/mythboxee
  * License: MIT License
- * Version: 1.1
+ * Version: 2.0-beta
  * 
  * 
  * Author: Erik Kristensen
