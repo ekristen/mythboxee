@@ -2,7 +2,7 @@ import mc
 config = mc.GetApp().GetLocalConfig()
 http = mc.Http()
 
-#Debug Code
+# For Debugging
 #config.SetValue("verified", "")
 #config.SetValue("server", "")
 
@@ -13,30 +13,23 @@ def GetServer():
 		config = mc.GetApp().GetLocalConfig()
 		server = config.GetValue("server")
 		response = mc.ShowDialogKeyboard("Enter Full URL to MythBoxee Script", server, False)
-		if not response and not server:
-			GetServer()
-		elif response:
+		if VerifyServer(response) == True:
 			config.SetValue("server", response)
 
-
-def VerifyServer():
-		data = http.Get(config.GetValue("server") + "?type=verify")
-		if http.GetHttpResponseCode() != 200:
-			mc.ShowDialogOk("Error", "Unable to connect MythBoxee Script on MythBackend")
-			GetServer()
-			VerifyServer()
-		else:
+def VerifyServer(url):
+		data = http.Get(url + "?type=verify")
+		if http.GetHttpResponseCode() == 200:
 			config.SetValue("verified", "1")
+			return True
+		else:
+			return False
 
-while not server and not verified:
-	if not server:
-		GetServer()
-		server = config.GetValue("server")
-	if not verified:
-		VerifyServer()
-		verified = config.GetValue("verified")
+if not server:
+	GetServer()
 
 # If server is set, and at this point it has been verified
 # then launch the application
-if verified:
+if config.GetValue("verified") == "1":
 	mc.ActivateWindow(14000)
+else:
+	mc.ShowDialogOk("MythBoxee Error", "You must enter the full path to the MythBoxee script or MythBoxee was unable to verify the URL provided.")
