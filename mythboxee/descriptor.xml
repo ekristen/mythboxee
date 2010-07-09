@@ -1,8 +1,8 @@
 <app>
   <id>com.erikkristensen.mythboxee</id>
   <name>MythBoxee Beta</name>
-  <version>2.0.beta</version>
-  <description>Watch all your MythTV recordings from Boxee. For this to work you will need to have a PHP script installed on your MythTV Backend. Please visit http://erikkristensen.com/project/mythboxee for more details.</description>
+  <version>3.0.beta</version>
+  <description>Watch all your MythTV recordings from Boxee.</description>
   <thumb>http://erikkristensen.com/project/mythboxee/mythboxee_logo.jpg</thumb>
   <media>video</media>
   <copyright>Erik Kristensen</copyright>
