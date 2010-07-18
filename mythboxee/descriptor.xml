@@ -1,7 +1,7 @@
 <app>
-  <id>mythboxee-test</id>
-  <name>MythBoxee Test</name>
-  <version>3.0.beta</version>
+  <id>com.erikkristensen.mythboxee</id>
+  <name>MythBoxee Beta</name>
+  <version>3.23.0.beta</version>
   <description>Watch all your MythTV recordings from Boxee.</description>
   <thumb>http://erikkristensen.com/project/mythboxee/mythboxee_logo.jpg</thumb>
   <media>video</media>
