@@ -5,8 +5,8 @@ import mythboxee
 config = mc.GetApp().GetLocalConfig()
 
 # For Debugging
-config.SetValue("verified", "1")
-config.SetValue("server", "192.168.1.210")
+#config.SetValue("verified", "1")
+#config.SetValue("server", "192.168.1.210")
 
 # Pull out some of the variables we need
 server = config.GetValue("server")
