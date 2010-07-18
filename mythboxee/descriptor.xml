@@ -1,6 +1,6 @@
 <app>
-  <id>com.erikkristensen.mythboxee</id>
-  <name>MythBoxee Beta</name>
+  <id>mythboxee-test</id>
+  <name>MythBoxee Test</name>
   <version>3.0.beta</version>
   <description>Watch all your MythTV recordings from Boxee.</description>
   <thumb>http://erikkristensen.com/project/mythboxee/mythboxee_logo.jpg</thumb>
@@ -11,4 +11,5 @@
   <startWindow>launch</startWindow>
   <platform>all</platform>
   <minversion>0.9.20</minversion>
+  <test-app>true</test-app>
 </app>

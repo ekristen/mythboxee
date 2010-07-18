@@ -1,6 +1,7 @@
 import mc
 import re
 from operator import itemgetter, attrgetter
+from xml.dom import minidom
 
 config = mc.GetApp().GetLocalConfig()
 
@@ -16,21 +17,45 @@ def LoadShows():
 	shows.clear()
 
 	config = mc.GetApp().GetLocalConfig()
-	sg = mc.Http()
-	html = sg.Get("http://" + config.GetValue("server") + ":6544/Myth/GetRecorded")
-	results = re.compile("<Program title=\"(.*?)\" subTitle=\"(.*?)\".*?endTime=\"(.*?)\" airdate=\"(.*?)\" startTime=\"(.*?)\".*?>(.*?)<Channel.*?chanId=\"(.*?)\".*?>").findall(html)
-	for title,subtitle,endtime,airdate,starttime,desc,chanid in results:
+
+	print "MythBoxee (LoadShows): Accessing MythTV Backend [" + "http://" + config.GetValue("server") + ":6544/Myth/GetRecorded" + "]"
+
+	domXml = minidom.parse("http://" + config.GetValue("server") + ":6544/Myth/GetRecorded")
+
+	programs = domXml.getElementsByTagName("Program")
+	channels = domXml.getElementsByTagName("Channel")
+	
+	x=0
+	for dom in programs:
+		title = str(dom.getAttribute("title"))
+		subtitle = str(dom.getAttribute("subTitle"))
+		try:
+			description = str(programs[x].childNodes[0].data)
+		except AttributeError:
+			description = "No Description"
+		airdate = str(dom.getAttribute("airdate"))
+		starttime = str(dom.getAttribute("startTime"))
+		endtime = str(dom.getAttribute("endTime"))
+		category = str(dom.getAttribute("category"))
+		chanid = str(channels[x].getAttribute("chanId"))
+		channame = str(channels[x].getAttribute("channelName"))
+		callsign = str(channels[x].getAttribute("callSign"))
+		
 		if title not in titles:
 			titles.append(title)
 			idbanners[title] = GetSeriesIDBanner(title)
 			shows[title] = []
-
-		single = [title,subtitle,desc,chanid,airdate,starttime,endtime]
+		
+		single = [title,subtitle,description,chanid,airdate,starttime,endtime]
 		recordings.append(single)
 		
 		shows[title].append(single)
-
+		
+		x=x+1
+		
 	titles.sort()
+	
+	print "MythBoxee (LoadShows): Titles: " + ", ".join(titles)
 	
 	items = mc.ListItems()
 	for title in titles:
@@ -108,9 +133,10 @@ def SortDirSeriesEpisodes():
 	LoadSeriesEpisodes(config.GetValue("name"))
 
 def GetSeriesIDBanner(name):
+	print "MythBoxee (GetSeriesIDBanner): " + name + " [" + "http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name.replace(" ", "%20") + "]"
 	sg = mc.Http()
 	sg.SetUserAgent('MythBoxee v3.0.beta')
-	html = sg.Get("http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name.replace(" ", "%20"))
+	html = sg.Get(str("http://www.thetvdb.com/api/GetSeries.php?seriesname=" + name.replace(" ", "%20")))
 	series = re.compile("<seriesid>(.*?)</seriesid>").findall(html)
 	banners = re.compile("<banner>(.*?)</banner>").findall(html)
 	show = []
@@ -150,7 +176,7 @@ def LoadSeriesEpisodes(name):
 	sortBy = config.GetValue("SortBy")
 	sortDir = config.GetValue("SortDir")
 
-	print shows[name]
+	print "MythBoxee (LoadSeriesEpisodes): " + name
 
 	if sortBy == "Original Air Date" and sortDir == "Ascending":
 		episodes = sorted(shows[name], key=itemgetter(4))
@@ -188,7 +214,7 @@ def GetServer():
 	config = mc.GetApp().GetLocalConfig()
 	server = config.GetValue("server")
 	response = mc.ShowDialogKeyboard("Enter IP Address of MythTV Backend Server", server, False)
-	url = "http://" + response + ":6544/Myth/GetServDesc"
+	url = "http://" + response + ":6544/Myth/GetConnectionInfo"
 	if VerifyServer(url) == True:
 		config.SetValue("server", response)
 
