@@ -6,9 +6,9 @@ from xml.dom import minidom
 config = mc.GetApp().GetLocalConfig()
 
 if not config.GetValue("SortBy"):
-	config.GetValue("SortBy", "Original Air Date")
+	config.SetValue("SortBy", "Original Air Date")
 if not config.GetValue("SortDir"):
-	config.GetValue("SortDir", "Descending")
+	config.SetValue("SortDir", "Descending")
 
 
 titles = []
