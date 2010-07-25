@@ -1,0 +1,13 @@
+CHANGELOG
+
+3.23.1.beta
+-----------
+Resolved several issues with index out of range in python. Mainly revolving around when the app cannot locate a TV shows artwork.
+The app now remembers your last sort settings.
+The app's default sort settings are now Original Air Date Descending.
+
+3.32.0.beta
+-----------
+Changed the versioning schema to MAJOR.MYTHTV_VERSION.MINOR.(STATUS)
+Added multiple new lines of debugging code to the app to help out with troubleshooting, they will be removed at a later date.
+

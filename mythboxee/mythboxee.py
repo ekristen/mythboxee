@@ -5,6 +5,12 @@ from xml.dom import minidom
 
 config = mc.GetApp().GetLocalConfig()
 
+if not config.GetValue("SortBy"):
+	config.GetValue("SortBy", "Original Air Date")
+if not config.GetValue("SortDir"):
+	config.GetValue("SortDir", "Descending")
+
+
 titles = []
 recordings = []
 idbanners = {}
@@ -83,8 +89,6 @@ def LoadSingleShow():
 
 
 def SetSortables():
-	config.SetValue("SortBy", "Recorded Date")
-	config.SetValue("SortDir", "Descending")
 	sortable = ['Original Air Date', 'Recorded Date', 'Title']
 	items = mc.ListItems()
 	for sorttype in sortable:
@@ -93,7 +97,7 @@ def SetSortables():
 		items.append(item)
 	
 	mc.GetActiveWindow().GetList(2014).SetItems(items)
-	mc.GetActiveWindow().GetList(2014).SetSelected(1, True)
+	mc.GetActiveWindow().GetList(2014).SetSelected(0, True)
 	
 	sortableby = ['Ascending', 'Descending']	
 	items = mc.ListItems()
@@ -106,10 +110,6 @@ def SetSortables():
 	mc.GetActiveWindow().GetList(2015).SetSelected(1, True)
 
 
-def ShowEpisodeDetails():
-	print "ShowEpisodeDetails"
-
-	
 def SortBySeriesEpisodes():
 	sortByItems = sortByItemNumber = mc.GetWindow(14001).GetList(2014).GetSelected()
 	sortDirectionItems = sortDirectionItemNumber = mc.GetWindow(14001).GetList(2015).GetSelected()
@@ -140,12 +140,13 @@ def GetSeriesIDBanner(name):
 	series = re.compile("<seriesid>(.*?)</seriesid>").findall(html)
 	banners = re.compile("<banner>(.*?)</banner>").findall(html)
 	show = []
-	if series:
+	try:
 		show.append(series[0])
 		show.append("http://www.thetvdb.com/banners/" + banners[0])
-	else:
+	except IndexError:
 		show.append("00000")
-		show.append("http://192.168.1.210/")
+		show.append("mb_artwork_error.png")
+			
 	return show
 
 
@@ -159,10 +160,16 @@ def GetSetSeriesDetails(name, seriesid):
 	item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
 	item.SetLabel(name)
 	item.SetTitle(name)
-	if overview:
+	try:
 		item.SetDescription(overview[0])
 		item.SetProperty("description", overview[0])
-	item.SetThumbnail("http://www.thetvdb.com/banners/" + poster[0])
+	except:
+		item.SetDescription("No Description")
+		item.SetProperty("description", "No Description")
+	try:
+		item.SetThumbnail("http://www.thetvdb.com/banners/" + poster[0])
+	except:
+		item.SetThumbnail("mb_poster_error.png")
 	items.append(item)
 
 	mc.GetWindow(14001).GetList(21).SetItems(items)

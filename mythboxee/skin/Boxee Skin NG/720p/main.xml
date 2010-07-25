@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <window type="window" id="14000">
-	<defaultcontrol always="true">13</defaultcontrol>
+	<defaultcontrol>13</defaultcontrol>
 	<allowoverlay>yes</allowoverlay>
 	<onload lang="python"><![CDATA[
 import mythboxee
@@ -32,8 +32,8 @@ import mythboxee
 			<posy>82</posy>
 			<width>1280</width>
 			<height>592</height>
-			<onleft>122</onleft>
-			<onright>112</onright>
+			<onleft>-</onleft>
+			<onright>-</onright>
 			<onup>-</onup>
 			<ondown>-</ondown>
 			<itemlayout width="420" height="120">
@@ -68,6 +68,7 @@ import mythboxee
 					<font>font16b</font>
 					<textcolor>FFFEFEFE</textcolor>
 				</control>			
+<!--
 				<control type="label">
 					<description>videos</description>
 					<posx>275</posx>
@@ -79,7 +80,8 @@ import mythboxee
 					<label>Recordings: $INFO[ListItem.property(custom:videos)]</label>
 					<font>font14</font>
 					<textcolor>FFCCCCCC</textcolor>
-				</control>			
+				</control>
+-->
 			</itemlayout>
 			<focusedlayout width="420" height="120">
 				<control type="togglebutton">
@@ -130,6 +132,7 @@ import mythboxee
 					<textcolor>FFFEFEFE</textcolor>
 					<scroll>true</scroll>
 				</control>			
+<!--
 				<control type="label">
 					<description>videos</description>
 					<posx>275</posx>
@@ -142,7 +145,8 @@ import mythboxee
 					<font>font14</font>
 					<textcolor>FFCCCCCC</textcolor>
 					<scroll>true</scroll>
-				</control>			
+				</control>
+-->
 			</focusedlayout>
 			<content type="action">
 				<onclick lang="python"><![CDATA[mythboxee.LoadSingleShow()]]></onclick>

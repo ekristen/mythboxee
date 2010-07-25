@@ -59,7 +59,8 @@ import mythboxee
 				<font>font16b</font>
 				<textcolor>FFFEFEFE</textcolor>
 				<wrapmultiline>true</wrapmultiline>
-			</control>			
+			</control>
+<!--
 			<control type="label">
 				<description>recordings</description>
 				<visible>!stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
@@ -74,12 +75,13 @@ import mythboxee
 				<font>font16b</font>
 				<textcolor>FFCCCCCC</textcolor>
 				<wrapmultiline>false</wrapmultiline>
-			</control>			
+			</control>
+-->
 			<control type="textbox">
 				<visible>!stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
 				<description>description</description>
 				<posx>22</posx>
-				<posy>430</posy>
+				<posy>400</posy>
 				<width>228</width>
 				<height>160</height>
 				<align>left</align>
@@ -89,7 +91,8 @@ import mythboxee
 				<font>font16</font>
 				<textcolor>FFCCCCCC</textcolor>
 				<autoscroll delay="3000" time="2000" repeat="10000">Control.HasFocus(2013)</autoscroll>
-			</control>			
+			</control>
+<!--
 			<control type="label">
 				<visible>stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
 				<description>videos</description>
@@ -104,12 +107,13 @@ import mythboxee
 				<font>font16b</font>
 				<textcolor>FFCCCCCC</textcolor>
 				<wrapmultiline>false</wrapmultiline>
-			</control>			
+			</control>
+-->
 			<control type="textbox">
 				<description>description</description>
 				<visible>stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
 				<posx>22</posx>
-				<posy>430</posy>
+				<posy>400</posy>
 				<width>228</width>
 				<height>160</height>
 				<align>left</align>
