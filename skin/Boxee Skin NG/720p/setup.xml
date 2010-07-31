@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<window type="window" id="14005">
+	<defaultcontrol always="true">9001</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<controls>
+		<control type="visualisation" id ="5001">
+			<width>1280</width>
+			<height>720</height>
+			<visible>Control.IsVisible(2000)</visible>
+		</control>
+		<control type="image">
+			<width>1280</width>
+			<height>720</height>
+			<texture>mb_bg_setup.png</texture>
+			<animation effect="fade" start="85" end="85" time="0" condition="true">Conditional</animation>
+		</control>
+		<control type="grouplist" id="1000">
+			<posy>11</posy>
+			<posx>216</posx>
+			<itemgap>20</itemgap>
+			<ondown>2000</ondown>
+			<orientation>horizontal</orientation>
+		</control>
+		<control type="image" id="5001">
+			<description>logo</description>
+			<posx>450</posx>
+			<posy>250</posy>
+			<width>402</width>
+			<height>107</height>
+			<texture flipY="true" flipX="false">logo.png</texture>
+			<aspectratio>keep</aspectratio>
+		</control>
+		<control type="label" id="5002">
+			<description>some label that shows text</description>
+			<posx>425</posx>
+			<posy>580</posy>
+			<width>450</width>
+			<height>40</height>
+			<align>center</align>
+			<aligny>center</aligny>
+			<scroll>false</scroll>
+			<label>Attempting to Locate MythTV Backend</label>
+			<number></number>
+			<haspath>false</haspath>
+			<font>font18</font>
+			<textcolor>white</textcolor>
+			<wrapmultiline>false</wrapmultiline>
+		</control>
+	</controls>
+</window>

@@ -1,0 +1,15 @@
+<app>
+  <id>mythboxy</id>
+  <name>MythBoxy</name>
+  <version>3.0.beta</version>
+  <description>Watch all your MythTV recordings from Boxee.</description>
+  <thumb>http://erikkristensen.com/project/mythboxee/mythboxee_logo.jpg</thumb>
+  <media>video</media>
+  <copyright>Erik Kristensen</copyright>
+  <email>erik@erikkristensen.com</email>
+  <type>skin</type>
+  <startWindow>launch</startWindow>
+  <platform>all</platform>
+  <minversion>0.9.20</minversion>
+  <test-app>true</test-app>
+</app>
