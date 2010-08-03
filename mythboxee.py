@@ -1,6 +1,11 @@
 import mc
 import re
+import mythtv
+from mythtv import MythError
 from operator import itemgetter, attrgetter
+
+mbbe = None
+mbdb = None
 
 config = mc.GetApp().GetLocalConfig()
 
@@ -8,6 +13,59 @@ titles = []
 recordings = []
 idbanners = {}
 shows = {}
+
+
+def DiscoverBackend():
+	mc.ShowDialogNotification("DiscoverBackend")
+
+	pin = config.GetValue("pin")
+	dbconn = config.GetValue("dbconn")
+
+	if not pin:
+		pin = 0000
+
+	try:
+		db = mythtv.MythDB(SecurityPin=pin)
+	except Exception, e:
+		mc.ShowDialogNotification(e.message)
+		if e.ename == 'DB_CREDENTIALS' and count < 3:
+			mc.ActivateWindow(14002)
+			mc.GetWindow(14002).GetControl(6020).SetVisible(False)
+			mc.GetWindow(14002).GetControl(6010).SetVisible(True)
+			mc.GetWindow(14002).GetControl(6011).SetFocus()
+		elif e.ename == 'DB_CONNECTION' or e.ename == 'DB_CREDENTIALS' and count > 3:
+			mc.ActivateWindow(14002)
+			mc.GetWindow(14002).GetControl(6010).SetVisible(False)
+			mc.GetWindow(14002).GetControl(6020).SetVisible(True)
+			mc.GetWindow(14002).GetControl(6021).SetFocus()
+		return False
+	else:
+		mc.ShowDialogNotification(str(db.dbconn))
+		config.SetValue("dbconn", str(db.dbconn))
+		return True
+				
+
+def Launch():
+	# If dbconn isn't set, we'll assume we haven't found the backend.
+	if not config.GetValue("dbconn"):
+		discoverBackend = False
+		while discoverBackend is False:
+			discoverBackend = DiscoverBackend()
+
+	# Parse our DB info
+	dbconn = config.GetValue("dbconn")
+	dbconf = eval(dbconn)
+
+	# Now that the backend has been discovered, lets connect.
+	try:
+		mbdb = mythtv.MythDB(**dbconf)
+	except MythError, e:
+		print e.message
+		mc.ShowDialogNotification("Failed to connect to the MythTV Backend")
+	else:
+		mbbe = mythtv.MythBE(db=mbdb)
+		mc.ActivateWindow(14010)
+
 	
 def LoadShows():
 	del titles[:]

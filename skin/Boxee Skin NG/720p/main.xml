@@ -1,12 +1,18 @@
 <?xml version="1.0"?>
-<window type="window" id="14000">
+<window type="window" id="14010">
 	<defaultcontrol always="true">13</defaultcontrol>
 	<allowoverlay>yes</allowoverlay>
 	<onload lang="python"><![CDATA[
 import mythboxee
+
 ]]></onload>
+	<onunload lang="python">
+<![CDATA[
+mc.ActivateWindow(10482)
+]]>
+	</onunload> 
 	<controls>
-		<control type="visualisation" id ="5001">
+		<control type="visualisation" id ="2001">
 			<width>1280</width>
 			<height>720</height>
 			<visible>Control.IsVisible(2000)</visible>
@@ -17,7 +23,7 @@ import mythboxee
 			<texture>mb_bg.png</texture>
 			<animation effect="fade" start="85" end="85" time="0" condition="true">Conditional</animation>
 		</control>
-		<control type="grouplist" id="1000">
+		<control type="grouplist" id="2002">
 			<posy>11</posy>
 			<posx>216</posx>
 			<itemgap>20</itemgap>

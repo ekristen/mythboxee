@@ -1,39 +1,16 @@
 import mc
 import sys
-
-
-#import mythboxee
-
+import signal
 import mythtv
+import mythboxee
 
-# Get Access to the Apps Local Config
-#config = mc.GetApp().GetLocalConfig()
+# DEBUG #
+#mc.GetApp().GetLocalConfig().SetValue("dbconn", "")
+# DEBUG #
 
-# For Debugging
-#config.SetValue("verified", "")
-#config.SetValue("server", "")
+# Activate Loading Window
+mc.ActivateWindow(14001)
 
-mc.ActivateWindow(14005)
+# Lets go ahead and launch the app
+mythboxee.Launch()
 
-db = mythtv.MythDB(SecurityPin=4365)
-
-be = mythtv.MythBE(db=db)
-print be.getRecordings()
-
-# Pull out some of the variables we need
-#server = config.GetValue("server")
-#verified = config.GetValue("verified")
-
-# If the server hasn't been defined, we need to get it.
-#if not server:
-#	mythboxee.GetServer()
-
-# If server is set, and at this point it has been verified
-# then launch the application
-#if config.GetValue("verified") == "1":
-#	mc.ActivateWindow(14000)
-
-	# Load all the show data from the MythTV Backend Server
-#	mythboxee.LoadShows()
-#else:
-#	mc.ShowDialogOk("MythBoxee Error", "You must enter the full path to the MythBoxee script or MythBoxee was unable to verify the URL provided.")

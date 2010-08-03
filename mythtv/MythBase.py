@@ -796,7 +796,7 @@ class MythDBConn( object ):
             self.db = mysql.connector.connect(user=dbconn['DBUserName'],
                                               host=dbconn['DBHostName'],
                                               password=dbconn['DBPassword'],
-                                              database=dbconn['DBName'],
+                                              db=dbconn['DBName'],
                                               port=dbconn['DBPort'],
                                               use_unicode=True,
                                               charset='utf8')
@@ -1000,7 +1000,6 @@ class MythDBBase( object ):
             else:
                 # fall back to UPnP
                 dbconn = self._listenUPNP(dbconn['SecurityPin'], 5.0)
-
                 # push data to new settings file
                 settings = [dbconn[key] for key in \
                                 ('SecurityPin','DBHostName','DBUserName',

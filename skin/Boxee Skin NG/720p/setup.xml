@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<window type="window" id="14005">
-	<defaultcontrol always="true">9001</defaultcontrol>
+<window type="window" id="14002">
+	<defaultcontrol always="true">6003</defaultcontrol>
 	<allowoverlay>yes</allowoverlay>
 	<controls>
 		<control type="visualisation" id ="5001">
@@ -21,30 +21,181 @@
 			<ondown>2000</ondown>
 			<orientation>horizontal</orientation>
 		</control>
-		<control type="image" id="5001">
+		<control type="image" id="5002">
 			<description>logo</description>
 			<posx>450</posx>
-			<posy>250</posy>
+			<posy>150</posy>
 			<width>402</width>
 			<height>107</height>
 			<texture flipY="true" flipX="false">logo.png</texture>
 			<aspectratio>keep</aspectratio>
 		</control>
-		<control type="label" id="5002">
-			<description>some label that shows text</description>
-			<posx>425</posx>
-			<posy>580</posy>
-			<width>450</width>
-			<height>40</height>
-			<align>center</align>
-			<aligny>center</aligny>
-			<scroll>false</scroll>
-			<label>Attempting to Locate MythTV Backend</label>
-			<number></number>
-			<haspath>false</haspath>
-			<font>font18</font>
-			<textcolor>white</textcolor>
-			<wrapmultiline>false</wrapmultiline>
+		<control type="group" id="6010">
+			<control type="edit" id="6011">   
+			   <posx>515</posx>
+			   <posy>300</posy>
+			   <width>275</width>
+			   <height>46</height>
+			   <label>Security Pin:</label>
+			   <textoffsetx>8</textoffsetx>
+			   <ondown>6012</ondown>
+			   <align>right</align>   
+			   <aligny>right</aligny>   
+			   <font>font28</font>   
+			   <textcolor>white</textcolor>
+			</control>
+			<control type="button" id="6012">
+			   <description>login button control</description>
+			   <posx>415</posx>
+			   <posy>370</posy>
+			   <width>200</width>
+			   <height>40</height>
+			   <visible>true</visible>
+			   <colordiffuse>FFFFFFFF</colordiffuse>
+			   <label>Connect</label>
+			   <font>font21</font>
+			   <textcolor>white</textcolor>
+			   <disabledcolor>88FFFFFF</disabledcolor>
+			   <align>center</align>
+			   <aligny>center</aligny>
+			   <textoffsetx>20</textoffsetx>
+			   <textoffsety>-</textoffsety>
+			   <onfocus>-</onfocus>
+			   <onup>6011</onup>
+			   <onright>6013</onright>
+			   <onclick lang="python">
+<![CDATA[
+pin = mc.GetWindow(14006).GetEdit(6011).GetText()
+mc.GetApp().GetLocalConfig().SetValue("pin", pin)
+mc.ShowDialogNotification(pin)
+mc.ActivateWindow(14005)
+]]>
+			   </onclick>
+			</control>
+			<control type="button" id="6013">
+			   <description>login button control</description>
+			   <posx>685</posx>
+			   <posy>370</posy>
+			   <width>200</width>
+			   <height>40</height>
+			   <visible>true</visible>
+			   <colordiffuse>FFFFFFFF</colordiffuse>
+			   <label>Exit</label>
+			   <font>font21</font>
+			   <textcolor>white</textcolor>
+			   <disabledcolor>88FFFFFF</disabledcolor>
+			   <align>center</align>
+			   <aligny>center</aligny>
+			   <textoffsetx>20</textoffsetx>
+			   <textoffsety>-</textoffsety>
+			   <onfocus>-</onfocus>
+			   <onup>6011</onup>
+			   <onleft>6012</onleft>
+				<onclick lang="python"><![CDATA[
+mc.CloseWindow()
+]]></onclick>
+			</control>
+		</control>
+		<control type="group" id="6020">
+			<control type="edit" id="6021">   
+			   <posx>515</posx>
+			   <posy>300</posy>
+			   <width>275</width>
+			   <height>46</height>
+			   <label>Hostname:</label>
+			   <textoffsetx>8</textoffsetx>
+			   <ondown>6012</ondown>
+			   <align>right</align>   
+			   <aligny>right</aligny>   
+			   <font>font28</font>   
+			   <textcolor>white</textcolor>
+			</control>
+			<control type="edit" id="6022">   
+			   <posx>515</posx>
+			   <posy>320</posy>
+			   <width>275</width>
+			   <height>46</height>
+			   <label>Username:</label>
+			   <textoffsetx>8</textoffsetx>
+			   <ondown>6012</ondown>
+			   <align>right</align>   
+			   <aligny>right</aligny>   
+			   <font>font28</font>   
+			   <textcolor>white</textcolor>
+			</control>
+			<control type="edit" id="6023">   
+			   <posx>515</posx>
+			   <posy>340</posy>
+			   <width>275</width>
+			   <height>46</height>
+			   <label>Password:</label>
+			   <textoffsetx>8</textoffsetx>
+			   <ondown>6012</ondown>
+			   <align>right</align>   
+			   <aligny>right</aligny>   
+			   <font>font28</font>   
+			   <textcolor>white</textcolor>
+			</control>
+			<control type="edit" id="6024">   
+			   <posx>515</posx>
+			   <posy>360</posy>
+			   <width>275</width>
+			   <height>46</height>
+			   <label>Database:</label>
+			   <textoffsetx>8</textoffsetx>
+			   <ondown>6012</ondown>
+			   <align>right</align>   
+			   <aligny>right</aligny>   
+			   <font>font28</font>   
+			   <textcolor>white</textcolor>
+			</control>
+			<control type="button" id="6025">
+			   <description>login button control</description>
+			   <posx>555</posx>
+			   <posy>370</posy>
+			   <width>200</width>
+			   <height>40</height>
+			   <visible>true</visible>
+			   <colordiffuse>FFFFFFFF</colordiffuse>
+			   <label>Connect</label>
+			   <font>font21</font>
+			   <textcolor>white</textcolor>
+			   <disabledcolor>88FFFFFF</disabledcolor>
+			   <align>center</align>
+			   <aligny>center</aligny>
+			   <textoffsetx>20</textoffsetx>
+			   <textoffsety>-</textoffsety>
+			   <onfocus>-</onfocus>
+			   <onup>6024</onup>
+			   <onright>6026</onright>
+				<onclick lang="python"><![CDATA[
+pin = mc.GetWindow(14006).GetEdit(6003).GetText()
+mc.GetApp().GetLocalConfig().SetValue("pin", pin)
+]]></onclick>
+			</control>
+			<control type="button" id="6026">
+			   <description>login button control</description>
+			   <posx>555</posx>
+			   <posy>370</posy>
+			   <width>200</width>
+			   <height>40</height>
+			   <visible>true</visible>
+			   <colordiffuse>FFFFFFFF</colordiffuse>
+			   <label>Exit</label>
+			   <font>font21</font>
+			   <textcolor>white</textcolor>
+			   <disabledcolor>88FFFFFF</disabledcolor>
+			   <align>center</align>
+			   <aligny>center</aligny>
+			   <textoffsetx>20</textoffsetx>
+			   <textoffsety>-</textoffsety>
+			   <onfocus>-</onfocus>
+			   <onup>6024</onup>
+			   <onleft>6025</onleft>
+				<onclick lang="python"><![CDATA[
+mc.CloseWindow()
+]]></onclick>
+			</control>
 		</control>
 	</controls>
 </window>
