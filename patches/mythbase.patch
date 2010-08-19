@@ -1,0 +1,131 @@
+--- mythtv_old/MythBase.py	2010-07-31 08:46:35.000000000 -0400
++++ mythtv/MythBase.py	2010-08-17 21:49:43.000000000 -0400
+@@ -7,18 +7,15 @@
+ from MythStatic import *
+ 
+ import os, re, socket, sys, locale, weakref
+-from xml import *
++import xml.etree.cElementTree as etree
+ from datetime import datetime
+ from time import sleep, time
+ from urllib import urlopen
+ from subprocess import Popen
+ from sys import version_info
+ 
+-#import MySQLdb, MySQLdb.cursors
+-#MySQLdb.__version__ = tuple([v for v in MySQLdb.__version__.split('.')])
+-
+-import mysql.connector
+-import mysql.connector.cursor
++import MySQLdb, MySQLdb.cursors
++MySQLdb.__version__ = tuple([v for v in MySQLdb.__version__.split('.')])
+ 
+ class DictData( object ):
+     """
+@@ -742,19 +739,19 @@
+         del self.hash[index]
+         del self.data[index]
+ 
+-class MythDBCursor( mysql.connector.cursor.MySQLCursor ):
++class MythDBCursor( MySQLdb.cursors.Cursor ):
+     """
+     Custom cursor, offering logging and error handling
+     """
+     def __init__(self, connection):
+         self.log = None
+-        mysql.connector.cursor.MySQLCursor.__init__(self, connection)
++        MySQLdb.cursors.Cursor.__init__(self, connection)
+ 
+     def execute(self, query, args=None):
+-        #if MySQLdb.__version__ >= ('1','2','2'):
+-        #    self.connection.ping(True)
+-        #else:
+-        #    self.connection.ping()
++        if MySQLdb.__version__ >= ('1','2','2'):
++            self.connection.ping(True)
++        else:
++            self.connection.ping()
+         if self.log == None:
+             self.log = MythLog('Python Database Connection')
+         if args:
+@@ -762,21 +759,21 @@
+         else:
+             self.log(self.log.DATABASE, ' '.join(query.split()))
+         try:
+-            return mysql.connector.cursor.MySQLCursor.execute(self, query, args)
++            return MySQLdb.cursors.Cursor.execute(self, query, args)
+         except Exception, e:
+             raise MythDBError(MythDBError.DB_RAW, e.args)
+ 
+     def executemany(self, query, args):
+-        #if MySQLdb.__version__ >= ('1','2','2'):
+-        #    self.connection.ping(True)
+-        #else:
+-        #    self.connection.ping()
++        if MySQLdb.__version__ >= ('1','2','2'):
++            self.connection.ping(True)
++        else:
++            self.connection.ping()
+         if self.log == None:
+             self.log = MythLog('Python Database Connection')
+         for arg in args:
+             self.log(self.log.DATABASE, ' '.join(query.split()), str(arg))
+         try:
+-            return mysql.connector.cursor.MySQLCursor.executemany(self, query, args)
++            return MySQLdb.cursors.Cursor.executemany(self, query, args)
+         except Exception, e:
+             raise MythDBError(MythDBError.DB_RAW, e.args)
+ 
+@@ -793,23 +790,22 @@
+         try:
+             self.log(MythLog.DATABASE, "Attempting connection", 
+                                                 str(dbconn))
+-            self.db = mysql.connector.connect(user=dbconn['DBUserName'],
+-                                              host=dbconn['DBHostName'],
+-                                              password=dbconn['DBPassword'],
+-                                              db=dbconn['DBName'],
+-                                              port=dbconn['DBPort'],
+-                                              use_unicode=True,
+-                                              charset='utf8')
++            self.db = MySQLdb.connect(  user=   dbconn['DBUserName'],
++                                        host=   dbconn['DBHostName'],
++                                        passwd= dbconn['DBPassword'],
++                                        db=     dbconn['DBName'],
++                                        port=   dbconn['DBPort'],
++                                        use_unicode=True,
++                                        charset='utf8')
+         except:
+             raise MythDBError(MythError.DB_CONNECTION, dbconn)
+ 
+     def cursor(self, log=None, type=MythDBCursor):
+-        #if MySQLdb.__version__ >= ('1','2','2'):
+-        #    self.db.ping(True)
+-        #else:
+-        #    self.db.ping()
+-        #c = self.db.cursor(type)
+-        c = self.db.cursor()
++        if MySQLdb.__version__ >= ('1','2','2'):
++            self.db.ping(True)
++        else:
++            self.db.ping()
++        c = self.db.cursor(type)
+         if log:
+             c.log = log
+         else:
+@@ -1000,6 +996,7 @@
+             else:
+                 # fall back to UPnP
+                 dbconn = self._listenUPNP(dbconn['SecurityPin'], 5.0)
++
+                 # push data to new settings file
+                 settings = [dbconn[key] for key in \
+                                 ('SecurityPin','DBHostName','DBUserName',
+@@ -1449,7 +1446,7 @@
+             ind1 = xmlstr.find('xmlns')
+             ind2 = xmlstr.find('"', ind1+7) + 1
+             xmlstr = xmlstr[:ind1] + xmlstr[ind2:]
+-        return etree.ElementTree.fromstring(xmlstr)
++        return etree.fromstring(xmlstr)
+ 
+     def getConnectionInfo(self, pin=0):
+         """Return dbconn dict from backend connection info."""

@@ -3,6 +3,7 @@ import sys
 import signal
 import mythtv
 import mythboxee
+from mythboxee import MythBoxee
 
 # DEBUG #
 #mc.GetApp().GetLocalConfig().SetValue("dbconn", "")
@@ -12,5 +13,5 @@ import mythboxee
 mc.ActivateWindow(14001)
 
 # Lets go ahead and launch the app
-mythboxee.Launch()
+MythBoxee()
 

@@ -1,45 +1,45 @@
 <?xml version="1.0"?>
-<window type="window" id="14010">
-	<defaultcontrol always="true">13</defaultcontrol>
+<window type="window" id="14001">
+	<defaultcontrol always="true">1030</defaultcontrol>
 	<allowoverlay>yes</allowoverlay>
 	<onload lang="python"><![CDATA[
-import mythboxee
+from mythboxee import MythBoxee
 
+mb = MythBoxee()
+
+mb.GetRecordings()
 ]]></onload>
-	<onunload lang="python">
-<![CDATA[
-mc.ActivateWindow(10482)
-]]>
-	</onunload> 
 	<controls>
-		<control type="visualisation" id ="2001">
-			<width>1280</width>
-			<height>720</height>
-			<visible>Control.IsVisible(2000)</visible>
+		<control type="group" id="1010">
+			<control type="image" id="1011">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg_setup.png</texture>
+			</control>
+			<control type="image" id="1012">
+				<description>logo</description>
+				<posx>450</posx>
+				<posy>250</posy>
+				<width>402</width>
+				<height>107</height>
+				<texture flipY="true" flipX="false">logo.png</texture>
+				<aspectratio>keep</aspectratio>
+			</control>
 		</control>
-		<control type="image">
-			<width>1280</width>
-			<height>720</height>
-			<texture>mb_bg.png</texture>
-			<animation effect="fade" start="85" end="85" time="0" condition="true">Conditional</animation>
+		<control type="group" id="1020">
+			<control type="image" id="1021">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg.png</texture>
+			</control>
 		</control>
-		<control type="grouplist" id="2002">
-			<posy>11</posy>
-			<posx>216</posx>
-			<itemgap>20</itemgap>
-			<ondown>2000</ondown>
-			<orientation>horizontal</orientation>
-		</control>
-
-		<!-- SHOW LIST --> 
-		
-		<control type="panel" id="13">
+		<control type="panel" id="1030">
 			<posx>22</posx>
 			<posy>82</posy>
 			<width>1280</width>
 			<height>592</height>
-			<onleft>122</onleft>
-			<onright>112</onright>
+			<onleft>-</onleft>
+			<onright>-</onright>
 			<onup>-</onup>
 			<ondown>-</ondown>
 			<itemlayout width="420" height="120">
@@ -66,7 +66,7 @@ mc.ActivateWindow(10482)
 					<description>show title</description>
 					<posx>10</posx>
 					<posy>75</posy>
-					<width>152</width>
+					<width>250</width>
 					<height>60</height>
 					<align>left</align>
 					<aligny>top</aligny>
@@ -76,16 +76,16 @@ mc.ActivateWindow(10482)
 				</control>			
 				<control type="label">
 					<description>videos</description>
-					<posx>275</posx>
+					<posx>385</posx>
 					<posy>76</posy>
 					<width>152</width>
 					<height>60</height>
-					<align>left</align>
+					<align>right</align>
 					<aligny>top</aligny>
 					<label>Recordings: $INFO[ListItem.property(custom:videos)]</label>
 					<font>font14</font>
 					<textcolor>FFCCCCCC</textcolor>
-				</control>			
+				</control>
 			</itemlayout>
 			<focusedlayout width="420" height="120">
 				<control type="togglebutton">
@@ -98,7 +98,7 @@ mc.ActivateWindow(10482)
 					<texturenofocus border="5">mb_item_big_hover.png</texturenofocus>
 					<alttexturefocus border="5">mb_item_big.png</alttexturefocus>
 					<alttexturenofocus border="5">mb_item_big.png</alttexturenofocus>
-					<usealttexture>!Control.HasFocus(13)</usealttexture>
+					<usealttexture>!Control.HasFocus(1030)</usealttexture>
 				</control>
 				<control type="image">
 					<description>thumbnail</description>
@@ -121,13 +121,13 @@ mc.ActivateWindow(10482)
 					<aspectratio>scale</aspectratio>
 					<bordertexture>mb_thumb_hover_bg.png</bordertexture>
 					<bordersize>3</bordersize>
-					<visible>Control.HasFocus(13)</visible>
+					<visible>Control.HasFocus(1030)</visible>
 				</control>
 				<control type="label">
 					<description>show title</description>
 					<posx>10</posx>
 					<posy>75</posy>
-					<width>152</width>
+					<width>250</width>
 					<height>60</height>
 					<align>left</align>
 					<aligny>top</aligny>
@@ -138,11 +138,11 @@ mc.ActivateWindow(10482)
 				</control>			
 				<control type="label">
 					<description>videos</description>
-					<posx>275</posx>
+					<posx>385</posx>
 					<posy>76</posy>
 					<width>152</width>
 					<height>60</height>
-					<align>left</align>
+					<align>right</align>
 					<aligny>top</aligny>
 					<label>Recordings: $INFO[ListItem.property(custom:videos)]</label>
 					<font>font14</font>
@@ -151,7 +151,7 @@ mc.ActivateWindow(10482)
 				</control>			
 			</focusedlayout>
 			<content type="action">
-				<onclick lang="python"><![CDATA[mythboxee.LoadSingleShow()]]></onclick>
+				<onclick lang="python"><![CDATA[mb.DisplayShow()]]></onclick>
 			</content>
 		</control>
 	</controls>

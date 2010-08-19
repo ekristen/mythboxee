@@ -65,10 +65,10 @@
 			   <onright>6013</onright>
 			   <onclick lang="python">
 <![CDATA[
-pin = mc.GetWindow(14006).GetEdit(6011).GetText()
+pin = mc.GetWindow(14002).GetEdit(6011).GetText()
 mc.GetApp().GetLocalConfig().SetValue("pin", pin)
 mc.ShowDialogNotification(pin)
-mc.ActivateWindow(14005)
+mc.ActivateWindow(14002)
 ]]>
 			   </onclick>
 			</control>
@@ -169,7 +169,7 @@ mc.CloseWindow()
 			   <onup>6024</onup>
 			   <onright>6026</onright>
 				<onclick lang="python"><![CDATA[
-pin = mc.GetWindow(14006).GetEdit(6003).GetText()
+pin = mc.GetWindow(14002).GetEdit(6003).GetText()
 mc.GetApp().GetLocalConfig().SetValue("pin", pin)
 ]]></onclick>
 			</control>

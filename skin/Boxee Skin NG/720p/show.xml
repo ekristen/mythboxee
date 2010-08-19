@@ -1,31 +1,45 @@
 <?xml version="1.0"?>
-<window type="window" id="14011">
-	<defaultcontrol always="true">2013</defaultcontrol>
-	<allowoverlay>no</allowoverlay>
+<window type="window" id="14002">
+	<defaultcontrol always="true">2040</defaultcontrol>
+	<allowoverlay>true</allowoverlay>
 	<onload lang="python"><![CDATA[
 import mythboxee
+
+mb.LoadShow()
 ]]></onload>
 	<controls>
-		<control type="image">
-			<width>1280</width>
-			<height>720</height>
-			<texture>mb_bg.png</texture>
-			<animation effect="fade" start="85" end="85" time="0" condition="true">Conditional</animation>
+<!--
+		<control type="group" id="2010">
+			<control type="image" id="2011">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg_setup.png</texture>
+			</control>
+			<control type="image" id="2012">
+				<description>logo</description>
+				<posx>450</posx>
+				<posy>250</posy>
+				<width>402</width>
+				<height>107</height>
+				<texture flipY="true" flipX="false">logo.png</texture>
+				<aspectratio>keep</aspectratio>
+			</control>
 		</control>
-		<control type="grouplist" id="2000">
-			<posy>9</posy>
-			<posx>1110</posx>
-			<itemgap>20</itemgap>
-			<ondown>2013</ondown>
-			<orientation>horizontal</orientation>
+-->
+		<control type="group" id="2020">
+			<control type="image" id="202060">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg.png</texture>
+			</control>
 		</control>
 
-		<control type="group" id="2012">
+		<control type="group" id="2030">
 			<description>details box</description>
 			<posx>28</posx>
 			<posy>81</posy>
 			<onleft>-</onleft>
-			<onright>2013</onright>
+			<onright>2040</onright>
 			<onup>-</onup>
 			<ondown>-</ondown>
 			<control type="image">
@@ -42,7 +56,7 @@ import mythboxee
 				<posy>10</posy>
 				<width>253</width>
 				<height>350</height>
-				<texture>$INFO[Container(21).ListItem.Thumb]</texture>
+				<texture>$INFO[Container(2070).ListItem.Thumb]</texture>
 				<aspectratio>scale</aspectratio>
 				<fadetime>500</fadetime>
 			</control>
@@ -55,70 +69,24 @@ import mythboxee
 				<align>left</align>
 				<aligny>top</aligny>
 				<scroll>true</scroll>
-				<label>$INFO[Container(21).ListItem.Label]</label>
+				<label>$INFO[Container(2070).ListItem.Label]</label>
 				<font>font16b</font>
 				<textcolor>FFFEFEFE</textcolor>
 				<wrapmultiline>true</wrapmultiline>
 			</control>			
-			<control type="label">
-				<description>recordings</description>
-				<visible>!stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
-				<posx>22</posx>
-				<posy>400</posy>
-				<width>228</width>
-				<height>20</height>
-				<align>left</align>
-				<aligny>top</aligny>
-				<scroll>true</scroll>
-				<label>Recordings: $INFO[Container(21).ListItem.property(custom:videos)]</label>
-				<font>font16b</font>
-				<textcolor>FFCCCCCC</textcolor>
-				<wrapmultiline>false</wrapmultiline>
-			</control>			
-			<control type="textbox">
-				<visible>!stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
-				<description>description</description>
-				<posx>22</posx>
-				<posy>430</posy>
-				<width>228</width>
-				<height>160</height>
-				<align>left</align>
-				<aligny>top</aligny>
-				<scroll>true</scroll>
-				<label>$INFO[Container(21).ListItem.property(description)]</label>
-				<font>font16</font>
-				<textcolor>FFCCCCCC</textcolor>
-				<autoscroll delay="3000" time="2000" repeat="10000">Control.HasFocus(2013)</autoscroll>
-			</control>			
-			<control type="label">
-				<visible>stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
-				<description>videos</description>
-				<posx>22</posx>
-				<posy>400</posy>
-				<width>228</width>
-				<height>20</height>
-				<align>left</align>
-				<aligny>top</aligny>
-				<scroll>true</scroll>
-				<label>Recordings: $INFO[Container(21).ListItem.property(custom:videos)]</label>
-				<font>font16b</font>
-				<textcolor>FFCCCCCC</textcolor>
-				<wrapmultiline>false</wrapmultiline>
-			</control>			
 			<control type="textbox">
 				<description>description</description>
-				<visible>stringcompare(Container(21).ListItem.property(custom:category),movie)</visible>
 				<posx>22</posx>
-				<posy>430</posy>
+				<posy>395</posy>
 				<width>228</width>
-				<height>160</height>
+				<height>195</height>
 				<align>left</align>
 				<aligny>top</aligny>
 				<scroll>true</scroll>
-				<label>$INFO[Container(21).ListItem.property(description)]</label>
+				<label>$INFO[Container(2070).ListItem.property(description)]</label>
 				<font>font16</font>
 				<textcolor>FFCCCCCC</textcolor>
-				<autoscroll delay="3000" time="2000" repeat="10000">Control.HasFocus(2013)</autoscroll>
+				<autoscroll delay="3000" time="2000" repeat="10000">Control.HasFocus(2040)</autoscroll>
 			</control>			
 		</control>
 
@@ -126,18 +94,20 @@ import mythboxee
 
 <!-- begin EPISODES LIST -->
 
-		<control type="list" id="2013">
+		<control type="list" id="2040">
 			<posx>345</posx>
 			<posy>82</posy>
 			<width>700</width>
 			<height>592</height>
-			<onleft>2012</onleft>
-			<onright>2014</onright>
-			<onup>2000</onup>
+			<onleft>-</onleft>
+			<onright>2051</onright>
+			<onup>-</onup>
 			<ondown>-</ondown>
+<!--
             <animation condition="Control.IsVisible(14)" type="Conditional" reversible="false">
                 <effect end="100" start="0" time="200" type="fade" />
             </animation>
+-->
 			<itemlayout width="700" height="85">
 				<control type="image">
 					<description>background</description>
@@ -208,7 +178,7 @@ import mythboxee
 					<texturenofocus border="5">mb_item_big_hover.png</texturenofocus>
 					<alttexturefocus border="5">mb_item_big.png</alttexturefocus>
 					<alttexturenofocus border="5">mb_item_big.png</alttexturenofocus>
-					<usealttexture>!Control.HasFocus(2013)</usealttexture>
+					<usealttexture>!Control.HasFocus(2040)</usealttexture>
 				</control>
 				<control type="image">
 					<description>thumbnail</description>
@@ -231,7 +201,7 @@ import mythboxee
 					<aspectratio>scale</aspectratio>
 					<bordertexture>mb_thumb_hover_bg.png</bordertexture>
 					<bordersize>3</bordersize>
-					<visible>Control.HasFocus(2013)</visible>
+					<visible>Control.HasFocus(2040)</visible>
 				</control>
 				<control type="label">
 					<description>episode title</description>
@@ -271,156 +241,166 @@ import mythboxee
 					<wrapmultiline>true</wrapmultiline>
 				</control>			
 			</focusedlayout>
+<!--
 			<content type="action">
-				<onfocus lang="python"><![CDATA[mythboxee.ShowEpisodeDetails()]]></onfocus>
+				<onclick lang="python"><![CDATA[mb.PlayRecording()]]></onclick>
 			</content>
+-->
 		</control>
 
 <!-- end EPISODES LIST -->
 
 <!-- begin SORT LIST -->
 
-		<control type="label">
-			<posx>1079</posx>
-			<posy>75</posy>
-			<label>SORT:</label>
-			<font>font14b</font>
-			<aligny>top</aligny>
-			<textcolor>FF999999</textcolor>
-		</control>			
+		<control type="group" id="2050">
+			<control type="label">
+				<posx>1079</posx>
+				<posy>75</posy>
+				<label>SORT:</label>
+				<font>font14b</font>
+				<aligny>top</aligny>
+				<textcolor>FF999999</textcolor>
+			</control>			
 
-		<control type="list" id="2014">
-			<posx>1070</posx>
-			<posy>100</posy>
-			<width>164</width>
-			<height>100</height>
-			<onleft>2013</onleft>
-			<onright>-</onright>
-			<onup>-</onup>
-			<ondown>2015</ondown>
-			<itemlayout width="164" height="27">
-				<control type="label">
-					<description>title</description>
-					<posx>9</posx>
-					<posy>0</posy>
-					<width>146</width>
-					<height>25</height>
-					<align>left</align>
-					<aligny>top</aligny>
-					<info>ListItem.Label</info>
-					<font>font16</font>
-					<textcolor>FF999999</textcolor>
-					<selectedcolor>FFFFFFFF</selectedcolor>
-				</control>
-			</itemlayout>
-			<focusedlayout width="164" height="27">
-				<control type="label">
-					<description>title</description>
-					<posx>9</posx>
-					<posy>0</posy>
-					<width>146</width>
-					<height>25</height>
-					<align>left</align>
-					<aligny>top</aligny>
-					<info>ListItem.Label</info>
-					<font>font16</font>
-					<textcolor>FFFFFFFF</textcolor>
-					<visible>Control.HasFocus(2014)</visible>
-					<selectedcolor>FFFFFFFF</selectedcolor>
-				</control>			
-				<control type="label">
-					<visible>!Control.HasFocus(2014)</visible>
-					<description>title</description>
-					<posx>9</posx>
-					<posy>0</posy>
-					<width>146</width>
-					<height>25</height>
-					<align>left</align>
-					<aligny>top</aligny>
-					<info>ListItem.Label</info>
-					<font>font16</font>
-					<textcolor>FF999999</textcolor>
-					<selectedcolor>FFFFFFFF</selectedcolor>
-				</control>			
-			</focusedlayout>
-			<content type="action">
-				<onclick lang="python"><![CDATA[mythboxee.SortBySeriesEpisodes()]]></onclick>
-			</content>		
+			<control type="list" id="2051">
+				<posx>1070</posx>
+				<posy>100</posy>
+				<width>164</width>
+				<height>100</height>
+				<onleft>2040</onleft>
+				<onright>-</onright>
+				<onup>-</onup>
+				<ondown>2061</ondown>
+				<itemlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>
+				</itemlayout>
+				<focusedlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FFFFFFFF</textcolor>
+						<visible>Control.HasFocus(2051)</visible>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+					<control type="label">
+						<visible>!Control.HasFocus(2051)</visible>
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</focusedlayout>
+				<content type="action">
+					<onclick lang="python"><![CDATA[mythboxee.SortBySeriesEpisodes()]]></onclick>
+				</content>		
+			</control>
+		
 		</control>
 
 <!-- end SORT LIST -->
 
-		<control type="label">
-			<posx>1079</posx>
-			<posy>200</posy>
-			<label>SORT DIRECTION:</label>
-			<font>font14b</font>
-			<aligny>top</aligny>
-			<textcolor>FF999999</textcolor>
+		<control type="group" id="2060">
+			
+			<control type="label">
+				<posx>1079</posx>
+				<posy>200</posy>
+				<label>SORT DIRECTION:</label>
+				<font>font14b</font>
+				<aligny>top</aligny>
+				<textcolor>FF999999</textcolor>
+			</control>
+
+			<control type="list" id="2061">
+				<posx>1070</posx>
+				<posy>225</posy>
+				<width>164</width>
+				<height>100</height>
+				<onleft>2040</onleft>
+				<onright>-</onright>
+				<onup>2051</onup>
+				<ondown>-</ondown>
+				<itemlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</itemlayout>
+				<focusedlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FFFFFFFF</textcolor>
+						<visible>Control.HasFocus(2061)</visible>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+					<control type="label">
+						<visible>!Control.HasFocus(2061)</visible>
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</focusedlayout>
+				<content type="action">
+					<onclick lang="python"><![CDATA[mythboxee.SortDirSeriesEpisodes()]]></onclick>
+				</content>		
+			</control>
+			
 		</control>
 		
-		<control type="list" id="2015">
-			<posx>1070</posx>
-			<posy>225</posy>
-			<width>164</width>
-			<height>100</height>
-			<onleft>2013</onleft>
-			<onright>-</onright>
-			<onup>2014</onup>
-			<ondown>-</ondown>
-			<itemlayout width="164" height="27">
-				<control type="label">
-					<description>title</description>
-					<posx>9</posx>
-					<posy>0</posy>
-					<width>146</width>
-					<height>25</height>
-					<align>left</align>
-					<aligny>top</aligny>
-					<info>ListItem.Label</info>
-					<font>font16</font>
-					<textcolor>FF999999</textcolor>
-					<selectedcolor>FFFFFFFF</selectedcolor>
-				</control>			
-			</itemlayout>
-			<focusedlayout width="164" height="27">
-				<control type="label">
-					<description>title</description>
-					<posx>9</posx>
-					<posy>0</posy>
-					<width>146</width>
-					<height>25</height>
-					<align>left</align>
-					<aligny>top</aligny>
-					<info>ListItem.Label</info>
-					<font>font16</font>
-					<textcolor>FFFFFFFF</textcolor>
-					<visible>Control.HasFocus(2015)</visible>
-					<selectedcolor>FFFFFFFF</selectedcolor>
-				</control>			
-				<control type="label">
-					<visible>!Control.HasFocus(2015)</visible>
-					<description>title</description>
-					<posx>9</posx>
-					<posy>0</posy>
-					<width>146</width>
-					<height>25</height>
-					<align>left</align>
-					<aligny>top</aligny>
-					<info>ListItem.Label</info>
-					<font>font16</font>
-					<textcolor>FF999999</textcolor>
-					<selectedcolor>FFFFFFFF</selectedcolor>
-				</control>			
-			</focusedlayout>
-			<content type="action">
-				<onclick lang="python"><![CDATA[mythboxee.SortDirSeriesEpisodes()]]></onclick>
-			</content>		
-		</control>
 
 <!-- begin SHOW DETAILS CONTAINER -->
 
-		<control type="list" id="21">
+		<control type="list" id="2070">
 			<posx>1</posx>
 			<posy>1</posy>
 			<width>1</width>
@@ -432,24 +412,6 @@ import mythboxee
 		</control>
 
 <!-- end SHOW DETAILS CONTAINER -->
-		<!--
-		<control type="multiimage" id="30">
-            <description>loading control</description>
-            <visible>Container(21).IsLoading | Container(13).IsLoading | Container(20).IsLoading</visible>
-            <animation effect="fade" time="200">VisibleChange</animation>
-            <posx>538</posx>
-            <posy>306</posy>
-            <width>200</width>
-            <height>200</height>
-            <imagepath>loading</imagepath>
-            <timeperimage>80</timeperimage>
-            <fadetime>10</fadetime>
-            <pauseatend>0</pauseatend>
-            <randomize>false</randomize>
-            <loop>yes</loop>
-            <aspectratio>keep</aspectratio>
-        </control>
-		-->
 
 	</controls>
 </window>

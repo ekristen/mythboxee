@@ -521,12 +521,12 @@ class Program( DictData ):
         """Program.getRecorded() -> Recorded object"""
         return Recorded((self.chanid,self.recstartts), db=self.db)
 
-    def open(self, type='r'):
+    def open(self, type='r', dba=None):
         """Program.open(type='r') -> file or FileTransfer object"""
         if type != 'r':
             raise MythFileError(MythError.FILE_FAILED_WRITE, self.filename, 
                             'Program () objects cannot be opened for writing')
-        return ftopen(self.filename, 'r')
+        return ftopen(self.filename, 'r', forceremote=False, nooverwrite=False, db=dba)
 
 class Record( DBDataWrite ):
     """

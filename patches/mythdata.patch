@@ -1,0 +1,28 @@
+--- mythtv_old/MythData.py	2010-08-07 21:55:58.000000000 -0400
++++ mythtv/MythData.py	2010-08-17 21:49:43.000000000 -0400
+@@ -175,7 +175,7 @@
+         if not self.open:
+             return
+         self.control.backendCommand('QUERY_FILETRANSFER '\
+-                    +BACKEND_SEP.join([str(self.sockno), 'JOIN']))
++                    +BACKEND_SEP.join([str(self.sockno), 'DONE']))
+         self.socket.shutdown(1)
+         self.socket.close()
+         self.open = False
+@@ -521,12 +521,14 @@
+         """Program.getRecorded() -> Recorded object"""
+         return Recorded((self.chanid,self.recstartts), db=self.db)
+ 
+-    def open(self, type='r', dba=None):
++    def open(self, type='r'):
+         """Program.open(type='r') -> file or FileTransfer object"""
+         if type != 'r':
+             raise MythFileError(MythError.FILE_FAILED_WRITE, self.filename, 
+                             'Program () objects cannot be opened for writing')
+-        return ftopen(self.filename, 'r', forceremote=False, nooverwrite=False, db=dba)
++        if not self.filename.startswith('myth://'):
++            self.filename = 'myth://%s/%s' % (self.hostname, self.filename)
++        return ftopen(self.filename, 'r')
+ 
+ class Record( DBDataWrite ):
+     """

@@ -1,35 +1,35 @@
 K 25
 svn:wc:ra_dav:version-url
-V 67
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV
+V 69
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV
 END
 MythStatic.py
 K 25
 svn:wc:ra_dav:version-url
-V 81
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/MythStatic.py
+V 83
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/MythStatic.py
 END
 MythData.py
 K 25
 svn:wc:ra_dav:version-url
-V 79
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/MythData.py
+V 81
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/MythData.py
 END
 MythBase.py
 K 25
 svn:wc:ra_dav:version-url
-V 79
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/MythBase.py
+V 81
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/MythBase.py
 END
 MythFunc.py
 K 25
 svn:wc:ra_dav:version-url
-V 79
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/MythFunc.py
+V 81
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/MythFunc.py
 END
 __init__.py
 K 25
 svn:wc:ra_dav:version-url
-V 79
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/__init__.py
+V 81
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/__init__.py
 END

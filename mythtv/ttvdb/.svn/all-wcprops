@@ -1,41 +1,41 @@
 K 25
 svn:wc:ra_dav:version-url
-V 73
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/ttvdb
+V 75
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/ttvdb
 END
 tvdb_api.py
 K 25
 svn:wc:ra_dav:version-url
-V 85
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py
+V 87
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/ttvdb/tvdb_api.py
 END
 ttvdb-example.conf
 K 25
 svn:wc:ra_dav:version-url
-V 92
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/ttvdb/ttvdb-example.conf
+V 94
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/ttvdb/ttvdb-example.conf
 END
 tvdb_ui.py
 K 25
 svn:wc:ra_dav:version-url
-V 84
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/ttvdb/tvdb_ui.py
+V 86
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/ttvdb/tvdb_ui.py
 END
 __init__.py
 K 25
 svn:wc:ra_dav:version-url
-V 85
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/ttvdb/__init__.py
+V 87
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/ttvdb/__init__.py
 END
 tvdb_exceptions.py
 K 25
 svn:wc:ra_dav:version-url
-V 92
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/ttvdb/tvdb_exceptions.py
+V 94
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/ttvdb/tvdb_exceptions.py
 END
 cache.py
 K 25
 svn:wc:ra_dav:version-url
-V 82
-/svn/!svn/ver/24521/tags/release-0-23/mythtv/bindings/python/MythTV/ttvdb/cache.py
+V 84
+/svn/!svn/ver/25397/tags/release-0-23-1/mythtv/bindings/python/MythTV/ttvdb/cache.py
 END
