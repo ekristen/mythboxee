@@ -1,0 +1,231 @@
+<window type="window" id="14004">
+	<defaultcontrol always="true">1030</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<onload lang="python"><![CDATA[
+import mc
+import mythboxee
+mb.LoadSettings()
+]]></onload>
+	<controls>
+		<control type="group" id="1010">
+			<control type="image" id="1011">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg_settings.png</texture>
+			</control>
+		</control>
+
+<!-- START: BACKEND INFORMATION -->
+
+		<control type="group" id="1040">
+			<control type="label" id="1041">
+				<posx>820</posx>
+				<posy>150</posy>
+				<width>250</width>
+				<label>Backend Information</label>
+				<font>font23</font>
+			</control>
+			<control type="edit" id="1042">
+				<posx>820</posx>
+				<posy>175</posy>
+				<width>300</width>
+				<label>Hostname/IP:</label>
+				<align>left</align>
+				<font>font18</font>
+				<ondown>1043</ondown>
+			</control>
+			<control type="edit" id="1043">
+				<posx>820</posx>
+				<posy>205</posy>
+				<width>300</width>
+				<label>Username:</label>
+				<align>left</align>
+				<font>font18</font>
+				<onup>1042</onup>
+				<ondown>1044</ondown>
+			</control>
+			<control type="edit" id="1044">
+				<posx>820</posx>
+				<posy>235</posy>
+				<width>300</width>
+				<align>left</align>
+				<label>Password:</label>
+				<password>true</password>
+				<font>font18</font>
+				<onup>1043</onup>
+				<ondown>1022</ondown>
+			</control>
+		</control>
+
+<!-- END: BACKEND INFORMATION -->
+
+<!-- START: STREAM METHOD -->
+
+		<control type="group" id="1020">
+			<control type="label" id="1021">
+				<posx>820</posx>
+				<posy>300</posy>
+				<width>250</width>
+				<align>left</align>
+				<label>Stream Method</label>
+				<font>font23</font>
+			</control>
+			<control type="list" id="1022">
+				<posx>830</posx>
+				<posy>335</posy>
+				<width>164</width>
+				<height>100</height>
+				<onup>1044</onup>
+				<ondown>1032</ondown>
+				<itemlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font18</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>
+				</itemlayout>
+				<focusedlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font18</font>
+						<textcolor>green</textcolor>
+						<visible>Control.HasFocus(1022)</visible>
+						<selectedcolor>green</selectedcolor>
+					</control>			
+					<control type="label">
+						<visible>!Control.HasFocus(1022)</visible>
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font18</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</focusedlayout>
+				<content type="action">
+					<onclick lang="python"><![CDATA[mb.SetStreamMethod()]]></onclick>
+				</content>		
+			</control>
+		</control>
+
+<!-- END: STREAM METHOD -->
+
+<!-- START: SMB SETTINGS -->
+
+		<control type="group" id="1030">
+			<control type="label" id="1031">
+				<posx>820</posx>
+				<posy>420</posy>
+				<width>250</width>
+				<align>left</align>
+				<label>SMB Share</label>
+				<font>font23</font>
+			</control>
+			<control type="edit" id="1032">
+				<posx>820</posx>
+				<posy>445</posy>
+				<width>300</width>
+				<label>Share:</label>
+				<align>left</align>
+				<font>font18</font>
+				<onup>1022</onup>
+				<ondown>1033</ondown>
+				<ontextchange lang="python"><![CDATA[mb.SaveSMBSettings()]]></ontextchange>
+			</control>
+			<control type="edit" id="1033">
+				<posx>820</posx>
+				<posy>475</posy>
+				<width>300</width>
+				<label>Username:</label>
+				<align>left</align>
+				<font>font18</font>
+				<onup>1032</onup>
+				<ondown>1034</ondown>
+				<ontextchange lang="python"><![CDATA[mb.SaveSMBSettings()]]></ontextchange>
+			</control>
+			<control type="edit" id="1034">
+				<posx>820</posx>
+				<posy>505</posy>
+				<width>300</width>
+				<label>Password:</label>
+				<align>left</align>
+				<font>font18</font>
+				<password>true</password>
+				<onup>1033</onup>
+				<ontextchange lang="python"><![CDATA[mb.SaveSMBSettings()]]></ontextchange>
+			</control>
+		</control>
+
+<!-- END: SMB SETTINGS -->
+
+<!-- START: CACHE SETTINGS -->
+<!--
+		<control type="group" id="1050">
+			<control type="label" id="1051">
+				<posx>820</posx>
+				<posy>560</posy>
+				<width>250</width>
+				<align>left</align>
+				<label>Cache Settings</label>
+				<font>font23</font>
+			</control>
+			<control type="togglebutton" id="1052">
+				<posx>820</posx>
+				<posy>565</posy>
+				<width>300</width>
+				<label>Share:</label>
+				<align>left</align>
+				<font>font18</font>
+				<onup>1022</onup>
+				<ondown>1033</ondown>
+				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+			</control>
+			<control type="edit" id="1053">
+				<posx>820</posx>
+				<posy>590</posy>
+				<width>300</width>
+				<label>Username:</label>
+				<align>left</align>
+				<font>font18</font>
+				<onup>1032</onup>
+				<ondown>1034</ondown>
+				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+			</control>
+			<control type="edit" id="1054">
+				<posx>820</posx>
+				<posy>615</posy>
+				<width>300</width>
+				<label>Password:</label>
+				<align>left</align>
+				<font>font18</font>
+				<password>true</password>
+				<onup>1033</onup>
+				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+			</control>
+		</control>
+-->
+<!-- END: CACHE SETTINGS -->
+
+
+	</controls>
+</window>

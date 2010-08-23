@@ -1,5 +1,8 @@
 import mc
 import re
+import random
+import time
+import pickle
 import mythtv
 from mythtv import MythError
 from operator import itemgetter, attrgetter
@@ -8,13 +11,10 @@ from operator import itemgetter, attrgetter
 class MythBoxee:
 	logLevel = 1
 	version = "4.0.beta"
-
 	userAgent = "MythBoxee v4.0.beta"
 	tvdb_apikey = "6BEAB4CB5157AAE0"
-
 	be = None
 	db = None
-
 	recs = None
 	titles = []
 	recordings = []
@@ -33,7 +33,7 @@ class MythBoxee:
 	finally prompt user to enter their credentials manually.
 	"""
 	def DiscoverBackend():
-		self.log("def(DiscoverBackend)")
+		self.log("def(DiscoverBackend): Start =========================================================")
 
 		pin = self.config.GetValue("pin")
 		dbconn = self.config.GetValue("dbconn")
@@ -45,85 +45,138 @@ class MythBoxee:
 			self.db = mythtv.MythDB(SecurityPin=pin)
 		except Exception, e:
 			if e.ename == 'DB_CREDENTIALS' and count < 2:
-				mc.ActivateWindow(14002)
-				mc.GetWindow(14002).GetControl(6020).SetVisible(False)
-				mc.GetWindow(14002).GetControl(6010).SetVisible(True)
-				mc.GetWindow(14002).GetControl(6011).SetFocus()
+				## Jump to Settings Window
+				self.log("def(DiscoverBackend): Error: Database Credentials")
 			elif e.ename == 'DB_CONNECTION' or e.ename == 'DB_CREDENTIALS' and count > 3:
-				mc.ActivateWindow(14002)
-				mc.GetWindow(14002).GetControl(6010).SetVisible(False)
-				mc.GetWindow(14002).GetControl(6020).SetVisible(True)
-				mc.GetWindow(14002).GetControl(6021).SetFocus()
+				## Jump to Settings Window
+				self.log("def(DiscoverBackend): Error: Database Connection")
+			self.log("def(DiscoverBackend): End ===========================================================")
 			return False
 		else:
+			# We have a successful connection, save database information
 			self.config.SetValue("dbconn", str(self.db.dbconn))
+			self.log("def(DiscoverBackend): End ===========================================================")
 			return True
 
 
 	"""
-	Lets make a connection to the backend!
+	__init__ - Lets make a connection to the backend!
 	"""
 	def __init__(self):
-		self.config = mc.GetApp().GetLocalConfig()
+		self.log("def(__init__): Start =========================================================")
+		self.log("def(__init__): Version: " + self.version)
 
-		self.log("def(__init__)")
+		self.config = mc.GetApp().GetLocalConfig()
 
 		# If this is the first time the app is being run, lets set some default options.
 		if not self.config.GetValue("firstrun"):
 			self.config.SetValue("SortBy", "Original Air Date")
 			self.config.SetValue("SortDir", "Descending")
+			self.config.SetValue("Filter", "All")
 			self.config.SetValue("firstrun", "1")
 
 		# If dbconn isn't set, we'll assume we haven't found the backend.
 		if not self.config.GetValue("dbconn"):
 			discoverBackend = False
 			while discoverBackend is False:
-				print "discover"
 				discoverBackend = self.DiscoverBackend()
 
-		# Parse our DB info
-		dbconn = self.config.GetValue("dbconn")
-		dbconf = eval(dbconn)
+		# Parse our DB info into useable format
+		dbconf = eval(self.config.GetValue("dbconn"))
+		self.dbconf = dbconf
 
 		# Now that the backend has been discovered, lets connect.
 		try:
 			self.db = mythtv.MythDB(**dbconf)
 		except MythError, e:
-			print e.message
 			mc.ShowDialogNotification("Failed to connect to the MythTV Backend")
+			self.log(e.message)
 		else:
 			self.be = mythtv.MythBE(db=self.db)
+			self.GetRecordings()
+
+		self.log("def(__init__): End ===========================================================")
+
 
 	"""
-	GetRecordings - Pulls all of the recordings out of the backend.
+	LoadMain - Loader for Main Window
+	"""
+	def LoadMain(self):
+		self.log("def(LoadMain): Start =========================================================")
+		mc.ShowDialogWait()
+
+		## Put focus on last selected item
+		itemId = int(self.config.GetValue("CurrentShowItemID"))
+		if itemId and itemId != 0:
+			mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
+
+		mainList = mc.GetWindow(14001).GetList(1030)
+		mainListitems = mainList.GetItems()
+		mainLength = len(mainListitems)
+		lastruntime = self.config.GetValue("LastRunTime")
+
+		if mainLength == 0 or lastruntime <= str(time.time() - 3060):
+			# Lets get the recordings
+			self.SetShows()
+			
+		mc.HideDialogWait()
+		self.log("def(LoadMain): End ===========================================================")
+
+
+	"""
+	GetRecordings - Pulls all of the recordings out of the backend and prepares them for use in the app.
 	
 	This function also creates some dictionarys and lists of information
 	that is used throughout the app for different functions.
 	"""
 	def GetRecordings(self):
+		self.log("def(GetRecordings): Start =========================================================")
+
+		# Empty out crucial info
 		self.titles = []
 		self.banners = {}
 		self.series = {}
 		self.shows = {}
 
-		self.log("def(GetRecordings)")
+		cacheTime = self.config.GetValue("cache.time")
 
 		self.recs = self.be.getRecordings()
 		
-		x=0
-		for recording in self.recs:
-			if recording.title not in self.titles:
-				self.titles.append(str(recording.title))
-				self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
-				self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
-				self.shows[str(recording.title)] = []
-			
-			single = [str(recording.title), str(recording.subtitle), str(recording.description), str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), x]
-			self.shows[str(recording.title)].append(single)
-			x = x + 1
-		
+		if not cacheTime or cacheTime <= str(time.time() - 3600):
+			x=0
+			for recording in self.recs:
+				if recording.title not in self.titles:
+					self.titles.append(str(recording.title))
+					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
+					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
+					self.shows[str(recording.title)] = []
+
+				single = [str(recording.title), str(recording.subtitle), str(recording.description), str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
+				self.shows[str(recording.title)].append(single)
+				x = x + 1
+
+				# Lets cache our findings for now.
+				self.config.SetValue("cache.time", str(time.time()))
+				self.config.SetValue("cache.titles", pickle.dumps(self.titles))
+				self.config.SetValue("cache.banners", pickle.dumps(self.banners))
+				self.config.SetValue("cache.series", pickle.dumps(self.series))
+				self.config.SetValue("cache.shows", pickle.dumps(self.shows))
+		else:
+			self.titles = pickle.loads(self.config.GetValue("cache.titles"))
+			self.banners = pickle.loads(self.config.GetValue("cache.banners"))
+			self.series = pickle.loads(self.config.GetValue("cache.series"))
+			self.shows = pickle.loads(self.config.GetValue("cache.shows"))
+
 		self.titles.sort()
 
+		self.log("def(GetRecordings): End ===========================================================")
+		
+
+	"""
+	SetShows - Populate the Shows List on the Main Window
+	"""
+	def SetShows(self):
+		self.log("def(SetShows): Start =========================================================")
 		items = mc.ListItems()
 		for title in self.titles:
 			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
@@ -132,56 +185,76 @@ class MythBoxee:
 			item.SetProperty("videos", str(len(self.shows[title])))
 			item.SetProperty("seriesid", str(self.series[title]))
 			items.append(item)
-
 		mc.GetWindow(14001).GetList(1030).SetItems(items)
+		self.log("def(SetShows): End ===========================================================")
+		
 
-
+	"""
+	GetRecordingArtwork - Get the Artwork for a show.
+	"""
 	def GetRecordingArtwork(self, title):
+		self.log("def(GetRecordingArtwork): Start =========================================================")
+
 		sg = mc.Http()
-		sg.SetUserAgent('MythBoxee v4.0.beta')
+		sg.SetUserAgent(self.userAgent)
 		html = sg.Get("http://www.thetvdb.com/api/GetSeries.php?seriesname=" + str(title.replace(" ", "%20")))
 		banners = re.compile("<banner>(.*?)</banner>").findall(html)
 
+		## Sometimes we can't find the show, so we have to provide our own artwork
 		try:
 			artwork = "http://www.thetvdb.com/banners/" + banners[0]
 		except:
 			artwork = "mb_artwork_error.png"
 
-		self.log("def(GetRecordingArtwork): " + str(artwork))
+		self.log("def(GetRecordingArtwork): URL: " + str(artwork))
+		self.log("def(GetRecordingArtwork): End =========================================================")
 
 		return artwork
 
+
+	"""
+	GetRecordingSeriesID - Get the Series ID of a show.
+	
+	TODO: rewrite this entire function
+	"""
 	def GetRecordingSeriesID(self, title):
+		self.log("def(GetRecordingSeriesID): Start =========================================================")
 		sg = mc.Http()
 		sg.SetUserAgent(self.userAgent)
 		html = sg.Get("http://www.thetvdb.com/api/GetSeries.php?seriesname=" + title.replace(" ", "%20"))
 		series = re.compile("<seriesid>(.*?)</seriesid>").findall(html)
 
+		## Sometimes we can't determine the series ID
 		try:
 			seriesid = series[0]
 		except:
 			seriesid = 00000
 
-		self.log("def(GetRecordingSeriesID): title[" + title + "] - seriesid[" + str(seriesid) + "]")
-
+		self.log("def(GetRecordingSeriesID): Title:    " + title)
+		self.log("def(GetRecordingSeriesID): SeriesID: " + str(seriesid))
+		self.log("def(GetRecordingSeriesID): End ===========================================================")
 		return seriesid
 
 
 	"""
 	DisplayShow
+	
+	TODO: rewrite this entire function
 	"""
 	def DisplayShow(self):
+		self.log("def(DisplaySingleShow): Start =========================================================")
+
 		recordingList = mc.GetWindow(14001).GetList(1030)
-		item = recordingList.GetItem(recordingList.GetFocusedItem())
+		itemId = recordingList.GetFocusedItem()
+		item = recordingList.GetItem(itemId)
 		title = item.GetLabel()
 
 		# Save the Latest Show Title to what was clicked
 		# this way the show window has a way to load the data.
-		self.config.SetValue("LatestShowTitle", title)
-		self.config.SetValue("LatestShowID", item.GetProperty("seriesid"))
+		self.config.SetValue("CurrentShowItemID", str(itemId))
+		self.config.SetValue("CurrentShowTitle", title)
+		self.config.SetValue("CurrentShowID", item.GetProperty("seriesid"))
 
-		self.log("def(DisplaySingleShow): Title[" + title + "]")
-		
 		# Show the Single Show Window
 		mc.ActivateWindow(14002)
 		
@@ -190,21 +263,33 @@ class MythBoxee:
 		
 		mc.GetWindow(14002).GetList(2070).SetItems(itemList)
 
+		self.log("def(DisplaySingleShow): Title[" + title + "]")		
+		self.log("def(DisplaySingleShow): Current Show Title:     " + title)
+		self.log("def(DisplaySingleShow): Current Show Item ID:   " + str(itemId))
+		self.log("def(DisplaySingleShow): Current Show Series ID: " + item.GetProperty("seriesid"))
+		self.log("def(DisplaySingleShow): End ===========================================================")
+
 
 	"""
-	LoadShow
-	
-	Launch function to gather and setup the recordings for a single show.
+	LoadShow - init function for Show Window
 	"""
 	def LoadShow(self):
-		title = self.config.GetValue("LatestShowTitle")
-		seriesid = self.config.GetValue("LatestShowID")
+		self.log("def(LoadShow): Start =========================================================")
+		mc.ShowDialogWait()
+
+		## Get Current Show Information
+		title = self.config.GetValue("CurrentShowTitle")
+		seriesid = self.config.GetValue("CurrentShowID")
 
 		self.log("def(LoadSingleShow): Title[" + title + "]")
 
+		## Setup the Show Window and Populate the Window's Lists
 		self.SetSortableOptions()
 		self.SetSeriesDetails(title, seriesid)
 		self.LoadShowRecordings(title)
+		
+		mc.HideDialogWait()
+		self.log("def(LoadShow): End ===========================================================")
 
 
 	"""
@@ -214,11 +299,21 @@ class MythBoxee:
 	Then populate the recording list for the singular show for viewer to watch.
 	"""
 	def LoadShowRecordings(self, title):
+		self.log("def(LoadShowRecordings): Start =========================================================")
+
+		## Get current sort and filter settings
 		sortBy = self.config.GetValue("SortBy")
 		sortDir = self.config.GetValue("SortDir")
+		theFilter = self.config.GetValue("Filter")
 
+		self.log("def(LoadShowRecordings): Sort By:  " + sortBy)
+		self.log("def(LoadShowRecordings): Sort Dir: " + sortDir)
+		self.log("def(LoadShowRecordings): Filter:   " + theFilter)
+
+		## Clear the episodes container
 		episodes = None
 
+		## Sort based on Sorting Criteria
 		if sortBy == "Original Air Date" and sortDir == "Ascending":
 			episodes = sorted(self.shows[title], key=itemgetter(4))
 		elif sortBy == "Original Air Date" and sortDir == "Descending":
@@ -234,69 +329,115 @@ class MythBoxee:
 		else:
 			episodes = self.shows[title]
 
+		## Loop through all our recordings, and add them to the list.
 		showitems = mc.ListItems()
-		for title,subtitle,desc,chanid,airdate,starttime,endtime,ref in episodes:
-			print title
-			recording = self.recs[ref]
-			#showitem = mc.ListItem( mc.ListItem.MEDIA_VIDEO_EPISODE )
-			#showitem = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
-			showitem = mc.ListItem()
-			showitem.SetLabel(str(recording.subtitle))
-			showitem.SetTitle(str(recording.subtitle))
-			showitem.SetTVShowTitle(str(recording.title))
-			showitem.SetDescription(str(desc))
-			showitem.SetProperty("starttime", str(starttime))
-			showitem.SetProperty("ref", str(ref))
+		for title,subtitle,desc,chanid,airdate,starttime,endtime,watched,ref in episodes:
+			#recording = self.recs[ref]
 
+			# Filter the Episodes
+			if theFilter == "Watched" and watched == 0:
+				continue
+			elif theFilter == "Unwatched" and watched == 1:
+				continue
+
+			# Create the Item list and populate it
+			showitem = mc.ListItem( mc.ListItem.MEDIA_VIDEO_EPISODE )
+			showitem.SetLabel(subtitle)
+			showitem.SetTitle(subtitle)
+			showitem.SetTVShowTitle(title)
+			showitem.SetDescription(desc)
+			showitem.SetProperty("starttime", starttime)
+			#showitem.SetProperty("ref", ref)
+
+			## Sometimes dates aren't set, so generate one if not.
 			try:
-				date = str(airdate).split("-")
+				date = airdate.split("-")
 				showitem.SetDate(int(date[0]), int(date[1]), int(date[2]))
 			except:
 				showitem.SetDate(2010, 01, 01)
 
-			dbconf = eval(self.config.GetValue("dbconn"))
-
+			## Set the Thumbnail for the ListItem
 			#showitem.SetThumbnail("http://192.168.1.210:6544/Myth/GetPreviewImage?ChanId=1050&StartTime=2010-08-05%2021:00:00") 
 			#showitem.SetThumbnail("http://192.168.1.210:6544/Myth/GetPreviewImage?ChanId=" + chanid + "&StartTime=" + starttime.replace("T", "%20")) 
-			showitem.SetThumbnail("http://" + dbconf['DBHostName'] + ":6544/Myth/GetPreviewImage?ChanId=" + chanid + "&StartTime=" + starttime.replace(" ", "%20"))
+			#showitem.SetThumbnail("http://" + dbconf['DBHostName'] + ":6544/Myth/GetPreviewImage?ChanId=" + chanid + "&StartTime=" + starttime.replace(" ", "%20") + "&random=" + str(random.randrange(1000000, 2000000, 2)))
+			#showitem.SetThumbnail("mb_artwork_error.png")
+			#showitem.SetThumbnail("http://192.168.1.210:6544/Myth/GetPreviewImage?ChanId=" + chanid + "&StartTime=" + starttime.replace(" ", "%20") + "&random=" + str(random.randrange(1000000, 2000000, 2)))
+			#showitem.SetThumbnail("http://192.168.1.210:6544/Myth/GetPreviewImage?ChanId=" + chanid + "&StartTime=" + starttime.replace("T", "%20")) 
+
+			# Determine Stream Method, Generate Proper Path
+			streamMethod = self.config.GetValue("StreamMethod")
+			if streamMethod == "XML":
+				time = starttime.replace("T", "%20")
+				path = "http://" + self.dbconf['DBHostName'] + ":6544/Myth/GetRecording?ChanId=" + chanid + "&StartTime=" + time
+				showitem.SetThumbnail("http://" + self.dbconf['DBHostName'] + ":6544/Myth/GetPreviewImage?ChanId=" + chanid + "&StartTime=" + starttime.replace("T", "%20"))
+			elif streamMethod == "SMB":
+				time = starttime.replace("T", "").replace("-", "").replace(":", "").replace(" ","")
+				path = "smb://" + self.config.GetValue("smb.username") + ":" + self.config.GetValue("smb.password") + "@" + self.dbconf["DBHostName"] + "/" + self.config.GetValue("smb.share") + "/" + chanid + "_" + time + ".mpg"
 			
-			#showitem.SetPath("http://" + dbconf['DBHostName'] + ":6544/Myth/GetRecording?ChanId=" + chanid + "&StartTime=" + starttime.replace("T", "%20")) 
-			showitem.SetPath("smb://guest:guest@192.168.1.210/recordings/1050_20100709010000.mpg")
+			## Set the Path for the ListItem
+			showitem.SetPath(path)
+
+			self.log("def(LoadShowRecordings): Thumbnail: " + showitem.GetThumbnail())
+			self.log("def(LoadShowRecordings): Path: " + showitem.GetPath())
 			
 			showitems.append(showitem)
 		
-		mc.GetWindow(14002).GetList(2040).SetItems(mc.ListItems())
 		mc.GetWindow(14002).GetList(2040).SetItems(showitems)
+		
+		self.log("def(LoadShowRecordings): End ===========================================================")
 		
 
 	"""
-	SetShowOptions
-	
-	Setup the show options; sort by, sort direction, watched vs unwatched
+	SetSortableOptions - Setup the show options; sort by, sort direction, watched vs unwatched
 	"""
 	def SetSortableOptions(self):
+		self.log("def(SetSortableOptions): Start =========================================================")
+
+		## Setup Sortable Field Options
 		sortable = ['Original Air Date', 'Recorded Date', 'Title']
 		items = mc.ListItems()
 		for sorttype in sortable:
 			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
 			item.SetLabel(sorttype)
 			items.append(item)
-
+		mc.GetWindow(14002).GetList(2051).SetItems(mc.ListItems())
 		mc.GetWindow(14002).GetList(2051).SetItems(items)
-		mc.GetWindow(14002).GetList(2051).SetSelected(1, True)
 
+		## Setup Sortable Direction Options
 		sortableby = ['Ascending', 'Descending']	
 		items = mc.ListItems()
 		for sorttype in sortableby:
 			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
 			item.SetLabel(sorttype)
 			items.append(item)
-
+		mc.GetWindow(14002).GetList(2061).SetItems(mc.ListItems())
 		mc.GetWindow(14002).GetList(2061).SetItems(items)
-		mc.GetWindow(14002).GetList(2061).SetSelected(1, True)
-		
 
+		## Setup Filter Options
+		filters = ['All', 'Watched', 'Unwatched']
+		items = mc.ListItems()
+		for single_filter in filters:
+			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
+			item.SetLabel(single_filter)
+			items.append(item)
+		mc.GetWindow(14002).GetList(2082).SetItems(mc.ListItems())
+		mc.GetWindow(14002).GetList(2082).SetItems(items)
+
+		## Set the currently selected option in each category
+		mc.GetWindow(14002).GetList(2051).SetSelected(sortable.index(self.config.GetValue("SortBy")), True)
+		mc.GetWindow(14002).GetList(2061).SetSelected(sortableby.index(self.config.GetValue("SortDir")), True)
+		mc.GetWindow(14002).GetList(2082).SetSelected(filters.index(self.config.GetValue("Filter")), True)
+		
+		self.log("def(SetSortableOptions): End ===========================================================")
+
+
+	"""
+	SetSeriesDetails - Get Show Series Information
+	
+	TODO -- rewrite this entire function
+	"""
 	def SetSeriesDetails(self, title, seriesid):
+		self.log("def(SetSeriesDetails): Start =========================================================")
 		sg = mc.Http()
 		sg.SetUserAgent(self.userAgent)
 		html = sg.Get("http://thetvdb.com/api/" + self.tvdb_apikey + "/series/" + seriesid + "/")
@@ -321,27 +462,163 @@ class MythBoxee:
 		items.append(item)
 
 		mc.GetWindow(14002).GetList(2070).SetItems(items)
+		self.log("def(SetSeriesDetails): End ===========================================================")
 
 
-	def PlayRecording(self):
-		self.log("def(PlayRecording): ")
+	"""
+	FilterEpisodes - Filter the list of Episodes (All, Watched, Unwatched)
+	"""
+	def FilterEpisodes(self):
+		self.log("def(FilterEpisodes): Start =========================================================")
+
+		## Figure out how we need to filter
+		FilterItems = FilterItemNumber = mc.GetWindow(14002).GetList(2082).GetSelected()
+		mc.GetWindow(14002).GetList(2082).UnselectAll()
+		mc.GetWindow(14002).GetList(2082).SetSelected(mc.GetWindow(14002).GetList(2082).GetFocusedItem(), True)
+
+		## Update the Filter Criteria
+		self.config.SetValue("Filter", mc.GetWindow(14002).GetList(2082).GetItem(mc.GetWindow(14002).GetList(2082).GetFocusedItem()).GetLabel())
+
+		## Now that the filter has changed, reload the list of episodes
+		self.LoadShowRecordings(self.config.GetValue("CurrentShowTitle"))
+		self.log("def(FilterEpisodes): End ===========================================================")
+
+
+	"""
+	SortBy - Sort List of Episodes
+	"""
+	def SortBy(self):
+		self.log("def(SortBy): Start =========================================================")
+
+		## Figure out how we need to Sort
+		sortByItems = sortByItemNumber = mc.GetWindow(14002).GetList(2051).GetSelected()
+		sortDirectionItems = sortDirectionItemNumber = mc.GetWindow(14002).GetList(2061).GetSelected()
+		mc.GetWindow(14002).GetList(2051).UnselectAll()
+		mc.GetWindow(14002).GetList(2051).SetSelected(mc.GetWindow(14002).GetList(2051).GetFocusedItem(), True)
+
+		## Update the Sort Criteria
+		self.config.SetValue("SortBy", mc.GetWindow(14002).GetList(2051).GetItem(mc.GetWindow(14002).GetList(2051).GetFocusedItem()).GetLabel())
+
+		## Now that we have updated the Sort Criteria, reload the shows
+		self.LoadShowRecordings(self.config.GetValue("CurrentShowTitle"))
+		self.log("def(SortBy): End ===========================================================")
+
+
+	"""
+	LoadSettings - Stuff that needs to be executed when settings window is loaded
+	"""
+	def LoadSettings(self):
+		self.log("def(LoadSettings): Start =========================================================")
+
+		## Grab the current StreamMethod
+		streamMethod = self.config.GetValue("StreamMethod")
+
+		self.log("def(LoadSettings): Stream Method: " + streamMethod)
+
+		# Grab and Set the Database Information
+		dbconf = eval(self.config.GetValue("dbconn"))
+		mc.GetWindow(14004).GetEdit(1042).SetText(dbconf['DBHostName'])
+		mc.GetWindow(14004).GetEdit(1043).SetText(dbconf['DBUserName'])
+		mc.GetWindow(14004).GetEdit(1044).SetText(dbconf['DBPassword'])
+
+		# Setup Stream Methods for user to choose
+		methods = ['XML', 'SMB']
+		items = mc.ListItems()
+		for method in methods:
+			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
+			item.SetLabel(method)
+			items.append(item)
+		mc.GetWindow(14004).GetList(1022).SetItems(items)
+		mc.GetWindow(14004).GetList(1022).SetSelected(methods.index(streamMethod), True)
+
+		# Depending on StreamMethod Enable Options
+		if not streamMethod or streamMethod == "XML":
+			mc.GetWindow(14004).GetControl(1032).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1033).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1034).SetEnabled(False)
+		else:
+			if not self.config.GetValue("smb.username"):
+				self.config.SetValue("smb.username", "guest")
+			if not self.config.GetValue("smb.password"):
+				self.config.SetValue("smb.password", "guest")
+			
+			self.log("def(LoadSettings): smb.share: " + self.config.GetValue("smb.share"))
+			self.log("def(LoadSettings): smb.username: " + self.config.GetValue("smb.username"))
+			self.log("def(LoadSettings): smb.password: " + self.config.GetValue("smb.password"))
+
+			## Since the Stream Method is SMB enable controls for setting info
+			mc.GetWindow(14004).GetControl(1032).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1033).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1034).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1032).SetFocus()
+			
+			## Update the fields with current SMB settings.
+			mc.GetWindow(14004).GetEdit(1032).SetText(self.config.GetValue("smb.share"))
+			mc.GetWindow(14004).GetEdit(1033).SetText(self.config.GetValue("smb.username"))
+			mc.GetWindow(14004).GetEdit(1034).SetText(self.config.GetValue("smb.password"))
 		
-		sl = mc.GetWindow(14002).GetList(2040)
-		item = sl.GetItem(sl.GetFocusedItem())
+		self.log("def(LoadSettings): End ===========================================================")
 
-		ref = item.GetProperty("ref")
+
+	"""
+	SetStreamMethod - Change the Streaming Method
+	"""
+	def SetStreamMethod(self):
+		self.log("def(SetStreamMethod): Start =========================================================")
+
+		## Figure out what Stream Method the user has selected
+		streamMethodItems = streamMethodItemNumber = mc.GetWindow(14004).GetList(1022).GetSelected()
+		mc.GetWindow(14004).GetList(1022).UnselectAll()
+		mc.GetWindow(14004).GetList(1022).SetSelected(mc.GetWindow(14004).GetList(1022).GetFocusedItem(), True)
+		streamMethod = mc.GetWindow(14004).GetList(1022).GetItem(mc.GetWindow(14004).GetList(1022).GetFocusedItem()).GetLabel()
+
+		## Disabled some UI pieces depending on stream method
+		if not streamMethod or streamMethod == "XML":
+			mc.GetWindow(14004).GetControl(1032).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1033).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1034).SetEnabled(False)
+		else:
+			mc.GetWindow(14004).GetControl(1032).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1033).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1034).SetEnabled(True)
+
+		## Save the Stream Method
+		self.config.SetValue("StreamMethod", streamMethod)
 		
-		file = self.recs[int(ref)].open('r', self.db)
+		## Notify the User
+		mc.ShowDialogNotification("Stream Method Changed to " + streamMethod)
 
-		mc.ShowDialogNotification(item.GetProperty("ref"))
-		mc.ShowDialogNotification("Playing: " + item.GetLabel())
+		self.log("def(SetStreamMethod): Stream Method Changed to -- " + streamMethod)
+		self.log("def(SetStreamMethod): End =========================================================")
 
 
+	"""
+	SaveSMBSettings - Saves the SMB settings the user inputted.
+	"""
+	def SaveSMBSettings(self):
+		self.log("def(SetStreamMethod): Start =========================================================")
+		
+		## Save SMB settings the user inputted
+		self.config.SetValue("smb.share", mc.GetWindow(14004).GetEdit(1032).GetText())
+		self.config.SetValue("smb.username", mc.GetWindow(14004).GetEdit(1033).GetText())
+		self.config.SetValue("smb.password", mc.GetWindow(14004).GetEdit(1034).GetText())
+
+		## Notify the user that the changes have been saved.
+		mc.ShowDialogNotification("SMB Share Settings Saved")
+
+		self.log("def(SetStreamMethod): End ===========================================================")
+
+
+	"""
+	log - logging function mainly for debugging
+	"""
 	def log(self, message):
+		if self.logLevel >= 3:
+			mc.LogDebug(">>> MythBoxee: " + message)
+
 		if self.logLevel >= 2:
 			mc.ShowDialogNotification(message)
-			
-		if self.logLevel >= 1:
-			mc.LogInfo(">>> MythBoxee (" + self.version + ")\: " + message)
 
-		print ">>> MythBoxee (" + self.version + ")\: " + message
+		if self.logLevel >= 1:
+			mc.LogInfo(">>> MythBoxee: " + message)
+			print ">>> MythBoxee: " + message

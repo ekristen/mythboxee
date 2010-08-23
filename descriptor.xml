@@ -1,9 +1,9 @@
 <app>
   <id>mythboxy</id>
   <name>MythBoxy</name>
-  <version>3.0.beta</version>
+  <version>4.0.beta</version>
   <description>Watch all your MythTV recordings from Boxee.</description>
-  <thumb>http://erikkristensen.com/project/mythboxee/mythboxee_logo.jpg</thumb>
+  <thumb>http://erikkristensen.com/boxee/logo4.jpg</thumb>
   <media>video</media>
   <copyright>Erik Kristensen</copyright>
   <email>erik@erikkristensen.com</email>

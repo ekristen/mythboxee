@@ -4,35 +4,63 @@
 	<allowoverlay>true</allowoverlay>
 	<onload lang="python"><![CDATA[
 import mythboxee
-
 mb.LoadShow()
 ]]></onload>
 	<controls>
-<!--
-		<control type="group" id="2010">
-			<control type="image" id="2011">
-				<width>1280</width>
-				<height>720</height>
-				<texture>mb_bg_setup.png</texture>
-			</control>
-			<control type="image" id="2012">
-				<description>logo</description>
-				<posx>450</posx>
-				<posy>250</posy>
-				<width>402</width>
-				<height>107</height>
-				<texture flipY="true" flipX="false">logo.png</texture>
-				<aspectratio>keep</aspectratio>
-			</control>
-		</control>
--->
 		<control type="group" id="2020">
-			<control type="image" id="202060">
+			<control type="image" id="2021">
 				<width>1280</width>
 				<height>720</height>
 				<texture>mb_bg.png</texture>
 			</control>
+			<control type="image" id="2022">
+				<posx>10</posx>
+				<posy>10</posy>
+				<width>244</width>
+				<height>65</height>
+				<texture>logo.png</texture>
+			</control>
 		</control>
+
+<!-- START: TOP MENU -->
+
+		<control type="grouplist" id="1040">
+			<posy>28</posy>
+			<posx>940</posx>
+			<width>334</width>
+			<itemgap>10</itemgap>
+			<orientation>horizontal</orientation>
+			<ondown>2040</ondown>
+			<control type="button" id="1041">
+				<label>Refresh</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
+			</control>
+			<control type="button" id="1042">
+				<label>Settings</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14004)]]></onclick>
+			</control>
+<!--
+			780/500
+			<control type="button" id="1043">
+				<label>Send Logs</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>29</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mb.SendLogs()]]></onclick>
+			</control>
+-->
+		</control>
+		
+<!-- END: TOP MENU -->
 
 		<control type="group" id="2030">
 			<description>details box</description>
@@ -40,14 +68,14 @@ mb.LoadShow()
 			<posy>81</posy>
 			<onleft>-</onleft>
 			<onright>2040</onright>
-			<onup>-</onup>
+			<onup>1040</onup>
 			<ondown>-</ondown>
 			<control type="image">
 				<description>details box's background</description>
 				<posx>0</posx>
 				<posy>0</posy>
 				<width>283</width>
-				<height>597</height>
+				<height>630</height>
 				<texture>mb_show.png</texture>
 			</control>
 			<control type="image">
@@ -70,7 +98,7 @@ mb.LoadShow()
 				<aligny>top</aligny>
 				<scroll>true</scroll>
 				<label>$INFO[Container(2070).ListItem.Label]</label>
-				<font>font16b</font>
+				<font>font18</font>
 				<textcolor>FFFEFEFE</textcolor>
 				<wrapmultiline>true</wrapmultiline>
 			</control>			
@@ -79,7 +107,7 @@ mb.LoadShow()
 				<posx>22</posx>
 				<posy>395</posy>
 				<width>228</width>
-				<height>195</height>
+				<height>215</height>
 				<align>left</align>
 				<aligny>top</aligny>
 				<scroll>true</scroll>
@@ -98,46 +126,41 @@ mb.LoadShow()
 			<posx>345</posx>
 			<posy>82</posy>
 			<width>700</width>
-			<height>592</height>
+			<height>630</height>
 			<onleft>-</onleft>
 			<onright>2051</onright>
-			<onup>-</onup>
+			<onup>1040</onup>
 			<ondown>-</ondown>
-<!--
-            <animation condition="Control.IsVisible(14)" type="Conditional" reversible="false">
-                <effect end="100" start="0" time="200" type="fade" />
-            </animation>
--->
-			<itemlayout width="700" height="85">
+			<itemlayout width="700" height="105">
 				<control type="image">
 					<description>background</description>
 					<posx>0</posx>
 					<posy>0</posy>
 					<width>700</width>
-					<height>82</height>
+					<height>102</height>
 					<texture border="5">mb_item_big.png</texture>
 				</control>
 				<control type="image">
 					<description>thumbnail</description>
 					<posx>10</posx>
 					<posy>10</posy>
-					<width>106</width>
-					<height>62</height>
-					<info>Listitem.Thumb</info>
+					<width>126</width>
+					<height>82</height>
+					<info>ListItem.Thumb</info>
 					<aspectratio>scale</aspectratio>
 					<bordersize>3</bordersize>
 					<bordertexture>mb_thumb_bg.png</bordertexture>
 				</control>
 				<control type="label">
 					<description>episode title</description>
-					<posx>128</posx>
+					<posx>148</posx>
 					<posy>6</posy>
 					<width>440</width>
 					<height>30</height>
 					<align>left</align>
 					<aligny>top</aligny>
 					<info>ListItem.Label</info>
-					<font>font16b</font>
+					<font>font18</font>
 					<textcolor>FFFEFEFE</textcolor>
 					<wrapmultiline>true</wrapmultiline>
 				</control>
@@ -150,30 +173,30 @@ mb.LoadShow()
 					<align>right</align>
 					<aligny>top</aligny>
 					<label>Air Date: $INFO[ListItem.Date]</label>
-					<font>font12</font>
+					<font>font16</font>
 					<textcolor>FFCCCCCC</textcolor>
 				</control>
 				<control type="label">
 					<description>description</description>
-					<posx>128</posx>
+					<posx>148</posx>
 					<posy>31</posy>
 					<width>560</width>
 					<height>60</height>
 					<align>left</align>
 					<aligny>top</aligny>
 					<label>$INFO[ListItem.property(description)]</label>
-					<font>font14</font>
+					<font>font16</font>
 					<textcolor>FFCCCCCC</textcolor>
 					<wrapmultiline>true</wrapmultiline>
 				</control>
 			</itemlayout>
-			<focusedlayout width="700" height="85">
+			<focusedlayout width="700" height="105">
 				<control type="togglebutton">
 					<description>background</description>
 					<posx>0</posx>
 					<posy>0</posy>
 					<width>700</width>
-					<height>82</height>
+					<height>102</height>
 					<texturefocus border="5">mb_item_big_hover.png</texturefocus>
 					<texturenofocus border="5">mb_item_big_hover.png</texturenofocus>
 					<alttexturefocus border="5">mb_item_big.png</alttexturefocus>
@@ -184,19 +207,20 @@ mb.LoadShow()
 					<description>thumbnail</description>
 					<posx>10</posx>
 					<posy>10</posy>
-					<width>106</width>
-					<height>62</height>
+					<width>126</width>
+					<height>82</height>
 					<info>Listitem.Thumb</info>
 					<aspectratio>scale</aspectratio>
 					<bordertexture>mb_thumb_bg.png</bordertexture>
 					<bordersize>3</bordersize>
+					<visible>!Control.HasFocus(2040)</visible>
 				</control>
 				<control type="image">
 					<description>thumbnail hover</description>
 					<posx>10</posx>
 					<posy>10</posy>
-					<width>106</width>
-					<height>62</height>
+					<width>126</width>
+					<height>82</height>
 					<info>Listitem.Thumb</info>
 					<aspectratio>scale</aspectratio>
 					<bordertexture>mb_thumb_hover_bg.png</bordertexture>
@@ -205,14 +229,14 @@ mb.LoadShow()
 				</control>
 				<control type="label">
 					<description>episode title</description>
-					<posx>128</posx>
+					<posx>148</posx>
 					<posy>6</posy>
 					<width>440</width>
 					<height>30</height>
 					<align>left</align>
 					<aligny>top</aligny>
 					<info>ListItem.Label</info>
-					<font>font16b</font>
+					<font>font18</font>
 					<textcolor>FFFEFEFE</textcolor>
 				</control>			
 				<control type="label">
@@ -224,28 +248,23 @@ mb.LoadShow()
 					<align>right</align>
 					<aligny>top</aligny>
 					<label>Air Date: $INFO[ListItem.Date]</label>
-					<font>font12</font>
+					<font>font16</font>
 					<textcolor>FFCCCCCC</textcolor>
 				</control>
 				<control type="label">
 					<description>description</description>
-					<posx>128</posx>
+					<posx>148</posx>
 					<posy>31</posy>
 					<width>560</width>
 					<height>60</height>
 					<align>left</align>
 					<aligny>top</aligny>
 					<label>$INFO[ListItem.property(description)]</label>
-					<font>font14</font>
+					<font>font16</font>
 					<textcolor>FFCCCCCC</textcolor>
 					<wrapmultiline>true</wrapmultiline>
 				</control>			
 			</focusedlayout>
-<!--
-			<content type="action">
-				<onclick lang="python"><![CDATA[mb.PlayRecording()]]></onclick>
-			</content>
--->
 		</control>
 
 <!-- end EPISODES LIST -->
@@ -326,7 +345,6 @@ mb.LoadShow()
 <!-- end SORT LIST -->
 
 		<control type="group" id="2060">
-			
 			<control type="label">
 				<posx>1079</posx>
 				<posy>200</posy>
@@ -335,7 +353,6 @@ mb.LoadShow()
 				<aligny>top</aligny>
 				<textcolor>FF999999</textcolor>
 			</control>
-
 			<control type="list" id="2061">
 				<posx>1070</posx>
 				<posy>225</posy>
@@ -344,7 +361,7 @@ mb.LoadShow()
 				<onleft>2040</onleft>
 				<onright>-</onright>
 				<onup>2051</onup>
-				<ondown>-</ondown>
+				<ondown>2082</ondown>
 				<itemlayout width="164" height="27">
 					<control type="label">
 						<description>title</description>
@@ -394,9 +411,78 @@ mb.LoadShow()
 					<onclick lang="python"><![CDATA[mythboxee.SortDirSeriesEpisodes()]]></onclick>
 				</content>		
 			</control>
-			
 		</control>
 		
+
+		<control type="group" id="2080">
+			<control type="label" id="2081">
+				<posx>1079</posx>
+				<posy>300</posy>
+				<label>FILTERS:</label>
+				<font>font14b</font>
+				<aligny>top</aligny>
+				<textcolor>FF999999</textcolor>
+			</control>
+			
+			<control type="list" id="2082">
+				<posx>1070</posx>
+				<posy>325</posy>
+				<width>164</width>
+				<height>100</height>
+				<onleft>2040</onleft>
+				<onright>-</onright>
+				<onup>2061</onup>
+				<ondown>-</ondown>
+				<itemlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</itemlayout>
+				<focusedlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FFFFFFFF</textcolor>
+						<visible>Control.HasFocus(2082)</visible>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+					<control type="label">
+						<visible>!Control.HasFocus(2082)</visible>
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</focusedlayout>
+				<content type="action">
+					<onclick lang="python"><![CDATA[mb.FilterEpisodes()]]></onclick>
+				</content>		
+			</control>
+		</control>
 
 <!-- begin SHOW DETAILS CONTAINER -->
 
@@ -412,6 +498,27 @@ mb.LoadShow()
 		</control>
 
 <!-- end SHOW DETAILS CONTAINER -->
+
+		<control type="group">
+			<visible>App.HasSetting(loading)</visible>
+			<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+			<control type="image">
+				<width>1280</width>
+				<height>720</height>
+				<texture>black.png</texture>
+				<animation effect="fade" start="80" end="80" time="0" condition="true">Conditional</animation>
+			</control>
+			<control type="label">
+				<posx>530</posx>
+				<width>1280</width>
+				<height>720</height>
+				<align>cetner</align>
+				<aligny>center</aligny>
+				<font>sans40b</font>
+				<label>LOADING...</label>
+				<textcolor>ffffffff</textcolor>
+			</control>
+		</control>
 
 	</controls>
 </window>

@@ -4,43 +4,67 @@
 	<allowoverlay>yes</allowoverlay>
 	<onload lang="python"><![CDATA[
 from mythboxee import MythBoxee
-
 mb = MythBoxee()
-
-mb.GetRecordings()
+mb.LoadMain()
 ]]></onload>
 	<controls>
-		<control type="group" id="1010">
-			<control type="image" id="1011">
-				<width>1280</width>
-				<height>720</height>
-				<texture>mb_bg_setup.png</texture>
-			</control>
-			<control type="image" id="1012">
-				<description>logo</description>
-				<posx>450</posx>
-				<posy>250</posy>
-				<width>402</width>
-				<height>107</height>
-				<texture flipY="true" flipX="false">logo.png</texture>
-				<aspectratio>keep</aspectratio>
-			</control>
-		</control>
 		<control type="group" id="1020">
 			<control type="image" id="1021">
 				<width>1280</width>
 				<height>720</height>
 				<texture>mb_bg.png</texture>
 			</control>
+			<control type="image" id="1022">
+				<posx>10</posx>
+				<posy>10</posy>
+				<width>244</width>
+				<height>65</height>
+				<texture>logo.png</texture>
+			</control>
+		</control>
+		<control type="grouplist" id="1040">
+			<posy>28</posy>
+			<posx>940</posx>
+			<width>334</width>
+			<itemgap>10</itemgap>
+			<orientation>horizontal</orientation>
+			<ondown>1030</ondown>
+			<control type="button" id="1041">
+				<label>Refresh</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
+			</control>
+			<control type="button" id="1042">
+				<label>Settings</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14004)]]></onclick>
+			</control>
+<!--
+			780/500
+			<control type="button" id="1043">
+				<label>Send Logs</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>29</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mb.SendLogs()]]></onclick>
+			</control>
+-->
 		</control>
 		<control type="panel" id="1030">
 			<posx>22</posx>
 			<posy>82</posy>
 			<width>1280</width>
-			<height>592</height>
+			<height>692</height>
 			<onleft>-</onleft>
 			<onright>-</onright>
-			<onup>-</onup>
+			<onup>1040</onup>
 			<ondown>-</ondown>
 			<itemlayout width="420" height="120">
 				<control type="image">
@@ -153,6 +177,26 @@ mb.GetRecordings()
 			<content type="action">
 				<onclick lang="python"><![CDATA[mb.DisplayShow()]]></onclick>
 			</content>
+		</control>
+		<control type="group">
+			<visible>App.HasSetting(loading)</visible>
+			<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+			<control type="image">
+				<width>1280</width>
+				<height>720</height>
+				<texture>black.png</texture>
+				<animation effect="fade" start="80" end="80" time="0" condition="true">Conditional</animation>
+			</control>
+			<control type="label">
+				<posx>530</posx>
+				<width>1280</width>
+				<height>720</height>
+				<align>cetner</align>
+				<aligny>center</aligny>
+				<font>sans40b</font>
+				<label>LOADING...</label>
+				<textcolor>ffffffff</textcolor>
+			</control>
 		</control>
 	</controls>
 </window>
