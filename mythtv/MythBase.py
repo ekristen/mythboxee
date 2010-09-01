@@ -1076,6 +1076,7 @@ class MythDBBase( object ):
         except:
             raise MythDBError(MythError.DB_CREDENTIALS)
         sock.setblocking(0)
+        sock.settimeout(5)
         
         # spam the request a couple times
         sock.sendto(sreq, upnptup)

@@ -26,11 +26,13 @@ mb.LoadShow()
 
 		<control type="grouplist" id="1040">
 			<posy>28</posy>
-			<posx>940</posx>
-			<width>334</width>
+			<posx>1106</posx>
+			<width>166</width>
 			<itemgap>10</itemgap>
 			<orientation>horizontal</orientation>
 			<ondown>2040</ondown>
+<!--
+			940/334
 			<control type="button" id="1041">
 				<label>Refresh</label>
 				<texturefocus>bg_btn.png</texturefocus>
@@ -39,6 +41,7 @@ mb.LoadShow()
 				<align>center</align>
 				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
 			</control>
+-->
 			<control type="button" id="1042">
 				<label>Settings</label>
 				<texturefocus>bg_btn.png</texturefocus>
@@ -57,7 +60,7 @@ mb.LoadShow()
 				<align>center</align>
 				<onclick lang="python"><![CDATA[mb.SendLogs()]]></onclick>
 			</control>
--->
+-->			
 		</control>
 		
 <!-- END: TOP MENU -->
@@ -160,7 +163,7 @@ mb.LoadShow()
 					<align>left</align>
 					<aligny>top</aligny>
 					<info>ListItem.Label</info>
-					<font>font18</font>
+					<font>font18b</font>
 					<textcolor>FFFEFEFE</textcolor>
 					<wrapmultiline>true</wrapmultiline>
 				</control>
@@ -236,7 +239,7 @@ mb.LoadShow()
 					<align>left</align>
 					<aligny>top</aligny>
 					<info>ListItem.Label</info>
-					<font>font18</font>
+					<font>font18b</font>
 					<textcolor>FFFEFEFE</textcolor>
 				</control>			
 				<control type="label">
@@ -336,7 +339,7 @@ mb.LoadShow()
 					</control>			
 				</focusedlayout>
 				<content type="action">
-					<onclick lang="python"><![CDATA[mythboxee.SortBySeriesEpisodes()]]></onclick>
+					<onclick lang="python"><![CDATA[mb.SortBy()]]></onclick>
 				</content>		
 			</control>
 		
@@ -408,11 +411,10 @@ mb.LoadShow()
 					</control>			
 				</focusedlayout>
 				<content type="action">
-					<onclick lang="python"><![CDATA[mythboxee.SortDirSeriesEpisodes()]]></onclick>
+					<onclick lang="python"><![CDATA[mb.SortDir()]]></onclick>
 				</content>		
 			</control>
 		</control>
-		
 
 		<control type="group" id="2080">
 			<control type="label" id="2081">

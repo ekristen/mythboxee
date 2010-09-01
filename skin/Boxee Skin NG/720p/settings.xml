@@ -4,7 +4,8 @@
 	<onload lang="python"><![CDATA[
 import mc
 import mythboxee
-mb.LoadSettings()
+
+mb.SettingsInit()
 ]]></onload>
 	<controls>
 		<control type="group" id="1010">
@@ -53,7 +54,47 @@ mb.LoadSettings()
 				<password>true</password>
 				<font>font18</font>
 				<onup>1043</onup>
-				<ondown>1022</ondown>
+				<ondown>1045</ondown>
+			</control>
+			<control type="edit" id="1045">
+				<posx>820</posx>
+				<posy>265</posy>
+				<width>300</width>
+				<align>left</align>
+				<label>Database:</label>
+				<font>font18</font>
+				<onup>1044</onup>
+				<ondown>1047</ondown>
+			</control>
+
+		</control>
+
+		<control type="grouplist" id="1046">
+			<posx>820</posx>
+			<posy>295</posy>
+			<width>300</width>
+			<itemgap>0</itemgap>
+			<orientation>horizontal</orientation>
+			<ondown>1022</ondown>
+			<control type="button" id="1047">
+				<label>Test Connection</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<font>font14</font>
+				<height>30</height>
+				<align>center</align>
+				<aligny>center</aligny>
+				<onclick lang="python"><![CDATA[mb.TestDbSettings()]]></onclick>
+			</control>
+			<control type="button" id="1048">
+				<label>Save DB Settings</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<font>font14</font>
+				<height>30</height>
+				<align>center</align>
+				<aligny>center</aligny>
+				<onclick lang="python"><![CDATA[mb.SaveDbSettings()]]></onclick>
 			</control>
 		</control>
 
@@ -64,7 +105,7 @@ mb.LoadSettings()
 		<control type="group" id="1020">
 			<control type="label" id="1021">
 				<posx>820</posx>
-				<posy>300</posy>
+				<posy>360</posy>
 				<width>250</width>
 				<align>left</align>
 				<label>Stream Method</label>
@@ -72,7 +113,7 @@ mb.LoadSettings()
 			</control>
 			<control type="list" id="1022">
 				<posx>830</posx>
-				<posy>335</posy>
+				<posy>395</posy>
 				<width>164</width>
 				<height>100</height>
 				<onup>1044</onup>
@@ -135,7 +176,7 @@ mb.LoadSettings()
 		<control type="group" id="1030">
 			<control type="label" id="1031">
 				<posx>820</posx>
-				<posy>420</posy>
+				<posy>480</posy>
 				<width>250</width>
 				<align>left</align>
 				<label>SMB Share</label>
@@ -143,36 +184,53 @@ mb.LoadSettings()
 			</control>
 			<control type="edit" id="1032">
 				<posx>820</posx>
-				<posy>445</posy>
+				<posy>505</posy>
 				<width>300</width>
 				<label>Share:</label>
 				<align>left</align>
 				<font>font18</font>
 				<onup>1022</onup>
 				<ondown>1033</ondown>
-				<ontextchange lang="python"><![CDATA[mb.SaveSMBSettings()]]></ontextchange>
 			</control>
 			<control type="edit" id="1033">
 				<posx>820</posx>
-				<posy>475</posy>
+				<posy>535</posy>
 				<width>300</width>
 				<label>Username:</label>
 				<align>left</align>
 				<font>font18</font>
 				<onup>1032</onup>
 				<ondown>1034</ondown>
-				<ontextchange lang="python"><![CDATA[mb.SaveSMBSettings()]]></ontextchange>
 			</control>
 			<control type="edit" id="1034">
 				<posx>820</posx>
-				<posy>505</posy>
+				<posy>565</posy>
 				<width>300</width>
 				<label>Password:</label>
 				<align>left</align>
 				<font>font18</font>
 				<password>true</password>
 				<onup>1033</onup>
-				<ontextchange lang="python"><![CDATA[mb.SaveSMBSettings()]]></ontextchange>
+				<ondown>1071</ondown>
+			</control>
+		</control>
+		
+		<control type="grouplist" id="1070">
+			<posx>895</posx>
+			<posy>600</posy>
+			<width>300</width>
+			<itemgap>0</itemgap>
+			<orientation>horizontal</orientation>
+			<onup>1034</onup>
+			<control type="button" id="1071">
+				<label>Save SMB Settings</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<font>font14</font>
+				<height>30</height>
+				<align>center</align>
+				<aligny>center</aligny>
+				<onclick lang="python"><![CDATA[mb.SaveSMBSettings()]]></onclick>
 			</control>
 		</control>
 
@@ -226,6 +284,27 @@ mb.LoadSettings()
 -->
 <!-- END: CACHE SETTINGS -->
 
+		<control type="group" id="9000">
+			<visible>App.HasSetting(loadingsettings)</visible>
+			<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+			<control type="image" id="9001">
+				<width>1280</width>
+				<height>720</height>
+				<texture>black.png</texture>
+				<animation effect="fade" start="80" end="80" time="0" condition="true">Conditional</animation>
+			</control>
+			<control type="label" id="9002">
+				<posy>0</posy>
+				<posx>0</posx>
+				<width>1280</width>
+				<height>720</height>
+				<align>center</align>
+				<aligny>center</aligny>
+				<font>sans40b</font>
+				<label>LOADING...</label>
+				<textcolor>ffffffff</textcolor>
+			</control>
+		</control>
 
 	</controls>
 </window>
