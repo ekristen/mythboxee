@@ -24,8 +24,8 @@ mb.LoadMain()
 		</control>
 		<control type="grouplist" id="1040">
 			<posy>28</posy>
-			<posx>940</posx>
-			<width>334</width>
+			<posx>780</posx>
+			<width>500</width>
 			<itemgap>10</itemgap>
 			<orientation>horizontal</orientation>
 			<ondown>1030</ondown>
@@ -45,17 +45,14 @@ mb.LoadMain()
 				<align>center</align>
 				<onclick lang="python"><![CDATA[mc.ActivateWindow(14004)]]></onclick>
 			</control>
-<!--
-			780/500
 			<control type="button" id="1043">
-				<label>Send Logs</label>
+				<label>Status</label>
 				<texturefocus>bg_btn.png</texturefocus>
 				<texturenofocus></texturenofocus>
 				<height>29</height>
 				<align>center</align>
-				<onclick lang="python"><![CDATA[mb.SendLogs()]]></onclick>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14003)]]></onclick>
 			</control>
--->
 		</control>
 		<control type="panel" id="1030">
 			<posx>22</posx>

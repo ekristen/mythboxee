@@ -1,0 +1,132 @@
+<window type="window" id="14003">
+	<allowoverlay>yes</allowoverlay>
+	<onload lang="python"><![CDATA[
+import mc
+import mythboxee
+
+mb.StatusInit()
+]]></onload>
+	<controls>
+		<control type="group" id="1010">
+			<control type="image" id="1011">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg.png</texture>
+			</control>
+			<control type="image" id="1012">
+				<posx>10</posx>
+				<posy>10</posy>
+				<width>244</width>
+				<height>65</height>
+				<texture>logo.png</texture>
+			</control>
+		</control>
+
+<!-- BEGIN ENCODER STATUS -->
+
+	<control type="group" id="1020">
+		<control type="image" id="1021">
+			<posx>20</posx>
+			<posy>120</posy>
+			<height>255</height>
+			<width>610</width>
+			<texture>bg_box.png</texture>
+		</control>
+		<control type="label" id="1022">
+			<posx>30</posx>
+			<posy>90</posy>
+			<label>Encoder Status</label>
+			<font>font28b</font>
+		</control>
+	</control>
+
+<!-- END ENCODE STATUS -->
+
+<!-- BEGIN SYSTEM INFORMATION -->
+
+	<control type="group" id="1030">
+		<control type="image" id="1031">
+			<posx>650</posx>
+			<posy>120</posy>
+			<height>255</height>
+			<width>610</width>
+			<texture>bg_box.png</texture>
+		</control>
+		<control type="label" id="1032">
+			<posx>660</posx>
+			<posy>90</posy>
+			<label>System Information</label>
+			<font>font28b</font>
+		</control>
+	</control>
+
+<!-- END SYSTEM INFORMATION -->
+
+<!-- BEGIN SCHEDULE -->
+
+		<control type="group" id="1040">
+			<control type="image" id="1041">
+				<posx>20</posx>
+				<posy>460</posy>
+				<height>240</height>
+				<width>610</width>
+				<texture>bg_box.png</texture>
+			</control>
+			<control type="label" id="1042">
+				<posx>30</posx>
+				<posy>430</posy>
+				<label>Upcoming Schedule</label>
+				<font>font28b</font>
+			</control>
+		</control>
+
+<!-- END SCHEDULE -->
+
+<!-- BEGIN JOB QUEUE -->
+
+		<control type="group" id="1050">
+			<control type="image" id="1051">
+				<posx>650</posx>
+				<posy>460</posy>
+				<height>240</height>
+				<width>610</width>
+				<texture>bg_box.png</texture>
+			</control>
+			<control type="label" id="1052">
+				<posx>660</posx>
+				<posy>430</posy>
+				<label>Job Queue</label>
+				<font>font28b</font>
+			</control>
+		</control>
+
+<!-- END JOB QUEUE -->
+
+<!-- BEGIN LOADING OVERLAY -->
+
+		<control type="group" id="9000">
+			<visible>App.HasSetting(loadingstatus)</visible>
+			<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+			<control type="image" id="9001">
+				<width>1280</width>
+				<height>720</height>
+				<texture>black.png</texture>
+				<animation effect="fade" start="80" end="80" time="0" condition="true">Conditional</animation>
+			</control>
+			<control type="label" id="9002">
+				<posy>0</posy>
+				<posx>0</posx>
+				<width>1280</width>
+				<height>720</height>
+				<align>center</align>
+				<aligny>center</aligny>
+				<font>sans40b</font>
+				<label>LOADING...</label>
+				<textcolor>ffffffff</textcolor>
+			</control>
+		</control>
+
+<!-- END LOADING OVERLAY -->
+
+	</controls>
+</window>

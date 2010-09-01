@@ -25,12 +25,13 @@ class MythBoxee:
 
 
 	"""
-	__init__ - Lets make a connection to the backend!
+	__init__ - Lets get things rolling
 	"""
 	def __init__(self):
 		self.log("def(__init__): Start =========================================================")
-		self.log("def(__init__): Version: " + self.version)
-		self.log("def(__init__): Python Version: " + str(sys.version_info))
+		self.log("def(__init__): MythBoxee Version: " + self.version)
+		self.log("def(__init__):    Python Version: " + str(sys.version_info))
+		self.log()
 
 		self.config = mc.GetApp().GetLocalConfig()
 
@@ -170,15 +171,21 @@ class MythBoxee:
 		mainItems = len(mc.GetWindow(14001).GetList(1030).GetItems())
 
 		self.recs = self.be.getRecordings()
-		
+
+		self.banners = pickle.loads(self.config.GetValue("cache.banners"))
+		self.series = pickle.loads(self.config.GetValue("cache.series"))
+
 		if not cacheTime or mainItems == 0 or cacheTime <= str(time.time() - 2400):
+			self.log("def(GetRecordings): Cached Expired, Processing Recordings")
 			x=0
 			for recording in self.recs:
 				if recording.title not in self.titles:
 					self.titles.append(str(recording.title))
-					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
-					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
 					self.shows[str(recording.title)] = []
+				if recording.title not in self.banners:
+					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
+				if recording.title not in self.series:
+					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
 
 				single = [str(recording.title), str(recording.subtitle), str(recording.description), str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
 				self.shows[str(recording.title)].append(single)
@@ -191,6 +198,7 @@ class MythBoxee:
 				self.config.SetValue("cache.series", pickle.dumps(self.series))
 				self.config.SetValue("cache.shows", pickle.dumps(self.shows))
 		else:
+			self.log("def(GetRecordings): Cache OK, Retrieving from Cache")
 			self.titles = pickle.loads(self.config.GetValue("cache.titles"))
 			self.banners = pickle.loads(self.config.GetValue("cache.banners"))
 			self.series = pickle.loads(self.config.GetValue("cache.series"))
@@ -711,6 +719,7 @@ class MythBoxee:
 	SettingsInit - Init function for Settings Window
 	"""
 	def SettingsInit(self):
+		self.log("def(SettingsInit): Start =========================================================")
 		self.config.SetValue("loadingsettings", "true")
 		if not self.config.GetValue("dbconn"):
 			mc.ShowDialogOk("MythBoxee", "Welcome to MythBoxee! Looks like this is the first time you have run this app. Please fill out all the settings and you'll be on your way to using this app.")
@@ -734,6 +743,39 @@ class MythBoxee:
 		else:
 			self.LoadSettings()
 		self.config.Reset("loadingsettings")
+		self.log("def(SettingsInit): End ===========================================================")
+
+
+	"""
+	StatusInit -- Function called when Status Window is opened.
+	
+	This function pulls status information from the MythTV backend and displays it to the user.
+	Status information includes load, uptime, free space, upcoming recordings, guide data, etc ...
+	"""
+	def StatusInit(self):
+		self.log("def(StatusInit): Start =========================================================")
+		self.config.SetValue("loadingstatus", "true")
+
+		uptime = self.be.getUptime()
+		load = self.be.getLoad()
+		freespace = self.be.getFreeSpace()
+		guidedata = self.be.getLastGuideData()
+		isRecording = self.be.isRecording(1)
+		freespacesummary = self.be.getFreeSpaceSummary()
+		recorders = self.be.getRecorderList()
+		upcoming = self.be.getUpcomingRecordings()
+
+		self.log("def(StatusInit): Recorders: " + str(recorders))
+		self.log("def(StatusInit): Uptime: " + str(uptime))
+		self.log("def(StatusInit): Load: " + str(load))
+		self.log("def(StatusInit): Free Space: " + str(freespace))
+		self.log("def(StatusInit): Guide Data: " + str(guidedata))
+		self.log("def(StatusInit): Summary: " + str(freespacesummary))
+		self.log("def(StatusInit): Upcoming: " + str(upcoming))
+		self.log("def(StatusInit): Recording: " + str(isRecording))
+
+		self.config.Reset("loadingstatus")
+		self.log("def(StatusInit): End ===========================================================")
 
 
 	"""
