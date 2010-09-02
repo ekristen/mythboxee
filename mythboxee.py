@@ -31,7 +31,6 @@ class MythBoxee:
 		self.log("def(__init__): Start =========================================================")
 		self.log("def(__init__): MythBoxee Version: " + self.version)
 		self.log("def(__init__):    Python Version: " + str(sys.version_info))
-		self.log()
 
 		self.config = mc.GetApp().GetLocalConfig()
 
@@ -179,13 +178,16 @@ class MythBoxee:
 			self.log("def(GetRecordings): Cached Expired, Processing Recordings")
 			x=0
 			for recording in self.recs:
+				self.log("def(GetRecordings): Title: " + str(recording.title))
 				if recording.title not in self.titles:
 					self.titles.append(str(recording.title))
 					self.shows[str(recording.title)] = []
 				if recording.title not in self.banners:
 					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
+					self.log("def(GetRecordings): Artwork: " + str(self.banners[str(recording.title)]))
 				if recording.title not in self.series:
 					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
+					self.log("def(GetRecordings): SeriesID: " + str(self.series[str(recording.title)]))
 
 				single = [str(recording.title), str(recording.subtitle), str(recording.description), str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
 				self.shows[str(recording.title)].append(single)
@@ -217,6 +219,7 @@ class MythBoxee:
 		self.log("def(SetShows): Start =========================================================")
 		items = mc.ListItems()
 		for title in self.titles:
+			self.log("def(SetShows): Title: " + str(title))
 			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
 			item.SetLabel(str(title))
 			item.SetThumbnail(self.banners[title])
@@ -756,14 +759,20 @@ class MythBoxee:
 		self.log("def(StatusInit): Start =========================================================")
 		self.config.SetValue("loadingstatus", "true")
 
-		uptime = self.be.getUptime()
-		load = self.be.getLoad()
-		freespace = self.be.getFreeSpace()
-		guidedata = self.be.getLastGuideData()
-		isRecording = self.be.isRecording(1)
-		freespacesummary = self.be.getFreeSpaceSummary()
-		recorders = self.be.getRecorderList()
-		upcoming = self.be.getUpcomingRecordings()
+		try:
+			uptime = self.be.getUptime()
+			load = self.be.getLoad()
+			freespace = self.be.getFreeSpace()
+			guidedata = self.be.getLastGuideData()
+			isRecording = self.be.isRecording(1)
+			freespacesummary = self.be.getFreeSpaceSummary()
+			recorders = self.be.getRecorderList()
+			upcoming = self.be.getUpcomingRecordings()
+		except MythError, e:
+			self.log("def(StatusInit): Exception: " + e.message)
+			mc.ShowDialogOk("MythBoxee", "Whoops! Something went wrong while trying to load this screen. Try again.")
+			self.config.Reset("loadingstatus")
+			mc.CloseWindow()
 
 		self.log("def(StatusInit): Recorders: " + str(recorders))
 		self.log("def(StatusInit): Uptime: " + str(uptime))
