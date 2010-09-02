@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<window type="window" id="14001">
+	<defaultcontrol always="true">1030</defaultcontrol>
+	<allowoverlay>yes</allowoverlay>
+	<onload lang="python"><![CDATA[
+from mythboxee import MythBoxee
+mb = MythBoxee()
+mb.LoadMain()
+]]></onload>
+	<controls>
+		<control type="group" id="1020">
+			<control type="image" id="1021">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg.png</texture>
+			</control>
+			<control type="image" id="1022">
+				<posx>10</posx>
+				<posy>10</posy>
+				<width>244</width>
+				<height>65</height>
+				<texture>logo.png</texture>
+			</control>
+		</control>
+		<control type="grouplist" id="1040">
+			<posy>28</posy>
+			<posx>780</posx>
+			<width>500</width>
+			<itemgap>10</itemgap>
+			<orientation>horizontal</orientation>
+			<ondown>1030</ondown>
+			<control type="button" id="1041">
+				<label>Refresh</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
+			</control>
+			<control type="button" id="1042">
+				<label>Settings</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14004)]]></onclick>
+			</control>
+			<control type="button" id="1043">
+				<label>Status</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>29</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14003)]]></onclick>
+			</control>
+		</control>
+		<control type="panel" id="1030">
+			<posx>22</posx>
+			<posy>82</posy>
+			<width>1280</width>
+			<height>692</height>
+			<onleft>-</onleft>
+			<onright>-</onright>
+			<onup>1040</onup>
+			<ondown>-</ondown>
+			<itemlayout width="420" height="120">
+				<control type="image">
+					<description>background</description>
+					<posx>0</posx>
+					<posy>0</posy>
+					<width>400</width>
+					<height>100</height>
+					<texture border="5">mb_item_big.png</texture>
+				</control>
+				<control type="image">
+					<description>thumbnail</description>
+					<posx>10</posx>
+					<posy>10</posy>
+					<width>380</width>
+					<height>62</height>
+					<info>Listitem.Thumb</info>
+					<aspectratio>scale</aspectratio>
+					<bordersize>3</bordersize>
+					<bordertexture>mb_thumb_bg.png</bordertexture>
+				</control>
+				<control type="label">
+					<description>show title</description>
+					<posx>10</posx>
+					<posy>75</posy>
+					<width>250</width>
+					<height>60</height>
+					<align>left</align>
+					<aligny>top</aligny>
+					<info>ListItem.Label</info>
+					<font>font16b</font>
+					<textcolor>FFFEFEFE</textcolor>
+				</control>			
+				<control type="label">
+					<description>videos</description>
+					<posx>385</posx>
+					<posy>76</posy>
+					<width>152</width>
+					<height>60</height>
+					<align>right</align>
+					<aligny>top</aligny>
+					<label>Recordings: $INFO[ListItem.property(custom:videos)]</label>
+					<font>font14</font>
+					<textcolor>FFCCCCCC</textcolor>
+				</control>
+			</itemlayout>
+			<focusedlayout width="420" height="120">
+				<control type="togglebutton">
+					<description>background</description>
+					<posx>0</posx>
+					<posy>0</posy>
+					<width>400</width>
+					<height>100</height>
+					<texturefocus border="5">mb_item_big_hover.png</texturefocus>
+					<texturenofocus border="5">mb_item_big_hover.png</texturenofocus>
+					<alttexturefocus border="5">mb_item_big.png</alttexturefocus>
+					<alttexturenofocus border="5">mb_item_big.png</alttexturenofocus>
+					<usealttexture>!Control.HasFocus(1030)</usealttexture>
+				</control>
+				<control type="image">
+					<description>thumbnail</description>
+					<posx>10</posx>
+					<posy>10</posy>
+					<width>106</width>
+					<height>62</height>
+					<info>Listitem.Thumb</info>
+					<aspectratio>scale</aspectratio>
+					<bordertexture>mb_thumb_bg.png</bordertexture>
+					<bordersize>3</bordersize>
+				</control>
+				<control type="image">
+					<description>thumbnail hover</description>
+					<posx>10</posx>
+					<posy>10</posy>
+					<width>380</width>
+					<height>62</height>
+					<info>Listitem.Thumb</info>
+					<aspectratio>scale</aspectratio>
+					<bordertexture>mb_thumb_hover_bg.png</bordertexture>
+					<bordersize>3</bordersize>
+					<visible>Control.HasFocus(1030)</visible>
+				</control>
+				<control type="label">
+					<description>show title</description>
+					<posx>10</posx>
+					<posy>75</posy>
+					<width>250</width>
+					<height>60</height>
+					<align>left</align>
+					<aligny>top</aligny>
+					<info>ListItem.Label</info>
+					<font>font16b</font>
+					<textcolor>FFFEFEFE</textcolor>
+					<scroll>true</scroll>
+				</control>			
+				<control type="label">
+					<description>videos</description>
+					<posx>385</posx>
+					<posy>76</posy>
+					<width>152</width>
+					<height>60</height>
+					<align>right</align>
+					<aligny>top</aligny>
+					<label>Recordings: $INFO[ListItem.property(custom:videos)]</label>
+					<font>font14</font>
+					<textcolor>FFCCCCCC</textcolor>
+					<scroll>true</scroll>
+				</control>			
+			</focusedlayout>
+			<content type="action">
+				<onclick lang="python"><![CDATA[mb.DisplayShow()]]></onclick>
+			</content>
+		</control>
+		<control type="group">
+			<visible>App.HasSetting(loadingmain)</visible>
+			<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+			<control type="image">
+				<width>1280</width>
+				<height>720</height>
+				<texture>black.png</texture>
+				<animation effect="fade" start="80" end="80" time="0" condition="true">Conditional</animation>
+			</control>
+			<control type="label">
+				<posx>530</posx>
+				<width>1280</width>
+				<height>720</height>
+				<align>cetner</align>
+				<aligny>center</aligny>
+				<font>sans40b</font>
+				<label>LOADING...</label>
+				<textcolor>ffffffff</textcolor>
+			</control>
+		</control>
+	</controls>
+</window>

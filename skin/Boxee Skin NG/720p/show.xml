@@ -1,0 +1,526 @@
+<?xml version="1.0"?>
+<window type="window" id="14002">
+	<defaultcontrol always="true">2040</defaultcontrol>
+	<allowoverlay>true</allowoverlay>
+	<onload lang="python"><![CDATA[
+import mythboxee
+mb.LoadShow()
+]]></onload>
+	<controls>
+		<control type="group" id="2020">
+			<control type="image" id="2021">
+				<width>1280</width>
+				<height>720</height>
+				<texture>mb_bg.png</texture>
+			</control>
+			<control type="image" id="2022">
+				<posx>10</posx>
+				<posy>10</posy>
+				<width>244</width>
+				<height>65</height>
+				<texture>logo.png</texture>
+			</control>
+		</control>
+
+<!-- START: TOP MENU -->
+
+		<control type="grouplist" id="1040">
+			<posy>28</posy>
+			<posx>1106</posx>
+			<width>166</width>
+			<itemgap>10</itemgap>
+			<orientation>horizontal</orientation>
+			<ondown>2040</ondown>
+<!--
+			940/334
+			<control type="button" id="1041">
+				<label>Refresh</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
+			</control>
+-->
+			<control type="button" id="1042">
+				<label>Settings</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14004)]]></onclick>
+			</control>
+<!--
+			780/500
+			<control type="button" id="1043">
+				<label>Send Logs</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>29</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mb.SendLogs()]]></onclick>
+			</control>
+-->			
+		</control>
+		
+<!-- END: TOP MENU -->
+
+		<control type="group" id="2030">
+			<description>details box</description>
+			<posx>28</posx>
+			<posy>81</posy>
+			<onleft>-</onleft>
+			<onright>2040</onright>
+			<onup>1040</onup>
+			<ondown>-</ondown>
+			<control type="image">
+				<description>details box's background</description>
+				<posx>0</posx>
+				<posy>0</posy>
+				<width>283</width>
+				<height>630</height>
+				<texture>mb_show.png</texture>
+			</control>
+			<control type="image">
+				<description>thumbnail</description>
+				<posx>15</posx>
+				<posy>10</posy>
+				<width>253</width>
+				<height>350</height>
+				<texture>$INFO[Container(2070).ListItem.Thumb]</texture>
+				<aspectratio>scale</aspectratio>
+				<fadetime>500</fadetime>
+			</control>
+			<control type="label">
+				<description>show title</description>
+				<posx>22</posx>
+				<posy>370</posy>
+				<width>228</width>
+				<height>30</height>
+				<align>left</align>
+				<aligny>top</aligny>
+				<scroll>true</scroll>
+				<label>$INFO[Container(2070).ListItem.Label]</label>
+				<font>font18</font>
+				<textcolor>FFFEFEFE</textcolor>
+				<wrapmultiline>true</wrapmultiline>
+			</control>			
+			<control type="textbox">
+				<description>description</description>
+				<posx>22</posx>
+				<posy>395</posy>
+				<width>228</width>
+				<height>215</height>
+				<align>left</align>
+				<aligny>top</aligny>
+				<scroll>true</scroll>
+				<label>$INFO[Container(2070).ListItem.property(description)]</label>
+				<font>font16</font>
+				<textcolor>FFCCCCCC</textcolor>
+				<autoscroll delay="3000" time="2000" repeat="10000">Control.HasFocus(2040)</autoscroll>
+			</control>			
+		</control>
+
+<!-- end SHOW DETAILS -->
+
+<!-- begin EPISODES LIST -->
+
+		<control type="list" id="2040">
+			<posx>345</posx>
+			<posy>82</posy>
+			<width>700</width>
+			<height>630</height>
+			<onleft>-</onleft>
+			<onright>2051</onright>
+			<onup>1040</onup>
+			<ondown>-</ondown>
+			<itemlayout width="700" height="105">
+				<control type="image">
+					<description>background</description>
+					<posx>0</posx>
+					<posy>0</posy>
+					<width>700</width>
+					<height>102</height>
+					<texture border="5">mb_item_big.png</texture>
+				</control>
+				<control type="image">
+					<description>thumbnail</description>
+					<posx>10</posx>
+					<posy>10</posy>
+					<width>126</width>
+					<height>82</height>
+					<info>ListItem.Thumb</info>
+					<aspectratio>scale</aspectratio>
+					<bordersize>3</bordersize>
+					<bordertexture>mb_thumb_bg.png</bordertexture>
+				</control>
+				<control type="label">
+					<description>episode title</description>
+					<posx>148</posx>
+					<posy>6</posy>
+					<width>440</width>
+					<height>30</height>
+					<align>left</align>
+					<aligny>top</aligny>
+					<info>ListItem.Label</info>
+					<font>font18b</font>
+					<textcolor>FFFEFEFE</textcolor>
+					<wrapmultiline>true</wrapmultiline>
+				</control>
+				<control type="label">
+					<description>original air date</description>
+					<posx>690</posx>
+					<posy>5</posy>
+					<width>240</width>
+					<height>10</height>
+					<align>right</align>
+					<aligny>top</aligny>
+					<label>Air Date: $INFO[ListItem.Date]</label>
+					<font>font16</font>
+					<textcolor>FFCCCCCC</textcolor>
+				</control>
+				<control type="label">
+					<description>description</description>
+					<posx>148</posx>
+					<posy>31</posy>
+					<width>560</width>
+					<height>60</height>
+					<align>left</align>
+					<aligny>top</aligny>
+					<label>$INFO[ListItem.property(description)]</label>
+					<font>font16</font>
+					<textcolor>FFCCCCCC</textcolor>
+					<wrapmultiline>true</wrapmultiline>
+				</control>
+			</itemlayout>
+			<focusedlayout width="700" height="105">
+				<control type="togglebutton">
+					<description>background</description>
+					<posx>0</posx>
+					<posy>0</posy>
+					<width>700</width>
+					<height>102</height>
+					<texturefocus border="5">mb_item_big_hover.png</texturefocus>
+					<texturenofocus border="5">mb_item_big_hover.png</texturenofocus>
+					<alttexturefocus border="5">mb_item_big.png</alttexturefocus>
+					<alttexturenofocus border="5">mb_item_big.png</alttexturenofocus>
+					<usealttexture>!Control.HasFocus(2040)</usealttexture>
+				</control>
+				<control type="image">
+					<description>thumbnail</description>
+					<posx>10</posx>
+					<posy>10</posy>
+					<width>126</width>
+					<height>82</height>
+					<info>Listitem.Thumb</info>
+					<aspectratio>scale</aspectratio>
+					<bordertexture>mb_thumb_bg.png</bordertexture>
+					<bordersize>3</bordersize>
+					<visible>!Control.HasFocus(2040)</visible>
+				</control>
+				<control type="image">
+					<description>thumbnail hover</description>
+					<posx>10</posx>
+					<posy>10</posy>
+					<width>126</width>
+					<height>82</height>
+					<info>Listitem.Thumb</info>
+					<aspectratio>scale</aspectratio>
+					<bordertexture>mb_thumb_hover_bg.png</bordertexture>
+					<bordersize>3</bordersize>
+					<visible>Control.HasFocus(2040)</visible>
+				</control>
+				<control type="label">
+					<description>episode title</description>
+					<posx>148</posx>
+					<posy>6</posy>
+					<width>440</width>
+					<height>30</height>
+					<align>left</align>
+					<aligny>top</aligny>
+					<info>ListItem.Label</info>
+					<font>font18b</font>
+					<textcolor>FFFEFEFE</textcolor>
+				</control>			
+				<control type="label">
+					<description>original air date</description>
+					<posx>690</posx>
+					<posy>5</posy>
+					<width>240</width>
+					<height>10</height>
+					<align>right</align>
+					<aligny>top</aligny>
+					<label>Air Date: $INFO[ListItem.Date]</label>
+					<font>font16</font>
+					<textcolor>FFCCCCCC</textcolor>
+				</control>
+				<control type="label">
+					<description>description</description>
+					<posx>148</posx>
+					<posy>31</posy>
+					<width>560</width>
+					<height>60</height>
+					<align>left</align>
+					<aligny>top</aligny>
+					<label>$INFO[ListItem.property(description)]</label>
+					<font>font16</font>
+					<textcolor>FFCCCCCC</textcolor>
+					<wrapmultiline>true</wrapmultiline>
+				</control>			
+			</focusedlayout>
+		</control>
+
+<!-- end EPISODES LIST -->
+
+<!-- begin SORT LIST -->
+
+		<control type="group" id="2050">
+			<control type="label">
+				<posx>1079</posx>
+				<posy>75</posy>
+				<label>SORT:</label>
+				<font>font14b</font>
+				<aligny>top</aligny>
+				<textcolor>FF999999</textcolor>
+			</control>			
+
+			<control type="list" id="2051">
+				<posx>1070</posx>
+				<posy>100</posy>
+				<width>164</width>
+				<height>100</height>
+				<onleft>2040</onleft>
+				<onright>-</onright>
+				<onup>-</onup>
+				<ondown>2061</ondown>
+				<itemlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>
+				</itemlayout>
+				<focusedlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FFFFFFFF</textcolor>
+						<visible>Control.HasFocus(2051)</visible>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+					<control type="label">
+						<visible>!Control.HasFocus(2051)</visible>
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</focusedlayout>
+				<content type="action">
+					<onclick lang="python"><![CDATA[mb.SortBy()]]></onclick>
+				</content>		
+			</control>
+		
+		</control>
+
+<!-- end SORT LIST -->
+
+		<control type="group" id="2060">
+			<control type="label">
+				<posx>1079</posx>
+				<posy>200</posy>
+				<label>SORT DIRECTION:</label>
+				<font>font14b</font>
+				<aligny>top</aligny>
+				<textcolor>FF999999</textcolor>
+			</control>
+			<control type="list" id="2061">
+				<posx>1070</posx>
+				<posy>225</posy>
+				<width>164</width>
+				<height>100</height>
+				<onleft>2040</onleft>
+				<onright>-</onright>
+				<onup>2051</onup>
+				<ondown>2082</ondown>
+				<itemlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</itemlayout>
+				<focusedlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FFFFFFFF</textcolor>
+						<visible>Control.HasFocus(2061)</visible>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+					<control type="label">
+						<visible>!Control.HasFocus(2061)</visible>
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</focusedlayout>
+				<content type="action">
+					<onclick lang="python"><![CDATA[mb.SortDir()]]></onclick>
+				</content>		
+			</control>
+		</control>
+
+		<control type="group" id="2080">
+			<control type="label" id="2081">
+				<posx>1079</posx>
+				<posy>300</posy>
+				<label>FILTERS:</label>
+				<font>font14b</font>
+				<aligny>top</aligny>
+				<textcolor>FF999999</textcolor>
+			</control>
+			
+			<control type="list" id="2082">
+				<posx>1070</posx>
+				<posy>325</posy>
+				<width>164</width>
+				<height>100</height>
+				<onleft>2040</onleft>
+				<onright>-</onright>
+				<onup>2061</onup>
+				<ondown>-</ondown>
+				<itemlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</itemlayout>
+				<focusedlayout width="164" height="27">
+					<control type="label">
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FFFFFFFF</textcolor>
+						<visible>Control.HasFocus(2082)</visible>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+					<control type="label">
+						<visible>!Control.HasFocus(2082)</visible>
+						<description>title</description>
+						<posx>9</posx>
+						<posy>0</posy>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
+						<aligny>top</aligny>
+						<info>ListItem.Label</info>
+						<font>font16</font>
+						<textcolor>FF999999</textcolor>
+						<selectedcolor>FFFFFFFF</selectedcolor>
+					</control>			
+				</focusedlayout>
+				<content type="action">
+					<onclick lang="python"><![CDATA[mb.FilterEpisodes()]]></onclick>
+				</content>		
+			</control>
+		</control>
+
+<!-- begin SHOW DETAILS CONTAINER -->
+
+		<control type="list" id="2070">
+			<posx>1</posx>
+			<posy>1</posy>
+			<width>1</width>
+			<height>1</height>
+			<itemlayout width="1" height="1">
+			</itemlayout>
+			<focusedlayout width="1" height="1">
+			</focusedlayout>
+		</control>
+
+<!-- end SHOW DETAILS CONTAINER -->
+
+		<control type="group">
+			<visible>App.HasSetting(loading)</visible>
+			<animation effect="fade" start="0" end="100" time="150">VisibleChange</animation>
+			<control type="image">
+				<width>1280</width>
+				<height>720</height>
+				<texture>black.png</texture>
+				<animation effect="fade" start="80" end="80" time="0" condition="true">Conditional</animation>
+			</control>
+			<control type="label">
+				<posx>530</posx>
+				<width>1280</width>
+				<height>720</height>
+				<align>cetner</align>
+				<aligny>center</aligny>
+				<font>sans40b</font>
+				<label>LOADING...</label>
+				<textcolor>ffffffff</textcolor>
+			</control>
+		</control>
+
+	</controls>
+</window>
