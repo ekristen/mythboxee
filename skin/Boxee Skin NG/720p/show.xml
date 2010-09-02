@@ -26,13 +26,11 @@ mb.LoadShow()
 
 		<control type="grouplist" id="1040">
 			<posy>28</posy>
-			<posx>1106</posx>
-			<width>166</width>
+			<posx>780</posx>
+			<width>500</width>
 			<itemgap>10</itemgap>
 			<orientation>horizontal</orientation>
-			<ondown>2040</ondown>
-<!--
-			940/334
+			<ondown>1030</ondown>
 			<control type="button" id="1041">
 				<label>Refresh</label>
 				<texturefocus>bg_btn.png</texturefocus>
@@ -41,7 +39,14 @@ mb.LoadShow()
 				<align>center</align>
 				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
 			</control>
--->
+			<control type="button" id="1043">
+				<label>Status</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>29</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14003)]]></onclick>
+			</control>
 			<control type="button" id="1042">
 				<label>Settings</label>
 				<texturefocus>bg_btn.png</texturefocus>
@@ -50,17 +55,6 @@ mb.LoadShow()
 				<align>center</align>
 				<onclick lang="python"><![CDATA[mc.ActivateWindow(14004)]]></onclick>
 			</control>
-<!--
-			780/500
-			<control type="button" id="1043">
-				<label>Send Logs</label>
-				<texturefocus>bg_btn.png</texturefocus>
-				<texturenofocus></texturenofocus>
-				<height>29</height>
-				<align>center</align>
-				<onclick lang="python"><![CDATA[mb.SendLogs()]]></onclick>
-			</control>
--->			
 		</control>
 		
 <!-- END: TOP MENU -->
