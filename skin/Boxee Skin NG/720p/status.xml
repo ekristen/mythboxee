@@ -38,6 +38,12 @@ mb.StatusInit()
 			<label>Encoder Status</label>
 			<font>font28b</font>
 		</control>
+		<control type="label" id="1023">
+			<posx>45</posx>
+			<posy>135</posy>
+			<label>Loading Encoder Status ...</label>
+			<font>font18</font>
+		</control>
 	</control>
 
 <!-- END ENCODE STATUS -->
@@ -58,6 +64,12 @@ mb.StatusInit()
 			<label>System Information</label>
 			<font>font28b</font>
 		</control>
+		<control type="label" id="1033">
+			<posx>675</posx>
+			<posy>135</posy>
+			<label>Loading System Information ...</label>
+			<font>font18</font>
+		</control>
 	</control>
 
 <!-- END SYSTEM INFORMATION -->
@@ -75,8 +87,30 @@ mb.StatusInit()
 			<control type="label" id="1042">
 				<posx>30</posx>
 				<posy>430</posy>
-				<label>Upcoming Schedule</label>
+				<label>Schedule</label>
 				<font>font28b</font>
+			</control>
+			<control type="list" id="1043">
+				<posx>45</posx>
+				<posy>460</posy>
+				<itemlayout width="580" height="220">
+					<control type="label">
+						<posx>5</posx>
+						<posy>5</posy>
+						<width>400</width>
+						<height>50</height>
+						<info>ListItem.Label</info>
+					</control>
+				</itemlayout>
+				<focusedlayout width="580" height="220">
+					<control type="label">
+						<posx>5</posx>
+						<posy>5</posy>
+						<width>400</width>
+						<height>50</height>
+						<info>ListItem.Label</info>
+					</control>
+				</focusedlayout>
 			</control>
 		</control>
 

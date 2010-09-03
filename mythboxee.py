@@ -774,6 +774,20 @@ class MythBoxee:
 			self.config.Reset("loadingstatus")
 			mc.CloseWindow()
 
+		if isRecording == True:
+			is_recording_txt = "is recording"
+		else:
+			is_recording_txt = "is not recording"
+
+		mc.GetWindow(14003).GetLabel(1023).SetLabel("Encoder " + str(recorders[0]) + " " + is_recording_txt + ".")
+		#mc.GetWindow(14003).GetLabel(1033).SetLabel()
+
+		text = None
+		for program in upcoming:
+			text = text + str(program.title) + "\n"
+
+		mc.GetWindow(14003).GetEdit(1043).SetText(text)
+
 		self.log("def(StatusInit): Recorders: " + str(recorders))
 		self.log("def(StatusInit): Uptime: " + str(uptime))
 		self.log("def(StatusInit): Load: " + str(load))
