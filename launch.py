@@ -1,5 +1,4 @@
 import mc
-from mythboxee import MythBoxee
 
 # DEBUG #
 #mc.GetApp().GetLocalConfig().ResetAll()
