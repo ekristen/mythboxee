@@ -171,8 +171,10 @@ class MythBoxee:
 
 		self.recs = self.be.getRecordings()
 
-		self.banners = pickle.loads(self.config.GetValue("cache.banners"))
-		self.series = pickle.loads(self.config.GetValue("cache.series"))
+		if self.config.GetValue("cache.banners"):
+			self.banners = pickle.loads(self.config.GetValue("cache.banners"))
+		if self.config.GetValue("cache.series"):
+			self.series = pickle.loads(self.config.GetValue("cache.series"))
 
 		if not cacheTime or mainItems == 0 or cacheTime <= str(time.time() - 2400):
 			self.log("def(GetRecordings): Cached Expired, Processing Recordings")
@@ -768,7 +770,7 @@ class MythBoxee:
 			freespacesummary = self.be.getFreeSpaceSummary()
 			recorders = self.be.getRecorderList()
 			upcoming = self.be.getUpcomingRecordings()
-		except MythError, e:
+		except Exception, e:
 			self.log("def(StatusInit): Exception: " + e.message)
 			mc.ShowDialogOk("MythBoxee", "Whoops! Something went wrong while trying to load this screen. Try again.")
 			self.config.Reset("loadingstatus")
