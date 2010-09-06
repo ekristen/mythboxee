@@ -169,7 +169,15 @@ class MythBoxee:
 		cacheTime = self.config.GetValue("cache.time")
 		mainItems = len(mc.GetWindow(14001).GetList(1030).GetItems())
 
-		self.recs = self.be.getRecordings()
+		try:
+			self.recs = self.be.getRecordings()
+		except Exception, e:
+			if e.name:
+				self.log("def(GetRecordings): Exception: " + e.ename)
+			else:
+				self.log("def(GetRecordings): Exception: Unknown Error")
+			mc.ShowDialogOk("MythBoxee", "Whoops! Something went wrong while trying to load this screen. Launch the app again it closes.")
+			mc.CloseWindow()
 
 		if self.config.GetValue("cache.banners"):
 			self.banners = pickle.loads(self.config.GetValue("cache.banners"))
@@ -586,7 +594,7 @@ class MythBoxee:
 			mc.GetWindow(14004).GetControl(1042).SetFocus()
 
 		# Setup Stream Methods for user to choose
-		methods = ['XML', 'SMB']
+		methods = ['SMB', 'Local', 'XML']
 		items = mc.ListItems()
 		for method in methods:
 			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
@@ -597,10 +605,33 @@ class MythBoxee:
 
 		# Depending on StreamMethod Enable Options
 		if not streamMethod or streamMethod == "XML":
-			mc.GetWindow(14004).GetControl(1032).SetEnabled(False)
-			mc.GetWindow(14004).GetControl(1033).SetEnabled(False)
-			mc.GetWindow(14004).GetControl(1034).SetEnabled(False)
-		else:
+			self.log("def(LoadSettings): --")
+			## Hide the SMB Settings
+			mc.GetWindow(14004).GetControl(1070).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1070).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1030).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1030).SetVisible(False)
+			
+			## Hide the Local Settings
+			mc.GetWindow(14004).GetControl(1080).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1080).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1083).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1083).SetVisible(False)
+		elif streamMethod == "SMB":
+			self.log("def(LoadSettings): --")
+
+			## Show the SMB Settings
+			mc.GetWindow(14004).GetControl(1070).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1070).SetVisible(True)
+			mc.GetWindow(14004).GetControl(1030).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1030).SetVisible(True)
+			
+			## Hide the Local Settings
+			mc.GetWindow(14004).GetControl(1080).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1080).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1083).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1083).SetVisible(False)
+
 			if not self.config.GetValue("smb.username"):
 				self.config.SetValue("smb.username", "guest")
 			if not self.config.GetValue("smb.password"):
@@ -610,15 +641,23 @@ class MythBoxee:
 			self.log("def(LoadSettings): smb.username: " + self.config.GetValue("smb.username"))
 			self.log("def(LoadSettings): smb.password: " + self.config.GetValue("smb.password"))
 
-			## Since the Stream Method is SMB enable controls for setting info
-			mc.GetWindow(14004).GetControl(1032).SetEnabled(True)
-			mc.GetWindow(14004).GetControl(1033).SetEnabled(True)
-			mc.GetWindow(14004).GetControl(1034).SetEnabled(True)
-			
 			## Update the fields with current SMB settings.
 			mc.GetWindow(14004).GetEdit(1032).SetText(self.config.GetValue("smb.share"))
 			mc.GetWindow(14004).GetEdit(1033).SetText(self.config.GetValue("smb.username"))
 			mc.GetWindow(14004).GetEdit(1034).SetText(self.config.GetValue("smb.password"))
+		elif streamMethod == "Local":
+			self.log("def(LoadSettings): --")
+			## Hide the SMB Settings
+			mc.GetWindow(14004).GetControl(1070).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1070).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1030).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1030).SetVisible(False)
+			
+			## Show the Local Settings
+			mc.GetWindow(14004).GetControl(1080).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1080).SetVisible(True)
+			mc.GetWindow(14004).GetControl(1083).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1083).SetVisible(True)
 
 		self.log("def(LoadSettings): End ===========================================================")
 
@@ -637,13 +676,43 @@ class MythBoxee:
 
 		## Disabled some UI pieces depending on stream method
 		if not streamMethod or streamMethod == "XML":
-			mc.GetWindow(14004).GetControl(1032).SetEnabled(False)
-			mc.GetWindow(14004).GetControl(1033).SetEnabled(False)
-			mc.GetWindow(14004).GetControl(1034).SetEnabled(False)
-		else:
-			mc.GetWindow(14004).GetControl(1032).SetEnabled(True)
-			mc.GetWindow(14004).GetControl(1033).SetEnabled(True)
-			mc.GetWindow(14004).GetControl(1034).SetEnabled(True)
+			## Hide the SMB Settings
+			mc.GetWindow(14004).GetControl(1070).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1070).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1030).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1030).SetVisible(False)
+			
+			## Hide the Local Settings
+			mc.GetWindow(14004).GetControl(1080).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1080).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1083).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1083).SetVisible(False)
+		elif streamMethod == "SMB":
+			## Show the SMB Settings
+			mc.GetWindow(14004).GetControl(1070).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1070).SetVisible(True)
+			mc.GetWindow(14004).GetControl(1030).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1030).SetVisible(True)
+			
+			## Hide the Local Settings
+			mc.GetWindow(14004).GetControl(1080).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1080).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1083).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1083).SetVisible(False)
+		elif streamMethod == "Local":
+			## Hide the SMB Settings
+			mc.GetWindow(14004).GetControl(1070).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1070).SetVisible(False)
+			mc.GetWindow(14004).GetControl(1030).SetEnabled(False)
+			mc.GetWindow(14004).GetControl(1030).SetVisible(False)
+			
+			## Show the Local Settings
+			mc.GetWindow(14004).GetControl(1080).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1080).SetVisible(True)
+			mc.GetWindow(14004).GetControl(1083).SetEnabled(True)
+			mc.GetWindow(14004).GetControl(1083).SetVisible(True)
+			
+			
 
 		## Save the Stream Method
 		self.config.SetValue("StreamMethod", streamMethod)
@@ -771,24 +840,42 @@ class MythBoxee:
 			recorders = self.be.getRecorderList()
 			upcoming = self.be.getUpcomingRecordings()
 		except Exception, e:
-			self.log("def(StatusInit): Exception: " + e.message)
+			self.log("def(StatusInit): Exception: " + e.ename)
 			mc.ShowDialogOk("MythBoxee", "Whoops! Something went wrong while trying to load this screen. Try again.")
 			self.config.Reset("loadingstatus")
 			mc.CloseWindow()
 
+		free_txt = "Storage:\n"
+		for free in freespace:
+			free_txt = free_txt + "  " + str(free.path) + " (" + "Total: " + str(free.totalspace) + ", Free: " + str(free.freespace) + ", Used: " + str(free.usedspace) + ")\n"
+		guide_txt = "There is guide data until " + str(guidedata) + ".\n"
+		load_txt = "Load: " + str(load)
+		uptime_txt = "Uptime: " + str(uptime)
+		sys_info = load_txt + "\n\n" + uptime_txt + "\n\n" + free_txt + "\n" + guide_txt
+
 		if isRecording == True:
-			is_recording_txt = "is recording"
+			try:
+				currentRecording = self.be.getCurrentRecording(1)
+			except Exception, e:
+				self.log("def(StatusInit): Failed to get Current Recording Information")
+
+			is_recording_txt = "is recording on channel " + str(currentRecording.callsign) + " (" + str(currentRecording.channum) + ")"
+
+			itemList = mc.ListItems()
+			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
+			item.SetThumbnail(self.banners[str(currentRecording.title)])
+			itemList.append(item)
+			mc.GetWindow(14003).GetList(1025).SetItems(itemList)
+			mc.GetWindow(14003).GetLabel(1026).SetLabel(str(currentRecording.title) + ": " + str(currentRecording.subtitle))
 		else:
 			is_recording_txt = "is not recording"
 
+
 		mc.GetWindow(14003).GetLabel(1023).SetLabel("Encoder " + str(recorders[0]) + " " + is_recording_txt + ".")
-		#mc.GetWindow(14003).GetLabel(1033).SetLabel()
+		mc.GetWindow(14003).GetLabel(1033).SetLabel(sys_info)
 
-		text = None
-		for program in upcoming:
-			text = text + str(program.title) + "\n"
 
-		mc.GetWindow(14003).GetEdit(1043).SetText(text)
+
 
 		self.log("def(StatusInit): Recorders: " + str(recorders))
 		self.log("def(StatusInit): Uptime: " + str(uptime))

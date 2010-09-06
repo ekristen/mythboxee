@@ -28,7 +28,7 @@ mb.StatusInit()
 		<control type="image" id="1021">
 			<posx>20</posx>
 			<posy>120</posy>
-			<height>255</height>
+			<height>185</height>
 			<width>610</width>
 			<texture>bg_box.png</texture>
 		</control>
@@ -44,6 +44,31 @@ mb.StatusInit()
 			<label>Loading Encoder Status ...</label>
 			<font>font18</font>
 		</control>
+		<control type="label" id="1026">
+			<posx>45</posx>
+			<posy>175</posy>
+			<font>font18</font>
+		</control>
+		<control type="image" id="1024">
+			<posx>45</posx>
+			<posy>200</posy>
+			<width>560</width>
+			<height>85</height>
+			<aspectratio>scale</aspectratio>
+			<bordersize>3</bordersize>
+			<bordertexture>mb_thumb_bg.png</bordertexture>
+			<texture>$INFO[Container(1025).ListItem.Thumb]</texture>
+		</control>
+		<control type="list" id="1025">
+			<posx>1</posx>
+			<posy>1</posy>
+			<width>1</width>
+			<height>1</height>
+			<itemlayout width="1" height="1">
+			</itemlayout>
+			<focusedlayout width="1" height="1">
+			</focusedlayout>
+		</control>
 	</control>
 
 <!-- END ENCODE STATUS -->
@@ -54,7 +79,7 @@ mb.StatusInit()
 		<control type="image" id="1031">
 			<posx>650</posx>
 			<posy>120</posy>
-			<height>255</height>
+			<height>245</height>
 			<width>610</width>
 			<texture>bg_box.png</texture>
 		</control>
@@ -67,8 +92,11 @@ mb.StatusInit()
 		<control type="label" id="1033">
 			<posx>675</posx>
 			<posy>135</posy>
+			<height>225</height>
+			<width>580</width>
+			<valign>top</valign>
 			<label>Loading System Information ...</label>
-			<font>font18</font>
+			<font>font16</font>
 		</control>
 	</control>
 
@@ -81,7 +109,7 @@ mb.StatusInit()
 				<posx>20</posx>
 				<posy>460</posy>
 				<height>240</height>
-				<width>610</width>
+				<width>1240</width>
 				<texture>bg_box.png</texture>
 			</control>
 			<control type="label" id="1042">
@@ -117,7 +145,7 @@ mb.StatusInit()
 <!-- END SCHEDULE -->
 
 <!-- BEGIN JOB QUEUE -->
-
+<!--
 		<control type="group" id="1050">
 			<control type="image" id="1051">
 				<posx>650</posx>
@@ -133,7 +161,7 @@ mb.StatusInit()
 				<font>font28b</font>
 			</control>
 		</control>
-
+-->
 <!-- END JOB QUEUE -->
 
 <!-- BEGIN LOADING OVERLAY -->
