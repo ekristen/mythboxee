@@ -932,7 +932,7 @@ class MythBoxee:
 				mc.GetApp().GetLocalConfig().Reset("watchdog.player")
 
 			def run(self):
-				if mc.GetApp().GetLocalConfig().GetValue("watchdog.player") == "true"
+				if mc.GetApp().GetLocalConfig().GetValue("watchdog.player") == "true":
 					return
 				mc.GetApp().GetLocalConfig().SetValue("watchdog.player", "true")
 
