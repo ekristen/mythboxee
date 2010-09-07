@@ -5,6 +5,7 @@ import random
 import time
 import pickle
 import mythtv
+import threading
 from mythtv import MythError
 from operator import itemgetter, attrgetter
 
@@ -22,6 +23,8 @@ class MythBoxee:
 	banners = {}
 	shows = {}
 	series = {}
+	player = None
+	watcher = None
 
 
 	"""
@@ -33,6 +36,9 @@ class MythBoxee:
 		self.log("def(__init__):    Python Version: " + str(sys.version_info))
 
 		self.config = mc.GetApp().GetLocalConfig()
+		self.player = mc.GetPlayer()
+
+		self.watchdog = MythBoxee.Watchdog().start()
 
 		# We'll use this to determine when to reload data.
 		self.config.SetValue("LastRunTime", str(time.time()))
@@ -840,7 +846,7 @@ class MythBoxee:
 			recorders = self.be.getRecorderList()
 			upcoming = self.be.getUpcomingRecordings()
 		except Exception, e:
-			self.log("def(StatusInit): Exception: " + e.ename)
+			self.log("def(StatusInit): Exception: " + str(sys.exc_info()[0]))
 			mc.ShowDialogOk("MythBoxee", "Whoops! Something went wrong while trying to load this screen. Try again.")
 			self.config.Reset("loadingstatus")
 			mc.CloseWindow()
@@ -903,3 +909,38 @@ class MythBoxee:
 		if self.logLevel == 1:
 			mc.LogInfo(">>> MythBoxee: " + message)
 			print ">>> MythBoxee: " + message
+
+
+	class Watchdog(threading.Thread):
+		def __del__(self):
+			mc.GetApp().GetLocalConfig().Reset("watchdog")
+
+		def run(self):
+			if mc.GetApp().GetLocalConfig().GetValue("watchdog") == "true":
+				return
+			mc.GetApp().GetLocalConfig().SetValue("watchdog", "true")
+
+			self.player = mc.GetPlayer()
+
+			while (mc.GetApp().GetLocalConfig().GetValue("watchdog") == "true"):
+				MythBoxee.Watchdog.PlayerWatchdog().start()
+				print "watchdog run"
+				time.sleep(5)
+
+		class PlayerWatchdog(threading.Thread):
+			def __del__(self):
+				mc.GetApp().GetLocalConfig().Reset("watchdog.player")
+
+			def run(self):
+				if mc.GetApp().GetLocalConfig().GetValue("watchdog.player") == "true"
+					return
+				mc.GetApp().GetLocalConfig().SetValue("watchdog.player", "true")
+
+				self.player = mc.GetPlayer()
+			
+				while (self.player.IsPlaying()):
+					if self.player.GetTime() / self.player.GetTotalTime() >= 0.95:
+						print "marked as watched"
+					
+
+
