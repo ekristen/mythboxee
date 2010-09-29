@@ -21,14 +21,14 @@ mb.SettingsInit()
 		<control type="group" id="1040">
 			<control type="label" id="1041">
 				<posx>820</posx>
-				<posy>60</posy>
+				<posy>150</posy>
 				<width>250</width>
 				<label>Backend Information</label>
 				<font>font23</font>
 			</control>
 			<control type="edit" id="1042">
 				<posx>820</posx>
-				<posy>85</posy>
+				<posy>175</posy>
 				<width>300</width>
 				<label>Hostname/IP:</label>
 				<align>left</align>
@@ -37,7 +37,7 @@ mb.SettingsInit()
 			</control>
 			<control type="edit" id="1043">
 				<posx>820</posx>
-				<posy>115</posy>
+				<posy>205</posy>
 				<width>300</width>
 				<label>Username:</label>
 				<align>left</align>
@@ -47,7 +47,7 @@ mb.SettingsInit()
 			</control>
 			<control type="edit" id="1044">
 				<posx>820</posx>
-				<posy>145</posy>
+				<posy>235</posy>
 				<width>300</width>
 				<align>left</align>
 				<label>Password:</label>
@@ -58,7 +58,7 @@ mb.SettingsInit()
 			</control>
 			<control type="edit" id="1045">
 				<posx>820</posx>
-				<posy>175</posy>
+				<posy>265</posy>
 				<width>300</width>
 				<align>left</align>
 				<label>Database:</label>
@@ -71,11 +71,11 @@ mb.SettingsInit()
 
 		<control type="grouplist" id="1046">
 			<posx>820</posx>
-			<posy>210</posy>
+			<posy>295</posy>
 			<width>300</width>
 			<itemgap>0</itemgap>
 			<orientation>horizontal</orientation>
-			<ondown>1052</ondown>
+			<ondown>1022</ondown>
 			<control type="button" id="1047">
 				<label>Test Connection</label>
 				<texturefocus>bg_btn.png</texturefocus>
@@ -100,37 +100,12 @@ mb.SettingsInit()
 
 <!-- END: BACKEND INFORMATION -->
 
-<!-- START: CACHE SETTINGS -->
-
-		<control type="group" id="1050">
-			<control type="label" id="1051">
-				<posx>820</posx>
-				<posy>260</posy>
-				<width>250</width>
-				<align>left</align>
-				<label>Cache Settings</label>
-				<font>font23</font>
-			</control>
-			<control type="edit" id="1052">
-				<posx>820</posx>
-				<posy>295</posy>
-				<width>300</width>
-				<label>Cache Length (min):</label>
-				<align>left</align>
-				<font>font18</font>
-				<onup>1045</onup>
-				<ondown>1022</ondown>
-			</control>
-		</control>
-
-<!-- END: CACHE SETTINGS -->
-
 <!-- START: STREAM METHOD -->
 
 		<control type="group" id="1020">
 			<control type="label" id="1021">
 				<posx>820</posx>
-				<posy>460</posy>
+				<posy>360</posy>
 				<width>250</width>
 				<align>left</align>
 				<label>Stream Method</label>
@@ -138,18 +113,19 @@ mb.SettingsInit()
 			</control>
 			<control type="list" id="1022">
 				<posx>830</posx>
-				<posy>495</posy>
-				<width>225</width>
+				<posy>395</posy>
+				<width>164</width>
 				<height>100</height>
-				<onup>1052</onup>
+				<onup>1044</onup>
 				<ondown>1032</ondown>
-				<orientation>horizontal</orientation>
-				<itemlayout width="75" height="27">
+				<itemlayout width="164" height="27">
 					<control type="label">
 						<description>title</description>
 						<posx>9</posx>
 						<posy>0</posy>
-						<align>center</align>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
 						<aligny>top</aligny>
 						<info>ListItem.Label</info>
 						<font>font18</font>
@@ -157,12 +133,14 @@ mb.SettingsInit()
 						<selectedcolor>FFFFFFFF</selectedcolor>
 					</control>
 				</itemlayout>
-				<focusedlayout width="75" height="27">
+				<focusedlayout width="164" height="27">
 					<control type="label">
 						<description>title</description>
 						<posx>9</posx>
 						<posy>0</posy>
-						<align>center</align>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
 						<aligny>top</aligny>
 						<info>ListItem.Label</info>
 						<font>font18</font>
@@ -175,7 +153,9 @@ mb.SettingsInit()
 						<description>title</description>
 						<posx>9</posx>
 						<posy>0</posy>
-						<align>center</align>
+						<width>146</width>
+						<height>25</height>
+						<align>left</align>
 						<aligny>top</aligny>
 						<info>ListItem.Label</info>
 						<font>font18</font>
@@ -196,15 +176,15 @@ mb.SettingsInit()
 		<control type="group" id="1030">
 			<control type="label" id="1031">
 				<posx>820</posx>
-				<posy>550</posy>
+				<posy>480</posy>
 				<width>250</width>
 				<align>left</align>
-				<label>SMB Settings</label>
+				<label>SMB Share</label>
 				<font>font23</font>
 			</control>
 			<control type="edit" id="1032">
 				<posx>820</posx>
-				<posy>575</posy>
+				<posy>505</posy>
 				<width>300</width>
 				<label>Share:</label>
 				<align>left</align>
@@ -214,7 +194,7 @@ mb.SettingsInit()
 			</control>
 			<control type="edit" id="1033">
 				<posx>820</posx>
-				<posy>605</posy>
+				<posy>535</posy>
 				<width>300</width>
 				<label>Username:</label>
 				<align>left</align>
@@ -224,7 +204,7 @@ mb.SettingsInit()
 			</control>
 			<control type="edit" id="1034">
 				<posx>820</posx>
-				<posy>635</posy>
+				<posy>565</posy>
 				<width>300</width>
 				<label>Password:</label>
 				<align>left</align>
@@ -237,12 +217,11 @@ mb.SettingsInit()
 		
 		<control type="grouplist" id="1070">
 			<posx>895</posx>
-			<posy>670</posy>
+			<posy>600</posy>
 			<width>300</width>
 			<itemgap>0</itemgap>
 			<orientation>horizontal</orientation>
 			<onup>1034</onup>
-			<ondown>1082</ondown>
 			<control type="button" id="1071">
 				<label>Save SMB Settings</label>
 				<texturefocus>bg_btn.png</texturefocus>
@@ -257,51 +236,53 @@ mb.SettingsInit()
 
 <!-- END: SMB SETTINGS -->
 
-<!-- START: LOCAL SETTINGS -->
-
-		<control type="group" id="1080">
-			<control type="label" id="1081">
+<!-- START: CACHE SETTINGS -->
+<!--
+		<control type="group" id="1050">
+			<control type="label" id="1051">
 				<posx>820</posx>
-				<posy>550</posy>
+				<posy>560</posy>
 				<width>250</width>
 				<align>left</align>
-				<label>Local Settings</label>
+				<label>Cache Settings</label>
 				<font>font23</font>
 			</control>
-			<control type="edit" id="1082">
+			<control type="togglebutton" id="1052">
 				<posx>820</posx>
-				<posy>575</posy>
+				<posy>565</posy>
 				<width>300</width>
-				<label>Path:</label>
+				<label>Share:</label>
 				<align>left</align>
 				<font>font18</font>
-				<onup>1070</onup>
-				<ondown>1084</ondown>
+				<onup>1022</onup>
+				<ondown>1033</ondown>
+				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+			</control>
+			<control type="edit" id="1053">
+				<posx>820</posx>
+				<posy>590</posy>
+				<width>300</width>
+				<label>Username:</label>
+				<align>left</align>
+				<font>font18</font>
+				<onup>1032</onup>
+				<ondown>1034</ondown>
+				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+			</control>
+			<control type="edit" id="1054">
+				<posx>820</posx>
+				<posy>615</posy>
+				<width>300</width>
+				<label>Password:</label>
+				<align>left</align>
+				<font>font18</font>
+				<password>true</password>
+				<onup>1033</onup>
+				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
 			</control>
 		</control>
-		
-		<control type="grouplist" id="1083">
-			<posx>895</posx>
-			<posy>605</posy>
-			<width>300</width>
-			<itemgap>0</itemgap>
-			<orientation>horizontal</orientation>
-			<onup>1082</onup>
-			<control type="button" id="1084">
-				<label>Save Local Settings</label>
-				<texturefocus>bg_btn.png</texturefocus>
-				<texturenofocus></texturenofocus>
-				<font>font14</font>
-				<height>30</height>
-				<align>center</align>
-				<aligny>center</aligny>
-				<onclick lang="python"><![CDATA[mb.SaveLocalSettings()]]></onclick>
-			</control>
-		</control>
-
-<!-- END: LOCAL SETTINGS -->
-
-<!-- START: LOADING SCREEN -->
+-->
+<!-- END: CACHE SETTINGS -->
 
 		<control type="group" id="9000">
 			<visible>App.HasSetting(loadingsettings)</visible>
@@ -324,8 +305,6 @@ mb.SettingsInit()
 				<textcolor>ffffffff</textcolor>
 			</control>
 		</control>
-		
-<!-- END: LOADING SCREEN -->
 
 	</controls>
 </window>
