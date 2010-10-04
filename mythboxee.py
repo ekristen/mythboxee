@@ -11,8 +11,8 @@ from operator import itemgetter, attrgetter
 
 class MythBoxee:
 	logLevel = 1
-	version = "4.0.beta"
-	userAgent = "MythBoxee v4.0.beta"
+	version = "4.23.2.beta"
+	userAgent = "MythBoxee v4.32.2.beta"
 	tvdb_apikey = "6BEAB4CB5157AAE0"
 	be = None
 	db = None
