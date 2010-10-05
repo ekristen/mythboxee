@@ -1,0 +1,27 @@
+Update Instructions
+
+Unfortunately there is not automatic update or even a good manual update process for 3rd party repositories at this time. I am hoping Boxee gets around to adding this feature in soon. In the mean time you will need to follow the instructions outlined below to successfully update the MythBoxee app.
+
+Also please note that all the configuration settings will remain in place even after you remove the app and re-add it, so you shouldn't have to reconfigure the app.
+
+Below are the step by step instructions on how to update the MythBoxee app.
+
+1. Start Boxee
+2. Browse to Apps
+3. Select MythBoxee Beta
+4. Select Remove from Apps
+5. Exit Boxee
+6. Clear Boxee cache folders
+6.a. UserData\cache\*
+6.b. UserData\profiles\<USERNAME>\cache\*
+7. Start Boxee
+8. Browse to Apps
+9. Browse to MythBoxee Repository
+10. Select MythBoxee Beta
+11. Select Add to My Apps
+12. Run the App
+
+
+Cheers!
+-Erik
+
