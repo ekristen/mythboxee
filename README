@@ -9,8 +9,26 @@ Installation
 1. Start Boxee
 2. Browse to the Apps section in Boxee
 3. Select "Repositories" in the left hand side at the bottom.
-4. Add Repository, use the url http://erikkristensen.com/project/boxeerepo
+4. Add Repository, use the url http://erikkristensen.com/boxee
 5. Follow the onscreen instructions.
 6. Sit back and enjoy watching your recordings from MythTV on your Boxee frontend.
+
+
+Update Instructions
+--------------------
+1. Start Boxee
+2. Browse to Apps
+3. Select MythBoxee Beta
+4. Select Remove from Apps
+5. Exit Boxee
+6. Clear Boxee cache folders
+--- UserData\cache\*
+--- UserData\profiles\<USERNAME>\cache\*
+7. Start Boxee
+8. Browse to Apps
+9. Browse to MythBoxee Repository
+10. Select MythBoxee Beta
+11. Select Add to My Apps
+12. Run the App
  
-Last Updated: September 1, 2011
+Last Updated: October 4, 2011
