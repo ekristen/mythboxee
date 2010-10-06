@@ -2,7 +2,6 @@ MythBoxee
 ----------
 Repository: http://erikkristensen.com/boxee/
 
-If you would like to beta test this for me please use the instructions below.
 
 Installation
 ------------- 
@@ -30,5 +29,26 @@ Update Instructions
 10. Select MythBoxee Beta
 11. Select Add to My Apps
 12. Run the App
- 
-Last Updated: October 4, 2011
+
+
+Clearing the Cache of Boxee
+---------------------------
+Delete the files in the following directories:
+ - UserData\cache\*
+ - UserData\profiles\<USERNAME>\cache\*
+
+
+Clearing Existing Settings of MythBoxee
+---------------------------------------
+Delete the corresponding version folder from UserData\profiles\<USERNAME>\apps
+Version 4.x     - com.erikkristensen.mythboxee4
+Version Nightly - com.erikkristensen.mythboxee0
+Version 3.x     - com.erikkristensen.mythboxee
+
+
+Downloading Older Versions
+--------------------------
+All releases current and old are currently available at http://erikkristensen.com/boxee/download/
+
+
+Last Updated: October 5, 2011
