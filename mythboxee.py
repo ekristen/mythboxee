@@ -12,7 +12,7 @@ from operator import itemgetter, attrgetter
 class MythBoxee:
 	logLevel = 1
 	version = "4.23.3.beta"
-	userAgent = "MythBoxee v4.32.3.beta"
+	userAgent = "MythBoxee v4.23.3.beta"
 	tvdb_apikey = "6BEAB4CB5157AAE0"
 	be = None
 	db = None
