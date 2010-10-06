@@ -1263,10 +1263,10 @@ class MythBEConn( object ):
     def check_version(self):
         res = self.backendCommand('MYTH_PROTO_VERSION %s' \
                     % PROTO_VERSION).split(BACKEND_SEP)
-        if res[0] == 'REJECT' and res[1] != PROTO_VERSION_2:
+        if res[0] == 'REJECT':
             self.log(MythLog.IMPORTANT|MythLog.NETWORK, 
-                            "Backend has version %s, and we speak %d (%d)" %\
-                            (res[1], PROTO_VERSION, PROTO_VERSION_2))
+                            "Backend has version %s, and we speak %d" %\
+                            (res[1], PROTO_VERSION))
             raise MythBEError(MythError.PROTO_MISMATCH,
                                                 int(res[1]), PROTO_VERSION)
 
