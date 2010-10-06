@@ -11,8 +11,8 @@ from operator import itemgetter, attrgetter
 
 class MythBoxee:
 	logLevel = 1
-	version = "4.23.2.beta"
-	userAgent = "MythBoxee v4.32.2.beta"
+	version = "4.23.3.beta"
+	userAgent = "MythBoxee v4.32.3.beta"
 	tvdb_apikey = "6BEAB4CB5157AAE0"
 	be = None
 	db = None
@@ -172,7 +172,12 @@ class MythBoxee:
 					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
 					self.shows[str(recording.title)] = []
 
-				single = [recording.title.encode('utf-8'), recording.subtitle.encode('utf-8'), str(recording.description), str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
+				if recording.subtitle == None:
+					subtitle = ""
+				else:
+					subtitle = recording.subtitle.encode('utf-8')
+
+				single = [recording.title.encode('utf-8'), subtitle, str(recording.description), str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
 				self.shows[str(recording.title)].append(single)
 				x = x + 1
 
