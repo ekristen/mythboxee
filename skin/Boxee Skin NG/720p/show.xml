@@ -11,18 +11,25 @@ mb.LoadShow()
 mb.stop()
 ]]></onunload>
 	<controls>
-		<control type="group" id="2020">
-			<control type="image" id="2021">
+		<control type="group" id="1010">
+			<control type="image" id="1011">
 				<width>1280</width>
 				<height>720</height>
 				<texture>mb_bg.png</texture>
 			</control>
-			<control type="image" id="2022">
+			<control type="image" id="1012">
 				<posx>10</posx>
 				<posy>10</posy>
 				<width>244</width>
 				<height>65</height>
 				<texture>logo.png</texture>
+			</control>
+			<control type="label" id="1013">
+				<posx>1205</posx>
+				<posy>700</posy>
+				<label>version</label>
+				<font>font12b</font>
+				<textcolor>FFFEFEFE</textcolor>
 			</control>
 		</control>
 

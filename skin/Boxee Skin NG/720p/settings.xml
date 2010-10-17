@@ -14,6 +14,13 @@ mb.SettingsInit()
 				<height>720</height>
 				<texture>mb_bg_settings.png</texture>
 			</control>
+			<control type="label" id="1013">
+				<posx>15</posx>
+				<posy>700</posy>
+				<label>version</label>
+				<font>font12b</font>
+				<textcolor>FFFEFEFE</textcolor>
+			</control>
 		</control>
 
 <!-- START: BACKEND INFORMATION -->

@@ -36,14 +36,17 @@ class MythBoxee(threading.Thread):
 
 		self.config = mc.GetApp().GetLocalConfig()
 
+		# Set the version on any page that loads
+		mc.GetActiveWindow().GetLabel(1013).SetLabel(self.version)
+
 		# Threading related
 		self._stopEvent = threading.Event()
 		self._sleepPeriod = 10
 		threading.Thread.__init__(self, name="mbReactor")
 
 		# We'll use this to determine when to reload data.
-		self.config.SetValue("LastRunTime", str(time.time()))
-		self.config.SetValue("CurrentShowItemID", "0")
+		#self.config.SetValue("LastRunTime", str(time.time()))
+		#self.config.SetValue("CurrentShowItemID", "0")
 
 		# If this is the first time the app is being run, lets set some default options.
 		if not self.config.GetValue("app.firstrun"):
@@ -141,11 +144,6 @@ class MythBoxee(threading.Thread):
 			return False
 
 		self.SetShows()
-
-		## Put focus on last selected item
-		itemId = int(self.config.GetValue("CurrentShowItemID"))
-		if itemId and itemId != 0:
-			mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
 		
 		self.config.Reset("loadingmain")
 		self.log("def(LoadMain): End ===========================================================")
@@ -178,12 +176,6 @@ class MythBoxee(threading.Thread):
 
 	def _GetCacheRecordings(self):
 		self.log("def(_GetCacheRecordings): Start =========================================================")
-		## Empty out crucial info
-		self.titles = []
-		self.banners = {}
-		self.series = {}
-		self.shows = {}
-
 		## Load information from cache
 		self.titles = pickle.loads(self.config.GetValue("cache.titles"))
 		self.banners = pickle.loads(self.config.GetValue("cache.banners"))
@@ -241,12 +233,6 @@ class MythBoxee(threading.Thread):
 				single = [title, subtitle, description, str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
 				shows[str(recording.title)].append(single)
 				x = x + 1
-
-			## Empty out crucial info
-			self.titles = []
-			self.banners = {}
-			self.series = {}
-			self.shows = {}
 			
 			## Set our global variables
 			self.titles = titles
@@ -257,7 +243,7 @@ class MythBoxee(threading.Thread):
 			# Lets cache our findings for now and the time we cached them.
 			self.config.SetValue("cache.time", str(time.time()))
 			self.config.SetValue("cache.titles", pickle.dumps(titles))
-			self.config.SetValue("cache.titlecount", len(titles))
+			self.config.SetValue("cache.titlecount", str(len(titles)))
 			self.config.SetValue("cache.banners", pickle.dumps(banners))
 			self.config.SetValue("cache.series", pickle.dumps(series))
 			self.config.SetValue("cache.shows", pickle.dumps(shows))
@@ -287,6 +273,13 @@ class MythBoxee(threading.Thread):
 			item.SetProperty("seriesid", str(self.series[title]))
 			items.append(item)
 		mc.GetWindow(14001).GetList(1030).SetItems(items)
+		
+		## Put focus on last selected item
+		itemId = int(self.config.GetValue("CurrentShowItemID"))
+		self.log("ItemID: " + str(itemId))
+		if itemId and itemId != 0:
+			mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
+
 		self.log("def(SetShows): End ===========================================================")
 		
 
@@ -783,6 +776,10 @@ class MythBoxee(threading.Thread):
 	"""
 	def SettingsInit(self):
 		self.config.SetValue("loadingsettings", "true")
+
+		# Set the version on any page that loads
+		mc.GetActiveWindow().GetLabel(1013).SetLabel(self.version)
+
 		if not self.config.GetValue("dbconn"):
 			mc.ShowDialogOk("MythBoxee", "Welcome to MythBoxee! Looks like this is the first time you have run this app. Please fill out all the settings and you'll be on your way to using this app.")
 			response = mc.ShowDialogConfirm("MythBoxee", "Do you know what your Security Pin is for your MythTV Backend? If not, we'll try the default, if that fails, you'll need to fill your database information in manually.", "No", "Yes")

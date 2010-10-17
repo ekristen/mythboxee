@@ -20,6 +20,13 @@ mb.StatusInit()
 				<height>65</height>
 				<texture>logo.png</texture>
 			</control>
+			<control type="label" id="1013">
+				<posx>15</posx>
+				<posy>700</posy>
+				<label>version</label>
+				<font>font12b</font>
+				<textcolor>FFFEFEFE</textcolor>
+			</control>
 		</control>
 
 <!-- BEGIN ENCODER STATUS -->
