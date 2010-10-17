@@ -21,8 +21,8 @@ mb.StatusInit()
 				<texture>logo.png</texture>
 			</control>
 			<control type="label" id="1013">
-				<posx>15</posx>
-				<posy>700</posy>
+				<posx>5</posx>
+				<posy>705</posy>
 				<label>version</label>
 				<font>font12b</font>
 				<textcolor>FFFEFEFE</textcolor>
