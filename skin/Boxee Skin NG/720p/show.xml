@@ -37,8 +37,8 @@ mb.stop()
 
 		<control type="grouplist" id="1040">
 			<posy>28</posy>
-			<posx>1106</posx>
-			<width>166</width>
+			<posx>940</posx>
+			<width>334</width>
 			<itemgap>10</itemgap>
 			<orientation>horizontal</orientation>
 			<ondown>2040</ondown>
@@ -53,6 +53,14 @@ mb.stop()
 				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
 			</control>
 -->
+			<control type="button" id="1042">
+				<label>Status</label>
+				<texturefocus>bg_btn.png</texturefocus>
+				<texturenofocus></texturenofocus>
+				<height>30</height>
+				<align>center</align>
+				<onclick lang="python"><![CDATA[mc.ActivateWindow(14003)]]></onclick>
+			</control>
 			<control type="button" id="1042">
 				<label>Settings</label>
 				<texturefocus>bg_btn.png</texturefocus>

@@ -14,7 +14,7 @@ from operator import itemgetter, attrgetter
 class MythBoxee(threading.Thread):
 	logLevel = 1
 	version = "4.4.23.1.beta"
-	userAgent = "MythBoxee v4.23.3.beta"
+	userAgent = "MythBoxee v4.4.23.1.beta"
 	tvdb_apikey = "6BEAB4CB5157AAE0"
 	be = None
 	db = None
@@ -802,6 +802,78 @@ class MythBoxee(threading.Thread):
 		else:
 			self.LoadSettings()
 		self.config.Reset("loadingsettings")
+
+
+	"""
+	StatusInit -- Function called when Status Window is opened.
+
+	This function pulls status information from the MythTV backend and displays it to the user.
+	Status information includes load, uptime, free space, upcoming recordings, guide data, etc ...
+	"""
+	def StatusInit(self):
+		self.log("def(StatusInit): Start =========================================================")
+		self.config.SetValue("loadingstatus", "true")
+
+		# Set the version on any page that loads
+		mc.GetActiveWindow().GetLabel(1013).SetLabel(self.version)
+
+		# Grab data from the backend for status screen
+		try:
+			uptime = self.be.getUptime()
+			load = self.be.getLoad()
+			freespace = self.be.getFreeSpace()
+			guidedata = self.be.getLastGuideData()
+			isRecording = self.be.isRecording(1)
+			freespacesummary = self.be.getFreeSpaceSummary()
+			recorders = self.be.getRecorderList()
+			upcoming = self.be.getUpcomingRecordings()
+		except Exception, e:
+			self.log("def(StatusInit): Exception: " + str(sys.exc_info()[0]))
+			mc.ShowDialogOk("MythBoxee", "Whoops! Something went wrong while trying to load this screen. Try again.")
+			self.config.Reset("loadingstatus")
+			mc.CloseWindow()
+
+		# Setup storage information for status screen
+		free_txt = "Storage:\n"
+		for free in freespace:
+			free_txt = free_txt + "  " + str(free.path) + " (" + "Total: " + str(free.totalspace) + ", Free: " + str(free.freespace) + ", Used: " + str(free.usedspace) + ")\n"
+		guide_txt = "There is guide data until " + str(guidedata) + ".\n"
+		load_txt = "Load: " + str(load)
+		uptime_txt = "Uptime: " + str(uptime)
+		sys_info = load_txt + "\n\n" + uptime_txt + "\n\n" + free_txt + "\n" + guide_txt
+
+		if isRecording == True:
+			try:
+				currentRecording = self.be.getCurrentRecording(1)
+			except Exception, e:
+				self.log("def(StatusInit): Failed to get Current Recording Information")
+
+			is_recording_txt = "is recording on channel " + str(currentRecording.callsign) + " (" + str(currentRecording.channum) + ")"
+
+			itemList = mc.ListItems()
+			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
+			item.SetThumbnail(self.banners[str(currentRecording.title)])
+			itemList.append(item)
+			mc.GetWindow(14003).GetList(1025).SetItems(itemList)
+			mc.GetWindow(14003).GetLabel(1026).SetLabel(str(currentRecording.title) + ": " + str(currentRecording.subtitle))
+		else:
+			is_recording_txt = "is not recording"
+
+		# Set encoder information up
+		mc.GetWindow(14003).GetLabel(1023).SetLabel("Encoder " + str(recorders[0]) + " " + is_recording_txt + ".")
+		mc.GetWindow(14003).GetLabel(1033).SetLabel(sys_info)
+
+		self.log("def(StatusInit): Recorders: " + str(recorders))
+		self.log("def(StatusInit): Uptime: " + str(uptime))
+		self.log("def(StatusInit): Load: " + str(load))
+		self.log("def(StatusInit): Free Space: " + str(freespace))
+		self.log("def(StatusInit): Guide Data: " + str(guidedata))
+		self.log("def(StatusInit): Summary: " + str(freespacesummary))
+		self.log("def(StatusInit): Upcoming: " + str(upcoming))
+		self.log("def(StatusInit): Recording: " + str(isRecording))
+
+		self.config.Reset("loadingstatus")
+		self.log("def(StatusInit): End ===========================================================")
 
 
 	"""
