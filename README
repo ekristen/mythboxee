@@ -31,6 +31,11 @@ Update Instructions
 12. Run the App
 
 
+General Troubleshooting
+-----------------------
+Submit all logs to http://mythboxee.pastebin.com/, if you don't want to do that post them mythboxee@googlegroups.com, and include the link and/or subject link (link if possible) in the issue you are either updating or creating.
+
+
 Clearing the Cache of Boxee
 ---------------------------
 Delete the files in the following directories:
