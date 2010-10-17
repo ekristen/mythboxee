@@ -177,7 +177,17 @@ class MythBoxee:
 				else:
 					subtitle = recording.subtitle.encode('utf-8')
 
-				single = [recording.title.encode('utf-8'), subtitle, str(recording.description), str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
+				if recording.title == None:
+					title = ""
+				else:
+					title = recording.title.encode('utf-8')
+
+				if recording.description == None:
+					description = ""
+				else:
+					description = recording.description.encode('utf-8')
+
+				single = [title, subtitle, description, str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
 				self.shows[str(recording.title)].append(single)
 				x = x + 1
 
