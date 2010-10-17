@@ -8,7 +8,7 @@
   <copyright>Erik Kristensen</copyright>
   <email>erik@erikkristensen.com</email>
   <type>skin</type>
-  <startWindow>launch</startWindow>
+  <startWindow>14001</startWindow>
   <platform>all</platform>
   <minversion>0.9.20</minversion>
   <test-app>true</test-app>

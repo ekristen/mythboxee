@@ -7,6 +7,9 @@ from mythboxee import MythBoxee
 mb = MythBoxee()
 mb.LoadMain()
 ]]></onload>
+	<onunload lang="python"><![CDATA[
+mb.stop()
+]]></onunload>
 	<controls>
 		<control type="group" id="1020">
 			<control type="image" id="1021">

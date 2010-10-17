@@ -3,13 +3,15 @@ import re
 import sys
 import random
 import time
+import md5
 import pickle
 import mythtv
+import threading
 from mythtv import MythError
 from operator import itemgetter, attrgetter
 
 
-class MythBoxee:
+class MythBoxee(threading.Thread):
 	logLevel = 1
 	version = "4.23.3.beta"
 	userAgent = "MythBoxee v4.23.3.beta"
@@ -34,6 +36,11 @@ class MythBoxee:
 
 		self.config = mc.GetApp().GetLocalConfig()
 
+		# Threading related
+		self._stopEvent = threading.Event()
+		self._sleepPeriod = 10
+		threading.Thread.__init__(self, name="mbReactor")
+
 		# We'll use this to determine when to reload data.
 		self.config.SetValue("LastRunTime", str(time.time()))
 		self.config.SetValue("CurrentShowItemID", "0")
@@ -45,7 +52,6 @@ class MythBoxee:
 			self.config.SetValue("Filter", "All")
 			self.config.SetValue("StreamMethod", "XML")
 			self.config.SetValue("app.firstrun", "true")
-
 
 		# If dbconn isn't set, we'll assume we haven't found the backend.
 		if not self.config.GetValue("dbconn"):
@@ -64,8 +70,30 @@ class MythBoxee:
 				self.log("def(__init__): Database Connection Successful")
 				self.be = mythtv.MythBE(db=self.db)
 				self.GetRecordings()
+				self.start()
 
 		self.log("def(__init__): End ===========================================================")
+
+	"""
+	run - this is called automatically when the thread is started
+	"""
+	def run(self):
+		print "MythBoxee: %s starts" % (self.getName(),)
+		while not self._stopEvent.isSet():
+			print "MythBoxee: %s ran" % (self.getName(),)
+			## Do Stuff Here
+			self.GetRecordings()
+
+			## Sleep
+			self._stopEvent.wait(self._sleepPeriod)
+
+
+	"""
+	stop - 
+	"""
+	def stop(self,timeout=None):
+		self._stopEvent.set()
+		threading.Thread.join(self,timeout)
 
 
 	"""
@@ -112,17 +140,13 @@ class MythBoxee:
 		if not self.config.GetValue("dbconn"):
 			return False
 
+		self.SetShows()
+
 		## Put focus on last selected item
 		itemId = int(self.config.GetValue("CurrentShowItemID"))
 		if itemId and itemId != 0:
 			mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
-
-		cacheTime = self.config.GetValue("cache.time")
-		mainItems = len(mc.GetWindow(14001).GetList(1030).GetItems())
-
-		if not cacheTime or mainItems == 0 or cacheTime <= str(time.time() - 2400):
-			self.SetShows()
-			
+		
 		self.config.Reset("loadingmain")
 		self.log("def(LoadMain): End ===========================================================")
 
@@ -142,45 +166,72 @@ class MythBoxee:
 		self.log("def(RefreshMain): End ===========================================================")
 
 
+	def GetRecordings(self):
+		cacheTime = self.config.GetValue("cache.time")
+		if not cacheTime or cacheTime <= str(time.time() - 600):
+			## pull from database
+			self._GetDbRecordings()
+		else:
+			## pull from cache
+			self._GetCacheRecordings()
+
+
+	def _GetCacheRecordings(self):
+		self.log("def(_GetCacheRecordings): Start =========================================================")
+		## Empty out crucial info
+		self.titles = []
+		self.banners = {}
+		self.series = {}
+		self.shows = {}
+
+		## Load information from cache
+		self.titles = pickle.loads(self.config.GetValue("cache.titles"))
+		self.banners = pickle.loads(self.config.GetValue("cache.banners"))
+		self.series = pickle.loads(self.config.GetValue("cache.series"))
+		self.shows = pickle.loads(self.config.GetValue("cache.shows"))
+		self.titles.sort()
+		self.log("def(_GetCacheRecordings): End ===========================================================")
+
+
 	"""
 	GetRecordings - Pulls all of the recordings out of the backend and prepares them for use in the app.
 	
 	This function also creates some dictionarys and lists of information
 	that is used throughout the app for different functions.
 	"""
-	def GetRecordings(self):
-		self.log("def(GetRecordings): Start =========================================================")
-		self.config.SetValue("loadingmain", "true")
+	def _GetDbRecordings(self):
+		self.log("def(_GetDbRecordings): Start =========================================================")
 
-		# Empty out crucial info
-		self.titles = []
-		self.banners = {}
-		self.series = {}
-		self.shows = {}
-
-		cacheTime = self.config.GetValue("cache.time")
-		mainItems = len(mc.GetWindow(14001).GetList(1030).GetItems())
+		titles = []
+		banners = {}
+		series = {}
+		shows = {}
 
 		self.recs = self.be.getRecordings()
-		
-		if not cacheTime or mainItems == 0 or cacheTime <= str(time.time() - 2400):
-			x=0
-			for recording in self.recs:
-				if recording.title not in self.titles:
-					self.titles.append(str(recording.title))
-					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
-					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
-					self.shows[str(recording.title)] = []
 
-				if recording.subtitle == None:
-					subtitle = ""
-				else:
-					subtitle = recording.subtitle.encode('utf-8')
+		fingerprint = str(md5.new(str(self.recs)).digest())
+		if self.config.GetValue("cache.fingerprint") == fingerprint:
+			self._GetCacheRecordings()
+		else:
+			self.config.SetValue("cache.fingerprint", fingerprint)
+
+			x = 0
+			for recording in self.recs:
+				if recording.title not in titles:
+					titles.append(str(recording.title))
+					banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
+					series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
+					shows[str(recording.title)] = []
 
 				if recording.title == None:
 					title = ""
 				else:
 					title = recording.title.encode('utf-8')
+
+				if recording.subtitle == None:
+					subtitle = ""
+				else:
+					subtitle = recording.subtitle.encode('utf-8')
 
 				if recording.description == None:
 					description = ""
@@ -188,24 +239,31 @@ class MythBoxee:
 					description = recording.description.encode('utf-8')
 
 				single = [title, subtitle, description, str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
-				self.shows[str(recording.title)].append(single)
+				shows[str(recording.title)].append(single)
 				x = x + 1
 
-				# Lets cache our findings for now.
-				self.config.SetValue("cache.time", str(time.time()))
-				self.config.SetValue("cache.titles", pickle.dumps(self.titles))
-				self.config.SetValue("cache.banners", pickle.dumps(self.banners))
-				self.config.SetValue("cache.series", pickle.dumps(self.series))
-				self.config.SetValue("cache.shows", pickle.dumps(self.shows))
-		else:
-			self.titles = pickle.loads(self.config.GetValue("cache.titles"))
-			self.banners = pickle.loads(self.config.GetValue("cache.banners"))
-			self.series = pickle.loads(self.config.GetValue("cache.series"))
-			self.shows = pickle.loads(self.config.GetValue("cache.shows"))
+			## Empty out crucial info
+			self.titles = []
+			self.banners = {}
+			self.series = {}
+			self.shows = {}
+			
+			## Set our global variables
+			self.titles = titles
+			self.banners = banners
+			self.series = series
+			self.shows = shows
+
+			# Lets cache our findings for now and the time we cached them.
+			self.config.SetValue("cache.time", str(time.time()))
+			self.config.SetValue("cache.titles", pickle.dumps(titles))
+			self.config.SetValue("cache.titlecount", len(titles))
+			self.config.SetValue("cache.banners", pickle.dumps(banners))
+			self.config.SetValue("cache.series", pickle.dumps(series))
+			self.config.SetValue("cache.shows", pickle.dumps(shows))
 
 		self.titles.sort()
 
-		self.config.Reset("loadingmain")
 		self.log("def(GetRecordings): End ===========================================================")
 		
 
@@ -214,8 +272,14 @@ class MythBoxee:
 	"""
 	def SetShows(self):
 		self.log("def(SetShows): Start =========================================================")
+
+		itemCount = len(mc.GetWindow(14001).GetList(1030).GetItems())
+		if itemCount !=0 and itemCount == self.config.GetValue("cache.titlecount"):
+			return
+
 		items = mc.ListItems()
 		for title in self.titles:
+			self.log("def(SetShows): " + str(title))
 			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
 			item.SetLabel(str(title))
 			item.SetThumbnail(self.banners[title])
@@ -756,3 +820,4 @@ class MythBoxee:
 		if self.logLevel == 1:
 			mc.LogInfo(">>> MythBoxee: " + message)
 			print ">>> MythBoxee: " + message
+					

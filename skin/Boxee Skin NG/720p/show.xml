@@ -3,9 +3,13 @@
 	<defaultcontrol always="true">2040</defaultcontrol>
 	<allowoverlay>true</allowoverlay>
 	<onload lang="python"><![CDATA[
-import mythboxee
+from mythboxee import MythBoxee
+mb = MythBoxee()
 mb.LoadShow()
 ]]></onload>
+	<onunload lang="python"><![CDATA[
+mb.stop()
+]]></onunload>
 	<controls>
 		<control type="group" id="2020">
 			<control type="image" id="2021">
