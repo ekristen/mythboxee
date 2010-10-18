@@ -98,7 +98,7 @@ class MythBoxee(threading.Thread):
 
 
 	"""
-	stop - 
+	stop - this is called when a winow is closed so the thread is killed
 	"""
 	def stop(self,timeout=None):
 		self._stopEvent.set()
@@ -170,6 +170,9 @@ class MythBoxee(threading.Thread):
 		self.log("def(RefreshMain): End ===========================================================")
 
 
+	"""
+	GetRecordings - Interface to pull recording information for use in the app.
+	"""
 	def GetRecordings(self):
 		cacheTime = self.config.GetValue("cache.time")
 		if not cacheTime or cacheTime <= str(time.time() - 6):
@@ -180,6 +183,9 @@ class MythBoxee(threading.Thread):
 			self._GetCacheRecordings()
 
 
+	"""
+	_GetCacheRecordings - Pulls recording information from the local cache
+	"""
 	def _GetCacheRecordings(self):
 		self.log("def(_GetCacheRecordings): Start =========================================================")
 		## Load information from cache
@@ -192,10 +198,7 @@ class MythBoxee(threading.Thread):
 
 
 	"""
-	GetRecordings - Pulls all of the recordings out of the backend and prepares them for use in the app.
-	
-	This function also creates some dictionarys and lists of information
-	that is used throughout the app for different functions.
+	_GetDbRecordings - Pulls all of the recordings out of the backend and prepares them for use in the app.
 	"""
 	def _GetDbRecordings(self):
 		self.log("def(_GetDbRecordings): Start =========================================================")
@@ -221,28 +224,33 @@ class MythBoxee(threading.Thread):
 					titles.append(str(recording.title))
 					shows[str(recording.title)] = []
 
+				# Check to see if we have a valid banner for the show, if not try and get one.
 				if recording.title not in self.banners:
 					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
 				else:
 					if self.banners[str(recording.title)] == "mb_artwork_error.png":
 						self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
 
+				# Check to see if we have a valid series id for the show, if not try and get one.
 				if recording.title not in self.series:
 					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
 				else:
 					if self.series[str(recording.title)] == 00000:
 						self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
 
+				# Check for title, and if not encode it utf-8
 				if recording.title == None:
 					title = ""
 				else:
 					title = recording.title.encode('utf-8')
 
+				# Check for subtitle, and if not encode it utf-8
 				if recording.subtitle == None:
 					subtitle = ""
 				else:
 					subtitle = recording.subtitle.encode('utf-8')
 
+				# Check for description, and if not encode it utf-8
 				if recording.description == None:
 					description = ""
 				else:
