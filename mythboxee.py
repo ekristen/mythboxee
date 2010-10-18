@@ -7,6 +7,7 @@ import md5
 import pickle
 import mythtv
 import threading
+from ttvdb import tvdb_api
 from mythtv import MythError
 from operator import itemgetter, attrgetter
 
@@ -41,7 +42,7 @@ class MythBoxee(threading.Thread):
 
 		# Threading related
 		self._stopEvent = threading.Event()
-		self._sleepPeriod = 10
+		self._sleepPeriod = 10	
 		threading.Thread.__init__(self, name="mbReactor")
 
 		# We'll use this to determine when to reload data.
@@ -55,6 +56,11 @@ class MythBoxee(threading.Thread):
 			self.config.SetValue("Filter", "All")
 			self.config.SetValue("StreamMethod", "XML")
 			self.config.SetValue("app.firstrun", "true")
+
+		self.banners = pickle.loads(self.config.GetValue("cache.banners"))
+		self.series = pickle.loads(self.config.GetValue("cache.series"))
+		#self.banners = {}
+		#self.series = {}
 
 		# If dbconn isn't set, we'll assume we haven't found the backend.
 		if not self.config.GetValue("dbconn"):
@@ -166,7 +172,7 @@ class MythBoxee(threading.Thread):
 
 	def GetRecordings(self):
 		cacheTime = self.config.GetValue("cache.time")
-		if not cacheTime or cacheTime <= str(time.time() - 600):
+		if not cacheTime or cacheTime <= str(time.time() - 6):
 			## pull from database
 			self._GetDbRecordings()
 		else:
@@ -194,6 +200,8 @@ class MythBoxee(threading.Thread):
 	def _GetDbRecordings(self):
 		self.log("def(_GetDbRecordings): Start =========================================================")
 
+		t = tvdb_api.Tvdb(apikey=self.tvdb_apikey)
+
 		titles = []
 		banners = {}
 		series = {}
@@ -211,9 +219,19 @@ class MythBoxee(threading.Thread):
 			for recording in self.recs:
 				if recording.title not in titles:
 					titles.append(str(recording.title))
-					banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
-					series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
 					shows[str(recording.title)] = []
+
+				if recording.title not in self.banners:
+					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
+				else:
+					if self.banners[str(recording.title)] == "mb_artwork_error.png":
+						self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
+
+				if recording.title not in self.series:
+					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
+				else:
+					if self.series[str(recording.title)] == 00000:
+						self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
 
 				if recording.title == None:
 					title = ""
@@ -236,16 +254,14 @@ class MythBoxee(threading.Thread):
 			
 			## Set our global variables
 			self.titles = titles
-			self.banners = banners
-			self.series = series
 			self.shows = shows
 
 			# Lets cache our findings for now and the time we cached them.
 			self.config.SetValue("cache.time", str(time.time()))
 			self.config.SetValue("cache.titles", pickle.dumps(titles))
 			self.config.SetValue("cache.titlecount", str(len(titles)))
-			self.config.SetValue("cache.banners", pickle.dumps(banners))
-			self.config.SetValue("cache.series", pickle.dumps(series))
+			self.config.SetValue("cache.banners", pickle.dumps(self.banners))
+			self.config.SetValue("cache.series", pickle.dumps(self.series))
 			self.config.SetValue("cache.shows", pickle.dumps(shows))
 
 		self.titles.sort()
@@ -289,16 +305,15 @@ class MythBoxee(threading.Thread):
 	def GetRecordingArtwork(self, title):
 		self.log("def(GetRecordingArtwork): Start =========================================================")
 
-		sg = mc.Http()
-		sg.SetUserAgent(self.userAgent)
-		html = sg.Get("http://www.thetvdb.com/api/GetSeries.php?seriesname=" + str(title.replace(" ", "%20")))
-		banners = re.compile("<banner>(.*?)</banner>").findall(html)
-
-		## Sometimes we can't find the show, so we have to provide our own artwork
-		try:
-			artwork = "http://www.thetvdb.com/banners/" + banners[0]
-		except:
-			artwork = "mb_artwork_error.png"
+		tries = 4
+		while tries > 0:
+			try:
+				t = tvdb_api.Tvdb(apikey=self.tvdb_apikey)
+				artwork = t[title]['banner']
+				tries = 0
+			except:
+				artwork = "mb_artwork_error.png"
+				tries = tries - 1
 
 		self.log("def(GetRecordingArtwork): URL: " + str(artwork))
 		self.log("def(GetRecordingArtwork): End =========================================================")
@@ -313,18 +328,17 @@ class MythBoxee(threading.Thread):
 	"""
 	def GetRecordingSeriesID(self, title):
 		self.log("def(GetRecordingSeriesID): Start =========================================================")
-		sg = mc.Http()
-		sg.SetUserAgent(self.userAgent)
-		html = sg.Get("http://www.thetvdb.com/api/GetSeries.php?seriesname=" + title.replace(" ", "%20"))
-		series = re.compile("<seriesid>(.*?)</seriesid>").findall(html)
 
-		## Sometimes we can't determine the series ID
-		try:
-			seriesid = series[0]
-		except:
-			seriesid = 00000
+		tries = 4
+		while tries > 0:
+			try:
+				t = tvdb_api.Tvdb(apikey=self.tvdb_apikey)
+				seriesid = t[title]['seriesid']
+				tries = 0
+			except:
+				seriesid = 00000
+				tries = tries - 1
 
-		self.log("def(GetRecordingSeriesID): Title:    " + title)
 		self.log("def(GetRecordingSeriesID): SeriesID: " + str(seriesid))
 		self.log("def(GetRecordingSeriesID): End ===========================================================")
 		return seriesid
@@ -527,24 +541,30 @@ class MythBoxee(threading.Thread):
 	"""
 	def SetSeriesDetails(self, title, seriesid):
 		self.log("def(SetSeriesDetails): Start =========================================================")
-		sg = mc.Http()
-		sg.SetUserAgent(self.userAgent)
-		html = sg.Get("http://thetvdb.com/api/" + self.tvdb_apikey + "/series/" + seriesid + "/")
-		overview = re.compile("<Overview>(.*?)</Overview>").findall(html)
-		poster = re.compile("<poster>(.*?)</poster>").findall(html)
+
+		t = tvdb_api.Tvdb(apikey=self.tvdb_apikey)
+		s = t[title.encode('utf-8')]
+
+		overview = s['overview'].encode('utf-8')
+		poster = str(s['poster'])
+
 		items = mc.ListItems()
 		item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
 		item.SetLabel(title)
 		item.SetTitle(title)
+
+		self.log("Overview: " + overview)
+		self.log("Poster: " + poster)
+
 		try:
-			item.SetDescription(overview[0])
-			item.SetProperty("description", overview[0])
+			item.SetDescription(overview)
+			item.SetProperty("description", overview)
 		except:
 			item.SetDescription("No Description")
 			item.SetProperty("description", "No Description")
 		
 		try:
-			item.SetThumbnail("http://www.thetvdb.com/banners/" + poster[0])
+			item.SetThumbnail(poster)
 		except:
 			item.SetThumbnail("mb_poster_error.png")
 
