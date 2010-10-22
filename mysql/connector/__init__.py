@@ -1,5 +1,5 @@
 # MySQL Connector/Python - MySQL driver written in Python.
-# Copyright 2009 Sun Microsystems, Inc. All rights reserved
+# Copyright (c) 2009,2010, Oracle and/or its affiliates. All rights reserved.
 # Use is subject to license terms. (See COPYING)
 
 # This program is free software; you can redistribute it and/or modify
@@ -25,15 +25,6 @@
 MySQL Connector/Python - MySQL drive written in Python
 """
 
-import sys
-_name = 'MySQL Connector/Python'
-if not hasattr(sys, "version_info") or sys.version_info < (2,4):
-    raise RuntimeError("%s requires Python 2.4 or higher." % (_name))
-elif sys.version_info >= (3,0):
-    raise RuntimeError("%s does not yet support Python v3." % (_name))
-del _name
-del sys
-
 # Python Db API v2
 apilevel = '2.0'
 threadsafety = 1
@@ -43,21 +34,22 @@ paramstyle = 'pyformat'
 import _version
 __version__ = _version.version
 
-from mysql import MySQL
+from connection import MySQLConnection
 from errors import *
-from constants import FieldFlag, FieldType, CharacterSet, RefreshOption
+from constants import FieldFlag, FieldType, CharacterSet,\
+    RefreshOption, ClientFlag
 from dbapi import *
 
 def Connect(*args, **kwargs):
-    """Shortcut for creating a mysql.MySQL object."""
-    return MySQL(*args, **kwargs)
+    """Shortcut for creating a connection.MySQLConnection object."""
+    return MySQLConnection(*args, **kwargs)
 connect = Connect
 
 __all__ = [
-    'MySQL', 'Connect',
+    'MySQLConnection', 'Connect',
     
     # Some useful constants
-    'FieldType','FieldFlag','CharacterSet','RefreshOption',
+    'FieldType','FieldFlag','ClientFlag','CharacterSet','RefreshOption',
 
     # Error handling
     'Error','Warning',
