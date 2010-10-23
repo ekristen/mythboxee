@@ -392,10 +392,10 @@ class MythBoxeeMainUIUpdater(MythBoxeeReactor, MythBoxeeLogger):
 				self.log("def(MythBoxeeMainUIUpdater.Run): No Change")
 				
 				## Put focus on last selected item
-				itemId = int(self.config.GetValue("CurrentShowItemID"))
-				print itemId
-				if itemId and itemId != 0:
-					mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
+				if self.config.GetValue("CurrentShowItemID"):
+					itemId = int(self.config.GetValue("CurrentShowItemID"))
+					if itemId and itemId != 0:
+						mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
 
 				self.config.Reset("loadingmain")
 				self._sleepPeriod = 10
@@ -419,9 +419,9 @@ class MythBoxeeMainUIUpdater(MythBoxeeReactor, MythBoxeeLogger):
 		mc.GetWindow(14001).GetList(1030).SetItems(items)
 
 		## Put focus on last selected item
-		itemId = int(self.config.GetValue("CurrentShowItemID"))
-		if itemId and itemId != 0:
-			mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
+		#itemId = int(self.config.GetValue("CurrentShowItemID"))
+		#if itemId and itemId != 0:
+		#	mc.GetWindow(14001).GetList(1030).SetFocusedItem(itemId)
 		
 		if len(self.titles) > 0:
 			self.config.Reset("loadingmain")
