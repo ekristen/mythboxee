@@ -936,7 +936,8 @@ class MythBoxeeStatus(MythBoxeeBase):
 
 class MythBoxeeSettings(MythBoxeeBase):
 	def __init__(self):
-		MythBoxeeBase.__init__(self)
+		#MythBoxeeBase.__init__(self)
+		self.config = mc.GetApp().GetLocalConfig()
 		
 		self.log("def(SettingsInit): Start =========================================================")
 		self.config.SetValue("loadingsettings", "true")
