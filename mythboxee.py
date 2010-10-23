@@ -195,7 +195,7 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 	"""
 	def GetRecordings(self):
 		cacheTime = self.config.GetValue("cache.time")
-		if not cacheTime or cacheTime <= str(time.time() - 600):
+		if not cacheTime or cacheTime <= str(time.time() - 6):
 			## pull from database
 			self._GetDbRecordings()
 			#self.SetShows()
@@ -238,8 +238,9 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 		# Generate the the Fingerprint
 		finger_titles = []
 		for rec in self.recs:
-			if rec.title not in finger_titles:
-				finger_titles.append(str(rec.title))
+			rectitle = rec.title.encode('utf-8')
+			if rectitle not in finger_titles:
+				finger_titles.append(rectitle)
 		finger_titles.sort()
 
 		fingerprint = str(md5.new(str(finger_titles)).hexdigest())
@@ -255,24 +256,6 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 
 			x = 0
 			for recording in self.recs:
-				if recording.title not in titles:
-					titles.append(str(recording.title))
-					shows[str(recording.title)] = []
-
-				# Check to see if we have a valid banner for the show, if not try and get one.
-				if recording.title not in self.banners:
-					self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
-				else:
-					if self.banners[str(recording.title)] == "mb_artwork_error.png":
-						self.banners[str(recording.title)] = self.GetRecordingArtwork(str(recording.title))
-
-				# Check to see if we have a valid series id for the show, if not try and get one.
-				if recording.title not in self.series:
-					self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
-				else:
-					if self.series[str(recording.title)] == 00000:
-						self.series[str(recording.title)] = self.GetRecordingSeriesID(str(recording.title))
-
 				# Check for title, and if not encode it utf-8
 				if recording.title == None:
 					title = ""
@@ -291,8 +274,26 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 				else:
 					description = recording.description.encode('utf-8')
 
+				if title not in titles:
+					titles.append(title)
+					shows[title] = []
+
+				# Check to see if we have a valid banner for the show, if not try and get one.
+				if title not in self.banners:
+					self.banners[title] = self.GetRecordingArtwork(title)
+				else:
+					if self.banners[title] == "mb_artwork_error.png":
+						self.banners[title] = self.GetRecordingArtwork(title)
+
+				# Check to see if we have a valid series id for the show, if not try and get one.
+				if title not in self.series:
+					self.series[title] = self.GetRecordingSeriesID(title)
+				else:
+					if self.series[title] == 00000:
+						self.series[title] = self.GetRecordingSeriesID(title)
+
 				single = [title, subtitle, description, str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
-				shows[str(recording.title)].append(single)
+				shows[title].append(single)
 				x = x + 1
 
 			## Set our global variables
