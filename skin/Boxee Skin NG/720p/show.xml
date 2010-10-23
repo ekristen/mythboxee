@@ -3,12 +3,12 @@
 	<defaultcontrol always="true">2040</defaultcontrol>
 	<allowoverlay>true</allowoverlay>
 	<onload lang="python"><![CDATA[
-from mythboxee import MythBoxee
-mb = MythBoxee()
-mb.LoadShow()
+from mythboxee import *
+mb = MythBoxeeShow()
 ]]></onload>
 	<onunload lang="python"><![CDATA[
-mb.stop()
+if mb:
+	mb.unload()
 ]]></onunload>
 	<controls>
 		<control type="group" id="1010">
@@ -37,23 +37,12 @@ mb.stop()
 
 		<control type="grouplist" id="1040">
 			<posy>28</posy>
-			<posx>940</posx>
-			<width>334</width>
+			<posx>920</posx>
+			<width>500</width>
 			<itemgap>10</itemgap>
 			<orientation>horizontal</orientation>
 			<ondown>2040</ondown>
-<!--
-			940/334
 			<control type="button" id="1041">
-				<label>Refresh</label>
-				<texturefocus>bg_btn.png</texturefocus>
-				<texturenofocus></texturenofocus>
-				<height>30</height>
-				<align>center</align>
-				<onclick lang="python"><![CDATA[mb.RefreshMain()]]></onclick>
-			</control>
--->
-			<control type="button" id="1042">
 				<label>Status</label>
 				<texturefocus>bg_btn.png</texturefocus>
 				<texturenofocus></texturenofocus>
@@ -69,17 +58,6 @@ mb.stop()
 				<align>center</align>
 				<onclick lang="python"><![CDATA[mc.ActivateWindow(14004)]]></onclick>
 			</control>
-<!--
-			780/500
-			<control type="button" id="1043">
-				<label>Send Logs</label>
-				<texturefocus>bg_btn.png</texturefocus>
-				<texturenofocus></texturenofocus>
-				<height>29</height>
-				<align>center</align>
-				<onclick lang="python"><![CDATA[mb.SendLogs()]]></onclick>
-			</control>
--->			
 		</control>
 		
 <!-- END: TOP MENU -->

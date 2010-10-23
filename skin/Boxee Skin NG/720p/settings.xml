@@ -2,10 +2,8 @@
 	<defaultcontrol always="true">1030</defaultcontrol>
 	<allowoverlay>yes</allowoverlay>
 	<onload lang="python"><![CDATA[
-import mc
-import mythboxee
-
-mb.SettingsInit()
+from mythboxee import *
+mbs = MythBoxeeSettings()
 ]]></onload>
 	<controls>
 		<control type="group" id="1010">
@@ -91,7 +89,7 @@ mb.SettingsInit()
 				<height>30</height>
 				<align>center</align>
 				<aligny>center</aligny>
-				<onclick lang="python"><![CDATA[mb.TestDbSettings()]]></onclick>
+				<onclick lang="python"><![CDATA[mbs.TestDbSettings()]]></onclick>
 			</control>
 			<control type="button" id="1048">
 				<label>Save DB Settings</label>
@@ -101,7 +99,7 @@ mb.SettingsInit()
 				<height>30</height>
 				<align>center</align>
 				<aligny>center</aligny>
-				<onclick lang="python"><![CDATA[mb.SaveDbSettings()]]></onclick>
+				<onclick lang="python"><![CDATA[mbs.SaveDbSettings()]]></onclick>
 			</control>
 		</control>
 
@@ -171,7 +169,7 @@ mb.SettingsInit()
 					</control>			
 				</focusedlayout>
 				<content type="action">
-					<onclick lang="python"><![CDATA[mb.SetStreamMethod()]]></onclick>
+					<onclick lang="python"><![CDATA[mbs.SetStreamMethod()]]></onclick>
 				</content>		
 			</control>
 		</control>
@@ -237,7 +235,7 @@ mb.SettingsInit()
 				<height>30</height>
 				<align>center</align>
 				<aligny>center</aligny>
-				<onclick lang="python"><![CDATA[mb.SaveSMBSettings()]]></onclick>
+				<onclick lang="python"><![CDATA[mbs.SaveSMBSettings()]]></onclick>
 			</control>
 		</control>
 
@@ -263,7 +261,7 @@ mb.SettingsInit()
 				<font>font18</font>
 				<onup>1022</onup>
 				<ondown>1033</ondown>
-				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+				<ontextchange lang="python"><![CDATA[mbs.SaveCacheSettings()]]></ontextchange>
 			</control>
 			<control type="edit" id="1053">
 				<posx>820</posx>
@@ -274,7 +272,7 @@ mb.SettingsInit()
 				<font>font18</font>
 				<onup>1032</onup>
 				<ondown>1034</ondown>
-				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+				<ontextchange lang="python"><![CDATA[mbs.SaveCacheSettings()]]></ontextchange>
 			</control>
 			<control type="edit" id="1054">
 				<posx>820</posx>
@@ -285,7 +283,7 @@ mb.SettingsInit()
 				<font>font18</font>
 				<password>true</password>
 				<onup>1033</onup>
-				<ontextchange lang="python"><![CDATA[mb.SaveCacheSettings()]]></ontextchange>
+				<ontextchange lang="python"><![CDATA[mbs.SaveCacheSettings()]]></ontextchange>
 			</control>
 		</control>
 -->
