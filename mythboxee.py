@@ -36,8 +36,14 @@ class MythBoxeeBase:
 
 		self.config = mc.GetApp().GetLocalConfig()
 
-		# Set the version on any page that loads
-		mc.GetActiveWindow().GetLabel(1013).SetLabel(self.version)
+		if self.config.GetValue("app.exiting") == "true":
+			return
+
+		try:
+			# Set the version on any page that loads
+			mc.GetActiveWindow().GetLabel(1013).SetLabel(self.version)
+		except:
+			pass
 
 		# We'll use this to determine when to reload data.
 		#self.config.SetValue("LastRunTime", str(time.time()))
@@ -50,6 +56,7 @@ class MythBoxeeBase:
 			self.config.SetValue("Filter", "All")
 			self.config.SetValue("StreamMethod", "XML")
 			self.config.SetValue("app.firstrun", "true")
+			self.config.SetValue("app.settings", "auto")
 
 		# If dbconn isn't set, we'll assume we haven't found the backend.
 		if not self.config.GetValue("dbconn"):
@@ -226,13 +233,16 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 	def _GetDbRecordings(self):
 		self.log("def(_GetDbRecordings): Start =========================================================")
 
+		# Create a connection to TheTVDB.com API
 		t = tvdb_api.Tvdb(apikey=self.tvdb_apikey)
 
+		# Setup some of the variables we need.
 		titles = []
 		banners = {}
 		series = {}
 		shows = {}
 
+		# Grab the recordings from the backend
 		self.recs = self.be.getRecordings()
 
 		# Generate the the Fingerprint
@@ -300,6 +310,7 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 			self.titles = titles
 			self.shows = shows
 			
+			# Sort the titles so we are in alphabetical order
 			self.titles.sort()
 
 			# Lets cache our findings for now and the time we cached them.
@@ -314,7 +325,9 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 		self.log("def(GetRecordings): End ===========================================================")
 
 	"""
-	GetRecordingArtwork - Get the Artwork for a show.
+	GetRecordingArtwork - Get the Artwork for a show from thetvdb.com using the python api.
+	
+	@param title The title of a Show
 	"""
 	def GetRecordingArtwork(self, title):
 		self.log("def(GetRecordingArtwork): Start =========================================================")
@@ -332,13 +345,13 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 		self.log("def(GetRecordingArtwork): URL: " + str(artwork))
 		self.log("def(GetRecordingArtwork): End =========================================================")
 
-		return artwork
+		return str(artwork)
 
 
 	"""
-	GetRecordingSeriesID - Get the Series ID of a show.
-
-	TODO: rewrite this entire function
+	GetRecordingSeriesID - Get the Series ID of a show from thetvdb.com using the python api.
+	
+	@param title The title of a Show
 	"""
 	def GetRecordingSeriesID(self, title):
 		self.log("def(GetRecordingSeriesID): Start =========================================================")
@@ -355,9 +368,15 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 
 		self.log("def(GetRecordingSeriesID): SeriesID: " + str(seriesid))
 		self.log("def(GetRecordingSeriesID): End ===========================================================")
-		return seriesid
+		return str(seriesid)
 
 
+"""
+MythBoxeeMainUIUpdater - this is a threaded class that runs in the background.
+It monitors the main UI and updates it accordingly when necessary.
+
+Inherits: MythBoxeeReactor, MythBoxeeLogger
+"""
 class MythBoxeeMainUIUpdater(MythBoxeeReactor, MythBoxeeLogger):
 	titles = []
 	recordings = []
@@ -365,11 +384,19 @@ class MythBoxeeMainUIUpdater(MythBoxeeReactor, MythBoxeeLogger):
 	shows = {}
 	series = {}
 
+	"""
+	initialization function for the class
+	
+	activates the inheritance from MythBoxeeReactor
+	"""
 	def __init__(self):
 		MythBoxeeReactor.__init__(self, "MythBoxeeMainUIUpdater")
 		self.config = mc.GetApp().GetLocalConfig()
 		self._sleepPeriod = 2
-		
+
+	"""
+	This function is the heart of the thread.
+	"""
 	def run(self):
 		self.log("def(MythBoxeeMainUIUpdater.Run): Started")
 		while not self._stopEvent.isSet():
@@ -405,14 +432,19 @@ class MythBoxeeMainUIUpdater(MythBoxeeReactor, MythBoxeeLogger):
 			self._stopEvent.wait(self._sleepPeriod)
 			
 
+	"""
+	This function updates the UI with all the recordings.
+	"""
 	def SetShows(self):
 		self.log("def(MythBoxeeMainUIUpdater.SetShows): Start =========================================================")
 
 		items = mc.ListItems()
 		for title in self.titles:
 			self.log("def(SetShows): " + str(title))
+			self.log("def(MythBoxeeMainUIUpdater.SetShow): Title: " + title)
+			self.log("def(MythBoxeeMainUIUpdater.SetShow): Thumbnail: " + self.banners[title])
 			item = mc.ListItem( mc.ListItem.MEDIA_UNKNOWN )
-			item.SetLabel(str(title))
+			item.SetLabel(title)
 			item.SetThumbnail(self.banners[title])
 			item.SetProperty("videos", str(len(self.shows[title])))
 			item.SetProperty("seriesid", str(self.series[title]))
@@ -563,15 +595,19 @@ class MythBoxeeMain(MythBoxeeBase):
 	def __init__(self):
 		MythBoxeeBase.__init__(self)
 		
-		self.MythBoxeeRecordings = MythBoxeeRecordings()
-		self.MythBoxeeRecordings.start()
+		if self.config.GetValue("dbconn"):
+			self.MythBoxeeRecordings = MythBoxeeRecordings()
+			self.MythBoxeeRecordings.start()
 
-		self.MythBoxeeMainUIUpdater = MythBoxeeMainUIUpdater()
-		self.MythBoxeeMainUIUpdater.start()
+			self.MythBoxeeMainUIUpdater = MythBoxeeMainUIUpdater()
+			self.MythBoxeeMainUIUpdater.start()
 
 	def unload(self):
-		self.MythBoxeeRecordings.stop()
-		self.MythBoxeeMainUIUpdater.stop()
+		try:
+			self.MythBoxeeRecordings.stop()
+			self.MythBoxeeMainUIUpdater.stop()
+		except:
+			pass
 
 
 	"""
@@ -940,35 +976,58 @@ class MythBoxeeSettings(MythBoxeeBase):
 		#MythBoxeeBase.__init__(self)
 		self.config = mc.GetApp().GetLocalConfig()
 		
+		if self.config.GetValue("app.exiting") == "true":
+			return
+		
 		self.log("def(SettingsInit): Start =========================================================")
 		self.config.SetValue("loadingsettings", "true")
 
-		# Set the version on any page that loads
-		mc.GetActiveWindow().GetLabel(1013).SetLabel(self.version)
+		try:
+			# Set the version on any page that loads
+			mc.GetActiveWindow().GetLabel(1013).SetLabel(self.version)
+		except:
+			pass
 
 		if not self.config.GetValue("dbconn"):
-			mc.ShowDialogOk("MythBoxee", "Welcome to MythBoxee! Looks like this is the first time you have run this app. Please fill out all the settings and you'll be on your way to using this app.")
-			response = mc.ShowDialogConfirm("MythBoxee", "Do you know what your Security Pin is for your MythTV Backend? If not, we'll try the default, if that fails, you'll need to fill your database information in manually.", "No", "Yes")
-			if response:
-				pin = mc.ShowDialogKeyboard("Security Pin", "", True)
-				self.config.SetValue("pin", str(pin))
+			if self.config.GetValue("app.settings") == "auto":
+				self.AutoConfig()
 			else:
-				pin = 0000
-				self.config.SetValue("pin", str(pin))
-
-			mc.GetWindow(14004).GetLabel(9002).SetLabel("Attempting Database Connection ...")
-			if self.DiscoverBackend() == False:
-				mc.ShowDialogOk("MythBoxee", "Unfortunately MythBoxee wasn't able to auto-discover your MythTV backend and database credentials. Please enter them in manually.")
-				mc.GetWindow(14004).GetLabel(9002).SetLabel("LOADING...")
-				self.LoadSettings()
-			else:
-				mc.ShowDialogOk("MythBoxee", "MythBoxee auto-discovered your MythTV backend. Enjoy your recordings!")
-				self.config.Reset("app.lastruntime")
-				mc.CloseWindow()
+				self.ManualConfig()
 		else:
 			self.LoadSettings()
-		self.config.Reset("loadingsettings")
+
 		self.log("def(SettingsInit): End ===========================================================")
+
+
+	def AutoConfig(self):
+		mc.ShowDialogOk("MythBoxee", "Welcome to MythBoxee! Looks like this is the first time you have run this app. Please fill out all the settings and you'll be on your way to using this app.")
+		response = mc.ShowDialogConfirm("MythBoxee", "Do you know what your Security Pin is for your MythTV Backend? If not, we'll try the default, if that fails, you'll need to fill your database information in manually.", "No", "Yes")
+		if response:
+			pin = mc.ShowDialogKeyboard("Security Pin", "", True)
+			self.config.SetValue("pin", str(pin))
+		else:
+			pin = 0000
+			self.config.SetValue("pin", str(pin))
+
+		mc.GetWindow(14004).GetLabel(9002).SetLabel("Attempting Auto-Discovery")
+		if self.DiscoverBackend() == False:
+			mc.ShowDialogOk("MythBoxee", "Unfortunately MythBoxee wasn't able to auto-discover your MythTV backend and database credentials. Please enter them in manually.")
+			self.config.SetValue("app.settings", "manual")
+			mc.GetWindow(14004).GetLabel(9002).SetLabel("LOADING...")
+			self.LoadSettings()
+		else:
+			mc.ShowDialogOk("MythBoxee", "MythBoxee was able to auto-discover your MythTV backend. Enjoy your recordings!")
+			mc.CloseWindow()
+			
+	def ManualConfig(self):
+		self.LoadSettings()
+		if not self.config.GetValue("dbconn") and self.config.GetValue("app.settings") == "manual":
+			response = mc.ShowDialogConfirm("MythBoxee", "You haven't configured your database connection yet? You can either return or exit the app.", "Return", "Exit")
+			if response:
+				self.config.SetValue("app.exiting", "true")
+				mc.CloseWindow()
+				mc.CloseWindow()
+			
 
 	"""
 	LoadSettings - Stuff that needs to be executed when settings window is loaded
@@ -1027,6 +1086,7 @@ class MythBoxeeSettings(MythBoxeeBase):
 			mc.GetWindow(14004).GetEdit(1033).SetText(self.config.GetValue("smb.username"))
 			mc.GetWindow(14004).GetEdit(1034).SetText(self.config.GetValue("smb.password"))
 
+		self.config.Reset("loadingsettings")
 		self.log("def(LoadSettings): End ===========================================================")
 
 
