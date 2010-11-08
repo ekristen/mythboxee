@@ -302,7 +302,7 @@ class MythBoxeeRecordings(MythBoxeeBase, MythBoxeeReactor):
 					if self.series[title] == 00000:
 						self.series[title] = self.GetRecordingSeriesID(title)
 
-				single = [title, subtitle, description, str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), recording.getRecorded().watched, x]
+				single = [title, subtitle, description, str(recording.chanid), str(recording.airdate), str(recording.starttime), str(recording.endtime), str(recording.filename.rsplit('/',1)[-1]), recording.getRecorded().watched, x]
 				shows[title].append(single)
 				x = x + 1
 
@@ -537,7 +537,7 @@ class MythBoxeeShowUIUpdater(MythBoxeeReactor, MythBoxeeLogger):
 
 		## Loop through all our recordings, and add them to the list.
 		showitems = mc.ListItems()
-		for title,subtitle,desc,chanid,airdate,starttime,endtime,watched,ref in episodes:
+		for title,subtitle,desc,chanid,airdate,starttime,endtime,filename,watched,ref in episodes:
 			#recording = self.recs[ref]
 
 			# Filter the Episodes
@@ -572,7 +572,8 @@ class MythBoxeeShowUIUpdater(MythBoxeeReactor, MythBoxeeLogger):
 				showitem.SetPath(path)
 			elif streamMethod == "SMB":
 				time = starttime.replace("T", "").replace("-", "").replace(":", "").replace(" ","")
-				path = "smb://" + self.config.GetValue("smb.username") + ":" + self.config.GetValue("smb.password") + "@" + self.dbconf["DBHostName"] + "/" + self.config.GetValue("smb.share") + "/" + chanid + "_" + time + ".mpg"
+				#path = "smb://" + self.config.GetValue("smb.username") + ":" + self.config.GetValue("smb.password") + "@" + self.dbconf["DBHostName"] + "/" + self.config.GetValue("smb.share") + "/" + chanid + "_" + time + ".mpg"
+				path = "smb://" + self.config.GetValue("smb.username") + ":" + self.config.GetValue("smb.password") + "@" + self.dbconf["DBHostName"] + "/" + self.config.GetValue("smb.share") + "/" + filename
 				showitem.SetThumbnail(path + ".png")
 				showitem.SetPath(path)
 				#showitem.AddAlternativePath("XML Source", "http://" + self.dbconf['DBHostName'] + ":6544/Myth/GetRecording?ChanId=" + chanid + "&StartTime=" + starttime.replace("T", "%20"), )
@@ -706,7 +707,7 @@ class MythBoxeeShow(MythBoxeeBase):
 
 		## Loop through all our recordings, and add them to the list.
 		showitems = mc.ListItems()
-		for title,subtitle,desc,chanid,airdate,starttime,endtime,watched,ref in episodes:
+		for title,subtitle,desc,chanid,airdate,starttime,endtime,filename,watched,ref in episodes:
 			#recording = self.recs[ref]
 
 			# Filter the Episodes
