@@ -407,6 +407,8 @@ class Tvdb:
     def _getTempDir(self):
         """Returns the [system temp dir]/tvdb_api
         """
+        import mc
+        return mc.GetTempDir()
         return os.path.join(tempfile.gettempdir(), "tvdb_api")
 
     def _loadUrl(self, url, recache = False):

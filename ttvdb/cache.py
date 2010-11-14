@@ -20,7 +20,7 @@ import time
 import errno
 import httplib
 import urllib2
-import String
+import string
 import StringIO
 import md5
 from threading import RLock

@@ -26,14 +26,14 @@ mbs = MythBoxeeSettings()
 		<control type="group" id="1040">
 			<control type="label" id="1041">
 				<posx>820</posx>
-				<posy>150</posy>
+				<posy>80</posy>
 				<width>250</width>
 				<label>Backend Information</label>
 				<font>font23</font>
 			</control>
 			<control type="edit" id="1042">
 				<posx>820</posx>
-				<posy>175</posy>
+				<posy>115</posy>
 				<width>300</width>
 				<label>Hostname/IP:</label>
 				<align>left</align>
@@ -42,7 +42,7 @@ mbs = MythBoxeeSettings()
 			</control>
 			<control type="edit" id="1043">
 				<posx>820</posx>
-				<posy>205</posy>
+				<posy>150</posy>
 				<width>300</width>
 				<label>Username:</label>
 				<align>left</align>
@@ -52,7 +52,7 @@ mbs = MythBoxeeSettings()
 			</control>
 			<control type="edit" id="1044">
 				<posx>820</posx>
-				<posy>235</posy>
+				<posy>185</posy>
 				<width>300</width>
 				<align>left</align>
 				<label>Password:</label>
@@ -63,7 +63,7 @@ mbs = MythBoxeeSettings()
 			</control>
 			<control type="edit" id="1045">
 				<posx>820</posx>
-				<posy>265</posy>
+				<posy>220</posy>
 				<width>300</width>
 				<align>left</align>
 				<label>Database:</label>
@@ -75,31 +75,19 @@ mbs = MythBoxeeSettings()
 		</control>
 
 		<control type="grouplist" id="1046">
-			<posx>820</posx>
-			<posy>295</posy>
+			<posx>895</posx>
+			<posy>260</posy>
 			<width>300</width>
 			<itemgap>0</itemgap>
 			<orientation>horizontal</orientation>
 			<ondown>1022</ondown>
 			<control type="button" id="1047">
-				<label>Test Connection</label>
-				<texturefocus>bg_btn.png</texturefocus>
-				<texturenofocus></texturenofocus>
+				<label>Test and Save Settings</label>
 				<font>font14</font>
 				<height>30</height>
 				<align>center</align>
 				<aligny>center</aligny>
 				<onclick lang="python"><![CDATA[mbs.TestDbSettings()]]></onclick>
-			</control>
-			<control type="button" id="1048">
-				<label>Save DB Settings</label>
-				<texturefocus>bg_btn.png</texturefocus>
-				<texturenofocus></texturenofocus>
-				<font>font14</font>
-				<height>30</height>
-				<align>center</align>
-				<aligny>center</aligny>
-				<onclick lang="python"><![CDATA[mbs.SaveDbSettings()]]></onclick>
 			</control>
 		</control>
 
@@ -110,7 +98,7 @@ mbs = MythBoxeeSettings()
 		<control type="group" id="1020">
 			<control type="label" id="1021">
 				<posx>820</posx>
-				<posy>360</posy>
+				<posy>330</posy>
 				<width>250</width>
 				<align>left</align>
 				<label>Stream Method</label>
@@ -118,7 +106,7 @@ mbs = MythBoxeeSettings()
 			</control>
 			<control type="list" id="1022">
 				<posx>830</posx>
-				<posy>395</posy>
+				<posy>365</posy>
 				<width>164</width>
 				<height>100</height>
 				<onup>1044</onup>
@@ -181,7 +169,7 @@ mbs = MythBoxeeSettings()
 		<control type="group" id="1030">
 			<control type="label" id="1031">
 				<posx>820</posx>
-				<posy>480</posy>
+				<posy>460</posy>
 				<width>250</width>
 				<align>left</align>
 				<label>SMB Share</label>
@@ -189,7 +177,7 @@ mbs = MythBoxeeSettings()
 			</control>
 			<control type="edit" id="1032">
 				<posx>820</posx>
-				<posy>505</posy>
+				<posy>490</posy>
 				<width>300</width>
 				<label>Share:</label>
 				<align>left</align>
@@ -199,7 +187,7 @@ mbs = MythBoxeeSettings()
 			</control>
 			<control type="edit" id="1033">
 				<posx>820</posx>
-				<posy>535</posy>
+				<posy>525</posy>
 				<width>300</width>
 				<label>Username:</label>
 				<align>left</align>
@@ -209,7 +197,7 @@ mbs = MythBoxeeSettings()
 			</control>
 			<control type="edit" id="1034">
 				<posx>820</posx>
-				<posy>565</posy>
+				<posy>560</posy>
 				<width>300</width>
 				<label>Password:</label>
 				<align>left</align>
