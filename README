@@ -3,6 +3,11 @@ MythBoxee
 Repository: http://erikkristensen.com/boxee/
 
 
+Requirements
+-------------
+MythTV 0.23.1 or 0.23.0 (if you use 0.23.0 you'll need to modify the MythStatic.py protocol version from 23056 to 56)
+
+
 Installation
 ------------- 
 1. Start Boxee
